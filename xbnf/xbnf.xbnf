@@ -1,0 +1,75 @@
+﻿/****************************************************************\
+*  xbnf.xbnf: a self describing grammar for describing grammars  *
+*   by codewitch honey crisis, july 2019                         *
+\****************************************************************/
+
+grammar<start>= productions;
+
+//
+// productions
+//
+// marking a non-terminal with collapse removes it from 
+// the tree and propagates its children to its parent
+// marking a terminal with it similarly hides it from
+// the result but not from the grammar, unlike hidden
+//
+productions<collapsed> = production productions | production;
+production= identifier [ "<" attributes ">" ] "=" expressions ";";
+
+//
+// expressions
+//
+expressions<collapsed>= expression { "|" expression }; 
+expression= { symbol };
+symbol= literal | regex | identifier | 
+	"(" expressions ")" | 
+	"[" expressions "]" |
+	"{" expressions ("}"|"}+");
+
+//
+// attributes
+//
+// recognized attributes are hidden, collapsed, terminal, start, 
+// followsConflict (which can be "error", "first" or "last")
+// and blockEnd (string)
+attributes<collapsed>= attribute { "," attribute};
+attribute<color="red">= identifier [ "=" attrvalue ];
+attrvalue<color="orange">= literal | integer | identifier;
+
+//
+// terminals
+//
+literal= '"([^"\\]|\\.)*"';
+regex= '\'([^\'\\]|\\.)*\'';
+identifier= '[A-Z_a-z][\-0-9A-Z_a-z]*';
+integer= '\-?[0-9]+';
+
+// hide comments and whitespace
+//
+// if you mark a production with the terminal attribute, you
+// can use xbnf syntax to define it. Anything that's text or regex 
+// is automatically a terminal
+whitespace<hidden,terminal>= {" "|"\v"|"\f"|"\t"|"\r"|"\n"}+; //'[ \v\f\t\r\n]+';
+// single quotes denote regex. make sure to escape single
+// quotes in the regex with \'
+// attributes get passed through to the parser, and you can define your own
+lineComment<hidden,color="green">= '//[^\n]*[\n]';
+blockComment<hidden,blockEnd="*/",color="green">= "/*";
+
+// defining these isn't required, but gives
+// us better constant names
+// double quotes denote a literal. the escapes are nearly the
+// same as C#. \U and \x are not supported
+or="|";
+lt="<";
+gt=">";
+eq="=";
+semi=";";
+comma=",";
+lparen="(";
+rparen=")";
+lbracket="[";
+rbracket="]";
+lbrace="{";
+rbrace="}";
+rbracePlus="}+";
