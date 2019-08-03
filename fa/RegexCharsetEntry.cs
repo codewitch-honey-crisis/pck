@@ -6,6 +6,7 @@ namespace Pck
 {
 	public abstract class RegexCharsetEntry : ICloneable
 	{
+		internal RegexCharsetEntry() { } // nobody can make new derivations
 		protected abstract RegexCharsetEntry CloneImpl();
 		object ICloneable.Clone() => CloneImpl();
 	}

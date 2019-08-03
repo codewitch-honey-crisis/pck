@@ -8,11 +8,11 @@ namespace Pck
 		static void Main(string[] args)
 		{
 			
-			var text = "[[:digit:]]";
+			var text = "[a-z_A-Z]+(a|b|c)[a-z_A-Z0-9]*";
 			Console.WriteLine(text);
 			var ast = RegexExpression.Parse(text);
 			var fa = ast.ToFA<string>();
-			Console.WriteLine(ast.ToFA<string>().FillClosure().Count);
+			Console.WriteLine(ast.ToFA<string>().Reduce().FillClosure().Count);
 			Console.WriteLine(ast);
 			return;
 		}

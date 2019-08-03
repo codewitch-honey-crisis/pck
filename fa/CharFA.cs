@@ -485,18 +485,18 @@ namespace Pck
 		public static CharFA<TAccept> Repeat(CharFA<TAccept> expr, int minOccurs = -1, int maxOccurs = -1, TAccept accept = default(TAccept))
 		{
 			expr = expr.Clone();
-			if (minOccurs != 0 && maxOccurs != 0 && minOccurs > maxOccurs)
+			if (minOccurs >0 && maxOccurs > 0 && minOccurs > maxOccurs)
 				throw new ArgumentOutOfRangeException(nameof(maxOccurs));
 			switch (minOccurs)
 			{
+				case -1:
 				case 0:
 					switch (maxOccurs)
 					{
+						case -1:
 						case 0:
 							var result = new CharFA<TAccept>();
-							var final = new CharFA<TAccept>();
-							final.AcceptSymbol = accept;
-							final.IsAccepting = true;
+							var final = new CharFA<TAccept>(true,accept);
 							final.EpsilonTransitions.Add(result);
 							foreach (var afa in expr.FillAccepting())
 							{
@@ -521,10 +521,10 @@ namespace Pck
 				case 1:
 					switch (maxOccurs)
 					{
+						case -1:
 						case 0:
 							var result = new CharFA<TAccept>();
-							var final = new CharFA<TAccept>();
-							final.AcceptSymbol = accept;
+							var final = new CharFA<TAccept>(true,accept);
 							final.EpsilonTransitions.Add(result);
 							foreach (var afa in expr.FillAccepting())
 							{
@@ -541,6 +541,7 @@ namespace Pck
 				default:
 					switch (maxOccurs)
 					{
+						case -1:
 						case 0:
 							return Concat(new CharFA<TAccept>[] { Repeat(expr, minOccurs, minOccurs, accept), Repeat(expr, 0, 0, accept) },accept);
 						case 1:
@@ -552,7 +553,7 @@ namespace Pck
 								l.Add(expr);
 								for (int i = 1; i < minOccurs; ++i)
 									l.Add(expr.Clone());
-								return Concat(l, accept);
+								return Concat( l, accept);
 							}
 							return Concat(new CharFA<TAccept>[] { Repeat(expr.Clone(), minOccurs, minOccurs, accept), Repeat(Optional(expr.Clone()), maxOccurs - minOccurs, maxOccurs - minOccurs, accept) },accept);
 
