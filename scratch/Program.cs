@@ -121,13 +121,9 @@ namespace Pck
 		}
 		static bool _IsHexChar(char hex)
 		{
-			if (':' > hex && '/' < hex)
-				return true;
-			if ('G' > hex && '@' < hex)
-				return true;
-			if ('g' > hex && '`' < hex)
-				return true;
-			return false;
+			return (':' > hex && '/' < hex) ||
+				('G' > hex && '@' < hex) ||
+				('g' > hex && '`' < hex);
 		}
 		static int _ParseEscape(ParseContext pc)
 		{
