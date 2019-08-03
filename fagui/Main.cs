@@ -30,7 +30,8 @@ namespace Pck
 			CharFA<string> fa = null;
 			try
 			{
-				fa = CharFA<string>.Parse(Regex.Text,"Accept");
+				var ast = RegexExpression.Parse(Regex.Text);
+				fa = ast.ToFA("Accept");
 			}
 			catch(Exception ex)
 			{

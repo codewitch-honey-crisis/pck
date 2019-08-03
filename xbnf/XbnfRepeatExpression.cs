@@ -6,7 +6,6 @@ namespace Pck
 {
 	public class XbnfRepeatExpression : XbnfUnaryExpression, IEquatable<XbnfRepeatExpression>
 	{
-		public override bool IsTerminal => false;
 		public bool IsOptional { get; set; } = true;
 		public XbnfRepeatExpression(XbnfExpression expression, bool isOptional = true)
 		{

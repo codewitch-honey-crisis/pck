@@ -76,11 +76,14 @@ namespace Pck
 			}
 			while (-1 != Advance() && Current != character)
 				CaptureCurrent();
-			CaptureCurrent();
+			//
 			if (Current == character)
 			{
 				if (readCharacter)
+				{
+					CaptureCurrent();
 					Advance();
+				}
 				return true;
 			}
 			return false;

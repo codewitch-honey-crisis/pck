@@ -55,6 +55,7 @@
     <Compile Include="..\common\OrderedCollectionEqualityComparer.cs">
       <Link>OrderedCollectionEqualityComparer.cs</Link>
     </Compile>
+    <Compile Include="CgtToPckTransform.cs" />
     <Compile Include="LL1ParserCodeGenerator.cs" />
     <Compile Include="PckToLexTransform.cs" />
     <Compile Include="PckToYaccTransform.cs" />

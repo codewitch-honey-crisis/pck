@@ -6,7 +6,6 @@ namespace Pck
 {
 	public class XbnfOptionalExpression : XbnfUnaryExpression,IEquatable<XbnfOptionalExpression>
 	{
-		public override bool IsTerminal => false;
 		public XbnfOptionalExpression(XbnfExpression expression) { Expression = expression; }
 		public XbnfOptionalExpression() { }
 		protected override XbnfExpression CloneImpl()

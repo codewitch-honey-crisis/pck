@@ -6,7 +6,6 @@ namespace Pck
 {
 	public class XbnfOrExpression : XbnfBinaryExpression, IEquatable<XbnfOrExpression>
 	{
-		public override bool IsTerminal => false;
 		public XbnfOrExpression(XbnfExpression left, params XbnfExpression[] right)
 		{
 			Left = left;

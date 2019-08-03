@@ -6,14 +6,19 @@ namespace Pck
 {
 	public class LexRule : LexNode, IEquatable<LexRule>, ICloneable
 	{
-		public LexRule(string left,string right)
+		public LexRule(string left,RegexExpression right)
 		{
 			Left = left;
 			Right = right;
 		}
+		public LexRule(string left, string right)
+		{
+			Left = left;
+			Right = RegexExpression.Parse(right);
+		}
 		public LexRule() { }
 		public string Left { get; set; } = null;
-		public string Right { get; set; } = null;
+		public RegexExpression Right { get; set; } = null;
 
 		public override string ToString()
 		{

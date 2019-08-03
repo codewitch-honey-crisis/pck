@@ -15,10 +15,10 @@ namespace Pck
 	/// <remarks>This is a specialialization of <see cref="FA.FA{TInput, TAccept}"/></remarks>
 	public class CharFA<TAccept> : FA<char,TAccept>
 	{
+		static IDictionary<string, IList<CharRange>> _charClasses = _GetCharacterClasses();
 		public CharFA(bool isAccepting, TAccept accept = default(TAccept)) : base(isAccepting,accept) { }
 		public CharFA() : base() { }
 
-		
 		public override string ToString()
 		{
 			var dfa = ToDfa() as CharFA<TAccept>;
@@ -475,22 +475,92 @@ namespace Pck
 			return result;
 		}
 		/// <summary>
-		/// Creates a new FA that will match a repetition of one or more of the specified FA expression
+		/// Creates a new FA that will match a repetition of the specified FA expression
 		/// </summary>
 		/// <param name="expr">The expression to repeat</param>
+		/// <param name="minOccurs">The minimum number of times to repeat or -1 for unspecified (0)</param>
+		/// <param name="maxOccurs">The maximum number of times to repeat or -1 for unspecified (unbounded)</param>
 		/// <param name="accept">The symbol to accept</param>
 		/// <returns>A new FA that matches the specified FA one or more times</returns>
-		public static CharFA<TAccept> Repeat(CharFA<TAccept> expr, TAccept accept = default(TAccept))
+		public static CharFA<TAccept> Repeat(CharFA<TAccept> expr, int minOccurs = -1, int maxOccurs = -1, TAccept accept = default(TAccept))
 		{
-			var result = new CharFA<TAccept>();
-			var final = new CharFA<TAccept>(true, accept);
-			var e = expr.Clone();
-			var afa = e.FirstAcceptingState;
-			afa.IsAccepting = false;
-			afa.EpsilonTransitions.Add(final);
-			afa.EpsilonTransitions.Add(result);
-			result.EpsilonTransitions.Add(e);
-			return result;
+			expr = expr.Clone();
+			if (minOccurs != 0 && maxOccurs != 0 && minOccurs > maxOccurs)
+				throw new ArgumentOutOfRangeException(nameof(maxOccurs));
+			switch (minOccurs)
+			{
+				case 0:
+					switch (maxOccurs)
+					{
+						case 0:
+							var result = new CharFA<TAccept>();
+							var final = new CharFA<TAccept>();
+							final.AcceptSymbol = accept;
+							final.IsAccepting = true;
+							final.EpsilonTransitions.Add(result);
+							foreach (var afa in expr.FillAccepting())
+							{
+								afa.IsAccepting = false;
+								afa.EpsilonTransitions.Add(final);
+							}
+							result.EpsilonTransitions.Add(expr);
+							result.EpsilonTransitions.Add(final);
+							return result;
+						case 1:
+							return Optional(expr, accept);
+						default:
+							var l = new List<CharFA<TAccept>>();
+							expr = Optional(expr);
+							l.Add(expr);
+							for (int i = 1; i < maxOccurs; ++i)
+							{
+								l.Add(expr.Clone());
+							}
+							return Concat(l, accept);
+					}
+				case 1:
+					switch (maxOccurs)
+					{
+						case 0:
+							var result = new CharFA<TAccept>();
+							var final = new CharFA<TAccept>();
+							final.AcceptSymbol = accept;
+							final.EpsilonTransitions.Add(result);
+							foreach (var afa in expr.FillAccepting())
+							{
+								afa.IsAccepting = false;
+								afa.EpsilonTransitions.Add(final);
+							}
+							result.EpsilonTransitions.Add(expr);
+							return result;
+						case 1:
+							return expr;
+						default:
+							return Concat(new CharFA<TAccept>[] { expr, Repeat(expr.Clone(), 0, maxOccurs - 1) },accept);
+					}
+				default:
+					switch (maxOccurs)
+					{
+						case 0:
+							return Concat(new CharFA<TAccept>[] { Repeat(expr, minOccurs, minOccurs, accept), Repeat(expr, 0, 0, accept) },accept);
+						case 1:
+							throw new ArgumentOutOfRangeException(nameof(maxOccurs));
+						default:
+							if (minOccurs == maxOccurs)
+							{
+								var l = new List<CharFA<TAccept>>();
+								l.Add(expr);
+								for (int i = 1; i < minOccurs; ++i)
+									l.Add(expr.Clone());
+								return Concat(l, accept);
+							}
+							return Concat(new CharFA<TAccept>[] { Repeat(expr.Clone(), minOccurs, minOccurs, accept), Repeat(Optional(expr.Clone()), maxOccurs - minOccurs, maxOccurs - minOccurs, accept) },accept);
+
+
+					}
+			}
+			// should never get here
+			throw new NotImplementedException();
 		}
 		/// <summary>
 		/// Creates a new FA that matches the specified FA expression or empty
@@ -506,20 +576,14 @@ namespace Pck
 			result.EpsilonTransitions.Add(f);
 			return result;
 		}
-		/// <summary>
-		/// Creates a new FA that will match a repetition of zero or more of the specified FA expressions
-		/// </summary>
-		/// <param name="expr">The expression to repeat</param>
-		/// <param name="accept">The symbol to accept</param>
-		/// <returns>A new FA that matches the specified FA zero or more times</returns>
-		public static CharFA<TAccept> Kleene(CharFA<TAccept> expr, TAccept accept = default(TAccept))
-		{
-			return Optional(Repeat(expr), accept);
-		}
 
 		protected override FA<char, TAccept> CreateFA(bool isAccepting = false, TAccept accept = default(TAccept))
 		{
 			return new CharFA<TAccept>(isAccepting, accept);
+		}
+		public new CharFA<TAccept> ToDfa()
+		{
+			return base.ToDfa() as CharFA<TAccept>;
 		}
 		public new CharDfaEntry[] ToArray(IList<TAccept> symbolTable = null)
 		{
@@ -583,6 +647,17 @@ namespace Pck
 		public new CharFA<TAccept> Clone()
 		{
 			return base.Clone() as CharFA<TAccept>;
+		}
+		
+		public static IDictionary<string, IList<CharRange>> CharacterClasses
+			=> _charClasses;
+		static IDictionary<string,IList<CharRange>> _GetCharacterClasses()
+		{
+			var result = new Dictionary<string, IList<CharRange>>();
+			result.Add("letter", new List<CharRange>(CharRange.GetRanges(CharUtility.Letter)));
+			result.Add("digit", new List<CharRange>(CharRange.GetRanges(CharUtility.Digit)));
+			return result;
+			
 		}
 		static char _ReadRangeChar(IEnumerator<char> e)
 		{
@@ -672,320 +747,6 @@ namespace Pck
 				return (byte)(hex - 'W'); // 'a'-10
 			throw new ArgumentException("The value was not hex.", "hex");
 		}
-		static int _ParseEscape(ParseContext pc)
-		{
-			if ('\\' != pc.Current)
-				return -1;
-			if (-1 == pc.Advance())
-				return -1;
-			switch (pc.Current)
-			{
-				case 't':
-					pc.Advance();
-					return '\t';
-				case 'n':
-					pc.Advance();
-					return '\n';
-				case 'r':
-					pc.Advance();
-					return '\r';
-				case 'x':
-					if (-1 == pc.Advance())
-						return 'x';
-					byte b = _FromHexChar((char)pc.Current);
-					b <<= 4;
-					if (-1 == pc.Advance())
-						return unchecked((char)b);
-					b |= _FromHexChar((char)pc.Current);
-					return unchecked((char)b);
-				case 'u':
-					if (-1 == pc.Advance())
-						return 'u';
-					ushort u = _FromHexChar((char)pc.Current);
-					u <<= 4;
-					if (-1 == pc.Advance())
-						return unchecked((char)u);
-					u |= _FromHexChar((char)pc.Current);
-					u <<= 4;
-					if (-1 == pc.Advance())
-						return unchecked((char)u);
-					u |= _FromHexChar((char)pc.Current);
-					u <<= 4;
-					if (-1 == pc.Advance())
-						return unchecked((char)u);
-					u |= _FromHexChar((char)pc.Current);
-					return unchecked((char)u);
-				default:
-					int i = pc.Current;
-					pc.Advance();
-					return (char)i;
-			}
-		}
-		static IEnumerable<CharRange> _ParseRanges(IEnumerable<char> charRanges)
-		{
-			using (var e = charRanges.GetEnumerator())
-			{
-				var skipRead = false;
-
-				while (skipRead || e.MoveNext())
-				{
-					skipRead = false;
-					char first = _ReadRangeChar(e);
-					if (e.MoveNext())
-					{
-						if ('-' == e.Current)
-						{
-							if (e.MoveNext())
-								yield return new CharRange(first, _ReadRangeChar(e));
-							else
-								yield return new CharRange('-', '-');
-						}
-						else
-						{
-							yield return new CharRange(first, first);
-							skipRead = true;
-							continue;
-
-						}
-					}
-					else
-					{
-						yield return new CharRange(first, first);
-						yield break;
-					}
-				}
-			}
-			yield break;
-		}
-		static IEnumerable<CharRange> _ParseRanges(IEnumerable<char> charRanges, bool normalize)
-		{
-			if (!normalize)
-				return _ParseRanges(charRanges);
-			else
-			{
-				var result = new List<CharRange>(_ParseRanges(charRanges));
-				CharRange.NormalizeRangeList(result);
-				return result;
-			}
-		}
-		/// <summary>
-		/// Parses a regular expresion from the specified string
-		/// </summary>
-		/// <param name="string">The string</param>
-		/// <param name="accepting">The symbol reported when accepting the specified expression</param>
-		/// <returns>A new machine that matches the regular expression</returns>
-		public static CharFA<TAccept> Parse(IEnumerable<char> @string, TAccept accept = default(TAccept)) => Parse(ParseContext.Create(@string), accept);
-		/// <summary>
-		/// Parses a regular expresion from the specified <see cref="TextReader"/>
-		/// </summary>
-		/// <param name="reader">The text reader</param>
-		/// <param name="accepting">The symbol reported when accepting the specified expression</param>
-		/// <returns>A new machine that matches the regular expression</returns>
-		public static CharFA<TAccept> ReadFrom(TextReader reader, TAccept accept = default(TAccept)) => Parse(ParseContext.Create(reader), accept);
-		internal static CharFA<TAccept> Parse(ParseContext pc, TAccept accept)
-		{
-			CharFA<TAccept> result = new CharFA<TAccept>(true,accept);
-			
-			CharFA<TAccept> f, next;
-			int ch;
-			pc.EnsureStarted();
-			var current = result;
-			while (true)
-			{
-				switch (pc.Current)
-				{
-					case -1:
-						return result;
-					case '.':
-						pc.Advance();
-						f = current.FirstAcceptingState as CharFA<TAccept>;
-
-						current = Set(new CharRange[] { new CharRange(char.MinValue, char.MaxValue) }, accept);
-						switch (pc.Current)
-						{
-							case '*':
-								current = Kleene(current, accept);
-								pc.Advance();
-								break;
-							case '+':
-								current = Repeat(current, accept);
-								pc.Advance();
-								break;
-							case '?':
-								current = Optional(current, accept);
-								pc.Advance();
-								break;
-
-						}
-						f.IsAccepting= false;
-						f.EpsilonTransitions.Add(current);
-						break;
-					case '\\':
-						if (-1 != (ch = _ParseEscape(pc)))
-						{
-							next = null;
-							switch (pc.Current)
-							{
-								case '*':
-									next = new CharFA<TAccept>();
-									next.Transitions.Add((char)ch, new CharFA<TAccept>(true,accept));
-									next = Kleene(next, accept);
-									pc.Advance();
-									break;
-								case '+':
-									next = new CharFA<TAccept>();
-									next.Transitions.Add((char)ch, new CharFA<TAccept>(true,accept));
-									next = Repeat(next, accept);
-									pc.Advance();
-									break;
-								case '?':
-									next = new CharFA<TAccept>();
-									next.Transitions.Add((char)ch, new CharFA<TAccept>(true,accept));
-									next = Optional(next, accept);
-									pc.Advance();
-									break;
-								default:
-									current = current.FirstAcceptingState as CharFA<TAccept>;
-									current.IsAccepting = false;
-									current.Transitions.Add((char)ch, new CharFA<TAccept>(true,accept));
-									break;
-							}
-							if (null != next)
-							{
-								current = current.FirstAcceptingState as CharFA<TAccept>;
-								current.IsAccepting = false;
-								current.EpsilonTransitions.Add(next);
-								current = next;
-							}
-						}
-						else
-						{
-							pc.Expecting(); // throw an error
-							return null; // doesn't execute
-						}
-						break;
-					case ')':
-						return result;
-					case '(':
-						pc.Advance();
-						pc.Expecting();
-						f = current.FirstAcceptingState as CharFA<TAccept>;
-						current = Parse(pc, accept);
-						pc.Expecting(')');
-						pc.Advance();
-						switch (pc.Current)
-						{
-							case '*':
-								current = Kleene(current, accept);
-								pc.Advance();
-								break;
-							case '+':
-								current = Repeat(current, accept);
-								pc.Advance();
-								break;
-							case '?':
-								current = Optional(current, accept);
-								pc.Advance();
-								break;
-						}
-						var ff = f.FirstAcceptingState;
-						ff.EpsilonTransitions.Add(current);
-						ff.IsAccepting = false;
-						break;
-					case '|':
-						if (-1 != pc.Advance())
-						{
-							current = Parse(pc, accept);
-							result = Or(new CharFA<TAccept>[] { result as CharFA<TAccept>, current as CharFA<TAccept>}, accept);
-						}
-						else
-						{
-							current = current.FirstAcceptingState as CharFA<TAccept>;
-							result = Optional(result, accept);
-						}
-						break;
-					case '[':
-						pc.ClearCapture();
-						pc.Advance();
-						pc.Expecting();
-						bool not = false;
-						if ('^' == pc.Current)
-						{
-							not = true;
-							pc.Advance();
-							pc.Expecting();
-						}
-						pc.TryReadUntil(']', '\\', false);
-						pc.Expecting(']');
-						pc.Advance();
-
-						var r = (!not && "." == pc.Capture) ?
-							new CharRange[] { new CharRange(char.MinValue, char.MaxValue) } :
-							_ParseRanges(pc.Capture, true);
-						if (not)
-							r = CharRange.NotRanges(r);
-						f = current.FirstAcceptingState as CharFA<TAccept>;
-						current = Set(r, accept);
-						switch (pc.Current)
-						{
-							case '*':
-								current = Kleene(current, accept);
-								pc.Advance();
-								break;
-							case '+':
-								current = Repeat(current, accept);
-								pc.Advance();
-								break;
-							case '?':
-								current = Optional(current, accept);
-								pc.Advance();
-								break;
-
-						}
-						f.IsAccepting = false;
-						f.EpsilonTransitions.Add(current);
-						break;
-					default:
-						ch = pc.Current;
-						pc.Advance();
-						next = null;
-						switch (pc.Current)
-						{
-							case '*':
-								next = new CharFA<TAccept>();
-								next.Transitions.Add((char)ch, new CharFA<TAccept>(true,accept));
-								next = Kleene(next, accept);
-								pc.Advance();
-								break;
-							case '+':
-								next = new CharFA<TAccept>();
-								next.Transitions.Add((char)ch, new CharFA<TAccept>(true,accept));
-								next = Repeat(next, accept);
-								pc.Advance();
-								break;
-							case '?':
-								next = new CharFA<TAccept>();
-
-								next.Transitions.Add((char)ch, new CharFA<TAccept>(true, accept));
-								next = Optional(next, accept);
-								pc.Advance();
-								break;
-							default:
-								current = current.FirstAcceptingState as CharFA<TAccept>;
-								current.IsAccepting = false;
-								current.Transitions.Add((char)ch, new CharFA<TAccept>(true,accept));
-								break;
-						}
-						if (null != next)
-						{
-							current = current.FirstAcceptingState as CharFA<TAccept>;
-							current.IsAccepting = false;
-							current.EpsilonTransitions.Add(next);
-							current = next;
-						}
-						break;
-				}
-			}
-		}
+		
 	}
 }

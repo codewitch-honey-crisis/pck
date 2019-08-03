@@ -6,7 +6,6 @@ namespace Pck
 {
 	public class XbnfConcatExpression : XbnfBinaryExpression
 	{
-		public override bool IsTerminal => false;
 		public XbnfConcatExpression(XbnfExpression left, params XbnfExpression[] right)
 		{
 			Left = left;

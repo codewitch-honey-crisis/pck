@@ -70,9 +70,11 @@ namespace Pck
 		}
 		public static IEnumerable<char> ExpandRanges(IEnumerable<CharRange> ranges)
 		{
+			var seen = new HashSet<char>();
 			foreach (var range in ranges)
 				foreach (char ch in range)
-					yield return ch;
+					if(seen.Add(ch))
+						yield return ch;
 		}
 		public static IEnumerable<CharRange> NotRanges(IEnumerable<CharRange> ranges)
 		{

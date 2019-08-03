@@ -131,7 +131,7 @@ namespace Pck
 		}
 		public bool HasSingleAcceptingState {
 			get {
-				return 1 == FillAcceptingStates().Count;
+				return 1 == FillAccepting().Count;
 			}
 		}
 		/// <summary>
@@ -236,7 +236,7 @@ namespace Pck
 		object ICloneable.Clone() => Clone();
 		public void Finalize(TAccept accept=default(TAccept))
 		{
-			var asc = FillAcceptingStates();
+			var asc = FillAccepting();
 			var ascc = asc.Count;
 			if (1 == ascc) return; // don't need to do anything
 			var final = CreateFA(true, accept);
@@ -252,7 +252,7 @@ namespace Pck
 		/// </summary>
 		/// <param name="result">The list of accepting states. Will be filled after the call.</param>
 		/// <returns>The resulting list of accepting states. This is the same value as the result parameter, if specified.</returns>
-		public IList<FA<TInput, TAccept>> FillAcceptingStates(IList<FA<TInput, TAccept>> result = null)
+		public IList<FA<TInput, TAccept>> FillAccepting(IList<FA<TInput, TAccept>> result = null)
 			=> FillAcceptingStates(FillClosure(),result);
 		/// <summary>
 		/// Retrieves all the states in this closure that are accepting

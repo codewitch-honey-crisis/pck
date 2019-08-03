@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\common\ParseContext.cs" Link="ParseContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cfg\cfg.csproj" />
+    <ProjectReference Include="..\fa\fa.csproj" />
+    <ProjectReference Include="..\ll1\ll1.csproj" />
+    <ProjectReference Include="..\pck\pck.csproj" />
+    <ProjectReference Include="..\xbnf\xbnf.csproj" />
+  </ItemGroup>
+
+</Project>

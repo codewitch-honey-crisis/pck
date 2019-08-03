@@ -64,13 +64,12 @@ namespace Pck
 					pc.Expecting('\'');
 					pc.Advance();
 					var rx = pc.GetCapture(l);
+					// make sure to capture the line numbers properly:
 					var rpc = ParseContext.Create(rx);
 					rpc.Line = pc.Line;
 					rpc.Column = pc.Column;
 					rpc.Position = pc.Position;
-					// check the regular expression for correctness
-					CharFA<string>.Parse(rpc, id);
-					var rule = new LexRule(id,rx);
+					var rule = new LexRule(id, RegexExpression.Parse(rpc));
 					rule.SetLocationInfo(line, column, position);
 					result.Rules.Add(rule);
 				}
@@ -122,7 +121,7 @@ namespace Pck
 			for(int ic=Rules.Count,i=0;i<ic;++i)
 			{
 				var rule = Rules[i];
-				result.EpsilonTransitions.Add(CharFA<string>.Parse(rule.Right, rule.Left));
+				result.EpsilonTransitions.Add(rule.Right.ToFA(rule.Left));
 			}
 			return result.ToDfa() as CharFA<string>;
 		}
