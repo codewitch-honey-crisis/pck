@@ -298,7 +298,6 @@ namespace Pck
 		public bool IsDuplicate(FA<TInput,TAccept> rhs)
 		{
 			return null != rhs && IsAccepting==rhs.IsAccepting &&
-				(!IsAccepting || Equals(AcceptSymbol,rhs.AcceptSymbol)) &&
 				_SetComparer.Default.Equals(EpsilonTransitions, rhs.EpsilonTransitions) &&
 				_SetComparer.Default.Equals((IDictionary<FA<TInput,TAccept>, ICollection<TInput>>)Transitions, (IDictionary<FA<TInput,TAccept>, ICollection<TInput>>)rhs.Transitions);
 		}
@@ -379,7 +378,7 @@ namespace Pck
 							{
 								var inps = td[repl.Key];
 								td.Remove(repl.Key);
-								td.Add(repl.Key, inps);
+								td.Add(repl.Value, inps);
 							}
 
 							int lc = s.EpsilonTransitions.Count;
@@ -1062,11 +1061,18 @@ namespace Pck
 					return false;
 				if (lhs.Count != rhs.Count)
 					return false;
-				using (var xe = lhs.GetEnumerator())
-				using (var ye = rhs.GetEnumerator())
-					while (xe.MoveNext() && ye.MoveNext())
-						if (!rhs.Contains(xe.Current) || !lhs.Contains(ye.Current))
-							return false;
+				foreach(var trns in lhs)
+				{
+					ICollection<TInput> col;
+					if (!rhs.TryGetValue(trns.Key, out col))
+						return false;
+					using (var xe = trns.Value.GetEnumerator())
+					using (var ye = col.GetEnumerator())
+						while (xe.MoveNext() && ye.MoveNext())
+							if (!col.Contains(xe.Current) || !trns.Value.Contains(ye.Current))
+								return false;
+				}
+				
 				return true;
 			}
 			public static bool _EqualsInput(ICollection<TInput> lhs, ICollection<TInput> rhs)

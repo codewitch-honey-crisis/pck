@@ -582,6 +582,10 @@ namespace Pck
 		{
 			return new CharFA<TAccept>(isAccepting, accept);
 		}
+		public new CharFA<TAccept> Reduce()
+		{
+			return base.Reduce() as CharFA<TAccept>;
+		}
 		public new CharFA<TAccept> ToDfa()
 		{
 			return base.ToDfa() as CharFA<TAccept>;
