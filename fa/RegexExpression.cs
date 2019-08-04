@@ -365,6 +365,7 @@ namespace Pck
 				case '}':
 				case '?':
 				case '*':
+				case '+':
 				case '$':
 				case '^':
 				case '\\':
@@ -427,6 +428,7 @@ namespace Pck
 				case '}':
 				case '?':
 				case '*':
+				case '+':
 				case '$':
 				case '^':
 				case '\\':
@@ -477,6 +479,7 @@ namespace Pck
 				case '}':
 				case '?':
 				case '*':
+				case '+':
 				case '$':
 				case '^':
 				case '-':
@@ -539,6 +542,7 @@ namespace Pck
 				case '}':
 				case '?':
 				case '*':
+				case '+':
 				case '$':
 				case '^':
 				case '-':

@@ -26,46 +26,10 @@ class Program
 		//return;
 		for(int i = 0;i<_tests.Length;++i)
 		{
-		//	Console.WriteLine("Testing {1} {0}", _tests[i],i+1);
-			//Console.WriteLine(RegexExpression.Parse(_tests[i]));
+			Console.WriteLine("Testing {1} {0}", _tests[i],i+1);
+			Console.WriteLine(RegexExpression.Parse(_tests[i]));
 		}
-
-		var pckspec = @"..\..\..\xbnf.ll1.pck";
-		var input = @"..\..\..\xbnf.xbnf";
-		string pck;
-		using (var sr = File.OpenText(pckspec))
-			pck = sr.ReadToEnd();
-
-		var cfg = CfgDocument.Parse(pck);
-		var lex = LexDocument.Parse(pck);
-		var lexer = lex.ToLexer();
-		var ii = 0;
-		var syms = new List<string>();
-		cfg.FillSymbols(syms);
-		var bes = new string[syms.Count];
-		for (ii = 0; ii < bes.Length; ii++)
-			bes[ii] = lex.GetAttribute(syms[ii], "blockEnd", null) as string;
-		var dfaTable = lexer.ToArray(syms);
-		var tt = new List<string>();
-		for (int ic = lex.Rules.Count, i = 0; i < ic; ++i)
-		{
-			var t = lex.Rules[i].Left;
-			if (!tt.Contains(t))
-				tt.Add(t);
-		}
-		tt.Add("#EOS");
-		tt.Add("#ERROR");
-		for (int ic = syms.Count, i = 0; i < ic; ++i)
-		{
-			if (!tt.Contains(syms[i]))
-				syms[i] = null;
-		}
-		var tokenizer = new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, new FileReaderEnumerable(input));
-		var parser = cfg.ToParser(tokenizer);
-		while(LL1ParserNodeType.EndDocument!=parser.NodeType)
-		{
-			Console.WriteLine(parser.ParseSubtree());
-		}
+		
 		return;
 	}		
 }
