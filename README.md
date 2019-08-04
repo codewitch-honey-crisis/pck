@@ -25,7 +25,6 @@ pckw fagen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namespa
 
   Generates an FA tokenizer/lexer in the specified .NET language.
 
-
 pckw ll1gen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namespace>] [/language <language>]
 
   <specfile>    The pck specification file to use (or stdin)
@@ -35,7 +34,6 @@ pckw ll1gen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namesp
   <language>    The .NET language to generate the code for (or draw from filename or C#)
 
   Generates an LL(1) parser in the specified .NET language.
-
 
 pckw ll1 [<specfile> [<outputfile>]]
 
