@@ -338,7 +338,7 @@ namespace Pck
 		/// </summary>
 		/// <param name="result">The predict table</param>
 		/// <returns>The result</returns>
-		public IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> FillPredict(IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> result = null)
+		IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> _FillPredict2(IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> result = null)
 		{
 			if (null == result)
 				result = new Dictionary<string, ICollection<(CfgRule Rule, string Symbol)>>();
@@ -373,6 +373,29 @@ namespace Pck
 			}
 			return result;
 		}
+		public IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> FillPredict(IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> result = null)
+		{
+			if (null == result)
+				result = new Dictionary<string, ICollection<(CfgRule Rule, string Symbol)>>();
+			var predictNT = _FillPredictNT();
+			
+			// finally, for each non-terminal N we still have in the firsts, resolve FIRSTS(N)
+			foreach (var kvp in predictNT)
+			{
+				var col = new HashSet<(CfgRule Rule, string Symbol)>();
+				foreach (var item in kvp.Value)
+				{
+					var res = new List<string>();
+					_ResolvePredict(item.Symbol, res, predictNT, new HashSet<string>());
+					foreach (var r in res)
+						col.Add((item.Rule, r));
+					
+				}
+				result.Add(kvp.Key, col);
+			}
+			return result;
+		}
+
 		void _ResolvePredict(string symbol,ICollection<string> result,IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> predictNT,HashSet<string> seen)
 		{
 			if (seen.Add(symbol))
@@ -392,6 +415,8 @@ namespace Pck
 						}
 					}
 				}
+				else if (!result.Contains(null))
+					result.Add(null);
 			}
 		}
 		public IDictionary<string, ICollection<string>> FillFollows(IDictionary<string, ICollection<string>> result = null)

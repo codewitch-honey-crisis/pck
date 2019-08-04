@@ -7,7 +7,7 @@ namespace Pck
 {
 	partial class Program
 	{
-		static int _Tree(string[] args)
+		static int _LL1Tree(string[] args)
 		{
 			if (1> args.Length || args.Length>2)
 			{

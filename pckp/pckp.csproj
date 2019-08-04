@@ -25,7 +25,7 @@
     <Compile Include="..\pckw\Program.fagen.cs" Link="Program.fagen.cs" />
     <Compile Include="..\pckw\Program.Ll1.cs" Link="Program.Ll1.cs" />
     <Compile Include="..\pckw\Program.Ll1gen.cs" Link="Program.Ll1gen.cs" />
-    <Compile Include="..\pckw\Program.Tree.cs" Link="Program.Tree.cs" />
+    <Compile Include="..\pckw\Program.LL1Tree.cs" Link="Program.LL1Tree.cs" />
     <Compile Include="..\pckw\Program.Xlt.cs" Link="Program.Xlt.cs" />
     <Compile Include="..\pckw\TokenizerCodeGenerator.cs" Link="TokenizerCodeGenerator.cs" />
     <Compile Include="..\pckw\XbnfToPckTransform.cs" Link="XbnfToPckTransform.cs" />

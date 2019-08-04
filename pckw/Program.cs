@@ -53,7 +53,7 @@ namespace Pck
 		static void _PrintUsageTree()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
-			Console.Error.WriteLine("tree <grammarfile> <inputfile>");
+			Console.Error.WriteLine("ll1tree <grammarfile> <inputfile>");
 			Console.Error.WriteLine();
 			Console.Error.WriteLine("  <grammarfile>\tThe grammar file to use");
 			Console.Error.WriteLine("  <inputfile>\tThe file to parse");
@@ -126,8 +126,8 @@ namespace Pck
 					return _Ll1(sargs);
 				case "xlt":
 					return _Xlt(sargs);
-				case "tree":
-					return _Tree(sargs);
+				case "ll1tree":
+					return _LL1Tree(sargs);
 				default:
 					_PrintUsage();
 					return 1;

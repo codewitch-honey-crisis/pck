@@ -20,15 +20,7 @@ class Program
 
 	static void Main(string[] args)
 	{
-		//var exp = RegexExpression.Parse(_tests[4]);
-		//var str = exp.ToString();
-		//Console.WriteLine(str);
-		//return;
-		for(int i = 0;i<_tests.Length;++i)
-		{
-			Console.WriteLine("Testing {1} {0}", _tests[i],i+1);
-			Console.WriteLine(RegexExpression.Parse(_tests[i]));
-		}
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.ll1.pck");
 		
 		return;
 	}		
