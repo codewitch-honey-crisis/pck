@@ -45,10 +45,12 @@ pckw ll1 [<specfile> [<outputfile>]]
   Factors a pck grammar spec so that it can be used with an LL(1) parser.
 
 
-pckw ll1tree <grammarfile> <inputfile>
+pckw ll1tree <specfile> [<inputfile>]
 
-  <grammarfile> The grammar file to use
-  <inputfile>   The file to parse
+  <specfile>    The pck specification file to use
+  <inputfile>   The file to parse (or stdin)
+
+  Prints a tree from the specified input file using the specified pck specification file.
 
 pckw xlt [<inputfile> [<outputfile>]] [/transform <transform>] [/assembly <assembly>]
 
