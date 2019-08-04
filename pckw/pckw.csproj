@@ -63,6 +63,7 @@
     <Compile Include="Program.Fagen.cs" />
     <Compile Include="Program.Ll1gen.cs" />
     <Compile Include="Program.Ll1.cs" />
+    <Compile Include="Program.Tree.cs" />
     <Compile Include="Program.Xlt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TokenizerCodeGenerator.cs" />

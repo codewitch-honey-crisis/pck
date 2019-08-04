@@ -9,6 +9,7 @@ namespace Pck
 {
 	public sealed class FileReaderEnumerable : TextReaderEnumerable
 	{
+		protected override bool CanCreateReader => true;
 		readonly string _filename;
 		public FileReaderEnumerable(string filename)
 		{
@@ -21,8 +22,20 @@ namespace Pck
 			return File.OpenText(_filename);
 		}
 	}
+	public sealed class ConsoleReaderEnumerable : TextReaderEnumerable
+	{
+		protected override bool CanCreateReader => false;
+		public ConsoleReaderEnumerable()
+		{
+		}
+		protected override TextReader CreateTextReader()
+		{
+			return Console.In;
+		}
+	}
 	public sealed class UrlReaderEnumerable : TextReaderEnumerable
 	{
+		protected override bool CanCreateReader => true;
 		readonly string _url;
 		public UrlReaderEnumerable(string url)
 		{
@@ -43,7 +56,7 @@ namespace Pck
 		{
 			return new TextReaderEnumerator(this);
 		}
-
+		protected abstract bool CanCreateReader { get; }
 		protected abstract TextReader CreateTextReader();
 
 		IEnumerator IEnumerable.GetEnumerator()
@@ -54,7 +67,18 @@ namespace Pck
 			TextReader _reader;
 			int _state;
 			char _current;
-			internal TextReaderEnumerator(TextReaderEnumerable outer) { _outer = outer;_reader = null; Reset(); }
+			internal TextReaderEnumerator(TextReaderEnumerable outer)
+			{
+				_outer = outer;
+				_reader = null;
+				if (_outer.CanCreateReader)
+					Reset();
+				else
+				{
+					_state = -1;
+					_reader = _outer.CreateTextReader(); // doesn't really recreate it
+				}
+			}
 
 			public char Current 
 			{
@@ -139,6 +163,8 @@ namespace Pck
 					}
 				}
 				catch (IOException) { }
+				if (!_outer.CanCreateReader)
+					throw new NotSupportedException();
 				_Dispose(true);
 				_reader = _outer.CreateTextReader();
 				_state = -1;

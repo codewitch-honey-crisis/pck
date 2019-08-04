@@ -1,6 +1,7 @@
 ﻿using Pck;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using CharFA = Pck.CharFA<string>;
 class Program
 {
@@ -31,9 +32,12 @@ class Program
 
 		var pckspec = @"..\..\..\xbnf.ll1.pck";
 		var input = @"..\..\..\xbnf.xbnf";
-;
-		var cfg = CfgDocument.ReadFrom(pckspec);
-		var lex = LexDocument.ReadFrom(pckspec);
+		string pck;
+		using (var sr = File.OpenText(pckspec))
+			pck = sr.ReadToEnd();
+
+		var cfg = CfgDocument.Parse(pck);
+		var lex = LexDocument.Parse(pck);
 		var lexer = lex.ToLexer();
 		var ii = 0;
 		var syms = new List<string>();
@@ -58,9 +62,9 @@ class Program
 		}
 		var tokenizer = new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, new FileReaderEnumerable(input));
 		var parser = cfg.ToParser(tokenizer);
-		while(parser.Read())
+		while(LL1ParserNodeType.EndDocument!=parser.NodeType)
 		{
-			Console.WriteLine(parser.NodeType);
+			Console.WriteLine(parser.ParseSubtree());
 		}
 		return;
 	}		

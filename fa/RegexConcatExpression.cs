@@ -36,9 +36,11 @@ namespace Pck
 		public RegexConcatExpression() { }
 		public override CharFA<TAccept> ToFA<TAccept>(TAccept accept)
 		{
-			var left = (null != Left) ? Left.ToFA(accept):null;
-			var right = (null != Right) ? Right.ToFA(accept) : null;
-			return CharFA<TAccept>.Concat(new CharFA<TAccept>[] { left, right }, accept);
+			if (null == Left)
+				return (null != Right) ? Right.ToFA(accept) : null;
+			else if (null == Right)
+				return Left.ToFA(accept);
+			return CharFA<TAccept>.Concat(new CharFA<TAccept>[] { Left.ToFA(accept), Right.ToFA(accept) }, accept);
 		}
 		protected override RegexExpression CloneImpl()
 			=> Clone();

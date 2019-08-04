@@ -50,6 +50,15 @@ namespace Pck
 			Console.Error.WriteLine();
 			Console.Error.WriteLine();
 		}
+		static void _PrintUsageTree()
+		{
+			Console.Error.Write(string.Concat(_name, " "));
+			Console.Error.WriteLine("tree <grammarfile> <inputfile>");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine("  <grammarfile>\tThe grammar file to use");
+			Console.Error.WriteLine("  <inputfile>\tThe file to parse");
+			Console.Error.WriteLine();
+		}
 		static void _PrintUsageXlt()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
@@ -75,6 +84,7 @@ namespace Pck
 			
 			Console.Error.WriteLine();
 		}
+		
 		static void _PrintUsage()
 		{
 			Console.Error.WriteLine(string.Concat("Usage: ",_name," <command> [<arguments>]"));
@@ -84,7 +94,9 @@ namespace Pck
 			_PrintUsageFagen();
 			_PrintUsageLl1gen();
 			_PrintUsageLl1();
+			_PrintUsageTree();
 			_PrintUsageXlt();
+			
 			Console.Error.WriteLine();
 		}
 		#endregion
@@ -114,6 +126,8 @@ namespace Pck
 					return _Ll1(sargs);
 				case "xlt":
 					return _Xlt(sargs);
+				case "tree":
+					return _Tree(sargs);
 				default:
 					_PrintUsage();
 					return 1;
