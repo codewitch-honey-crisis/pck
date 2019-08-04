@@ -38,6 +38,17 @@ namespace Pck
 		public override bool IsSingleElement => true;
 		protected internal override void AppendTo(StringBuilder sb)
 		{
+			// special case for "."
+			if(!HasNegatedRanges && 1==Entries.Count)
+			{
+				var e = Entries[0] as RegexCharsetRangeEntry;
+				if(null!=e && e.First==char.MinValue && e.Last==char.MaxValue)
+				{
+					sb.Append(".");
+					return;
+				}
+				
+			}
 			sb.Append('[');
 			if (HasNegatedRanges)
 				sb.Append('^');
