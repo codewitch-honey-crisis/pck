@@ -304,7 +304,7 @@ namespace Pck
 				do
 				{
 					s = _tokenEnum.Current.SymbolId;
-					Console.Error.WriteLine(_tokenEnum.Current.Value);
+					//Console.Error.WriteLine(_tokenEnum.Current.Value);
 					_errorToken.Value += _tokenEnum.Current.Value;
 					if (!_tokenEnum.MoveNext())
 						break;

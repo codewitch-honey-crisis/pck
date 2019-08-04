@@ -58,9 +58,9 @@ class Program
 		}
 		var tokenizer = new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, new FileReaderEnumerable(input));
 		var parser = cfg.ToParser(tokenizer);
-		foreach(var tok in tokenizer)
+		while(parser.Read())
 		{
-			Console.WriteLine("{0}: {1}", tok.Symbol, tok.Value);
+			Console.WriteLine(parser.NodeType);
 		}
 		return;
 	}		

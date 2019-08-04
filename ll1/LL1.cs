@@ -38,7 +38,9 @@ namespace Pck
 				else
 					attrSets[i] = null;// new KeyValuePair<string, object>[0];
 			}
-			var initCfg = new int[] { cfg.GetIdOfSymbol(cfg.StartSymbol), cfg.FillNonTerminals().Count };
+			var ss = cfg.GetIdOfSymbol(cfg.StartSymbol);
+			var ntc = cfg.FillNonTerminals().Count;
+			var initCfg = new int[] { ss, ntc};
 			return new LL1TableParser(parseTable.ToArray(syms), initCfg, syms.ToArray(), nodeFlags, attrSets, tokenizer);
 
 		}

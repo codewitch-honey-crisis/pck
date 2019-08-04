@@ -81,7 +81,7 @@ namespace Pck
 			for (var i = 0; i < ic; ++i)
 			{
 				var s = Rules[i].Left;
-				if (result.Contains(s))
+				if (!result.Contains(s))
 					result.Add(s);
 			}
 			return result;
@@ -342,29 +342,35 @@ namespace Pck
 		{
 			if (null == result)
 				result = new Dictionary<string, ICollection<(CfgRule Rule, string Symbol)>>();
-			var pnt=_FillPredictNT();
-
-			// finally, for each non-terminal N we still have in the firsts, resolve FIRSTS(N)
-			var done = false;
-			while (!done)
+			_FillPredictNT(result);
+			try
 			{
-				done = true;
-				foreach (var kvp in pnt)
+
+
+				// finally, for each non-terminal N we still have in the firsts, resolve FIRSTS(N)
+				var done = false;
+				while (!done)
 				{
-					var col = new HashSet<(CfgRule Rule, string Symbol)>();
-					result.Add(kvp.Key, col);
-					foreach (var item in new List<(CfgRule Rule, string Symbol)>(kvp.Value))
+					done = true;
+					foreach (var kvp in result)
 					{
-						var syms = new List<string>();
-						_ResolvePredict(item.Symbol, syms, pnt, new HashSet<string>());
-						foreach(var sym in syms)
-							col.Add((item.Rule, sym));
-						
+						foreach (var item in new List<(CfgRule Rule, string Symbol)>(kvp.Value))
+						{
+							if (IsNonTerminal(item.Symbol))
+							{
+								done = false;
+								kvp.Value.Remove(item);
+								foreach (var f in result[item.Symbol])
+									kvp.Value.Add((item.Rule, f.Symbol));
+							}
+						}
 					}
 				}
 			}
-			
-
+			catch (InvalidOperationException)
+			{
+				throw new CfgException("This operation cannot be performed because the grammar is left recursive.");
+			}
 			return result;
 		}
 		void _ResolvePredict(string symbol,ICollection<string> result,IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> predictNT,HashSet<string> seen)
