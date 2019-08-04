@@ -38,17 +38,16 @@ namespace Pck
 			}
 			tt.Add("#EOS");
 			tt.Add("#ERROR");
+
 			for (int ic = syms.Count, i = 0; i < ic; ++i)
-			{
 				if (!tt.Contains(syms[i]))
 					syms[i] = null;
-			}
-			var tokenizer = new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, (args.Length>1)?(TextReaderEnumerable)new FileReaderEnumerable(args[1]):new ConsoleReaderEnumerable());
+
+			var tokenizer = new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, (1<args.Length)?(TextReaderEnumerable)new FileReaderEnumerable(args[1]):new ConsoleReaderEnumerable());
 			var parser = cfg.ToLL1Parser(tokenizer);
-			while (LL1ParserNodeType.EndDocument != parser.NodeType)
-			{
+			while (LLNodeType.EndDocument != parser.NodeType)
 				Console.WriteLine(parser.ParseSubtree());
-			}
+			
 			return 1;
 		}
 	}

@@ -7,7 +7,7 @@ namespace Pck
 	/// <summary>
 	/// An enumeration indicating the node types of the parser
 	/// </summary>
-	public enum LL1ParserNodeType
+	public enum LLNodeType
 	{
 		/// <summary>
 		/// Indicates the initial state.
@@ -38,7 +38,7 @@ namespace Pck
 	{
 		public bool ShowHidden { get; set; } = false;
 		public bool ShowCollapsed { get; set; } = false;
-		public abstract LL1ParserNodeType NodeType { get; }
+		public abstract LLNodeType NodeType { get; }
 		public abstract string Symbol { get; }
 		public abstract int SymbolId { get; }
 		public abstract string Value { get; }
@@ -64,13 +64,13 @@ namespace Pck
 			if (!Read())
 				return null;
 			var nn = NodeType;
-			if (LL1ParserNodeType.EndNonTerminal == nn)
+			if (LLNodeType.EndNonTerminal == nn)
 				return null;
 
 			var result = new ParseNode();
 			result.IsHidden = IsHidden;
 			result.IsCollapsed = IsCollapsed;
-			if (LL1ParserNodeType.NonTerminal == nn)
+			if (LLNodeType.NonTerminal == nn)
 			{
 				result.Symbol = Symbol;
 				result.SymbolId = SymbolId;
@@ -88,7 +88,7 @@ namespace Pck
 
 				return result;
 			}
-			else if (LL1ParserNodeType.Terminal == nn)
+			else if (LLNodeType.Terminal == nn)
 			{
 				result.SetLocationInfo(Line, Column, Position);
 				result.Symbol = Symbol;
@@ -96,7 +96,7 @@ namespace Pck
 				result.Value = Value;
 				return result;
 			}
-			else if (LL1ParserNodeType.Error == nn)
+			else if (LLNodeType.Error == nn)
 			{
 				result.SetLocationInfo(Line, Column, Position);
 				result.Symbol = Symbol;

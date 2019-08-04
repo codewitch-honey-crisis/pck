@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pck
 {
-	public enum Lalr1ParserNodeType
+	public enum LRNodeType
 	{
 		Initial = -1,
 		Shift = 0,

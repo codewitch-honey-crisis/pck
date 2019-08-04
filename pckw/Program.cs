@@ -36,7 +36,6 @@ namespace Pck
 			Console.Error.WriteLine();
 			Console.Error.WriteLine("  Generates an LL(1) parser in the specified .NET language.");
 			Console.Error.WriteLine();
-			Console.Error.WriteLine();
 		}
 		static void _PrintUsageLl1()
 		{
@@ -48,15 +47,16 @@ namespace Pck
 			Console.Error.WriteLine();
 			Console.Error.WriteLine("  Factors a pck grammar spec so that it can be used with an LL(1) parser.");
 			Console.Error.WriteLine();
-			Console.Error.WriteLine();
 		}
 		static void _PrintUsageTree()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
-			Console.Error.WriteLine("ll1tree <grammarfile> <inputfile>");
+			Console.Error.WriteLine("ll1tree <specfile> [<inputfile>]");
 			Console.Error.WriteLine();
-			Console.Error.WriteLine("  <grammarfile>\tThe grammar file to use");
-			Console.Error.WriteLine("  <inputfile>\tThe file to parse");
+			Console.Error.WriteLine("  <specfile>\tThe pck specification file to use");
+			Console.Error.WriteLine("  <inputfile>\tThe file to parse (or stdin)");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine("  Prints a tree from the specified input file using the specified pck specification file.");
 			Console.Error.WriteLine();
 		}
 		static void _PrintUsageXlt()

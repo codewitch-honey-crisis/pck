@@ -12,7 +12,7 @@ namespace Pck
 		HashSet<string> _hiddenTerminals;
 		Stack<int> _stack = new Stack<int>();
 
-		Lalr1ParserNodeType _nodeType;
+		LRNodeType _nodeType;
 		int _ruleId;
 		string[] _ruleDef;
 
@@ -29,7 +29,7 @@ namespace Pck
 		}
 		public string Symbol {
 			get {
-				if (Lalr1ParserNodeType.Shift == _nodeType)
+				if (LRNodeType.Shift == _nodeType)
 					return _token.Symbol;
 				return null;
 			}
@@ -55,26 +55,26 @@ namespace Pck
 		{
 			_tokenEnum.Reset();
 			_stack.Clear();
-			_nodeType = Lalr1ParserNodeType.Initial;
+			_nodeType = LRNodeType.Initial;
 		}
 		public void Restart(IEnumerable<Token> tokenizer)
 		{
 			Close();
 			_stack.Clear();
 			_tokenEnum = tokenizer.GetEnumerator();
-			_nodeType = Lalr1ParserNodeType.Initial;
+			_nodeType = LRNodeType.Initial;
 		}
-		public Lalr1ParserNodeType NodeType => _nodeType;
+		public LRNodeType NodeType => _nodeType;
 		public int RuleId {
 			get {
-				if (Lalr1ParserNodeType.Reduce == _nodeType)
+				if (LRNodeType.Reduce == _nodeType)
 					return _ruleId;
 				return -1;
 			}
 		}
 		public string Rule {
 			get {
-				if (Lalr1ParserNodeType.Reduce == _nodeType)
+				if (LRNodeType.Reduce == _nodeType)
 				{
 					var sb = new StringBuilder();
 					sb.Append(_ruleDef[0]);
@@ -91,7 +91,7 @@ namespace Pck
 		}
 		public string[] RuleDefinition {
 			get {
-				if (Lalr1ParserNodeType.Reduce == _nodeType)
+				if (LRNodeType.Reduce == _nodeType)
 				{
 					return _ruleDef;
 				}
@@ -112,9 +112,9 @@ namespace Pck
 		}
 		public bool Read()
 		{
-			if (Lalr1ParserNodeType.EndDocument == _nodeType)
+			if (LRNodeType.EndDocument == _nodeType)
 				return false;
-			if (0 == _stack.Count && Lalr1ParserNodeType.Initial == _nodeType)
+			if (0 == _stack.Count && LRNodeType.Initial == _nodeType)
 			{
 				// state 0 is our start state
 				_stack.Push(0);
@@ -123,7 +123,7 @@ namespace Pck
 			}
 			else if ("#EOS" == _tokenEnum.Current.Symbol && 0 == _stack.Count)
 			{
-				_nodeType = Lalr1ParserNodeType.EndDocument;
+				_nodeType = LRNodeType.EndDocument;
 				return true;
 			}
 			var entry = _parseTable[_stack.Peek()];
@@ -134,7 +134,7 @@ namespace Pck
 				{
 					if (-1 != trns.RuleOrStateId) // shift
 					{
-						_nodeType = Lalr1ParserNodeType.Shift;
+						_nodeType = LRNodeType.Shift;
 						_token = _tokenEnum.Current;
 						while (_tokenEnum.MoveNext() && _hiddenTerminals.Contains(_tokenEnum.Current.Symbol)) ;
 						_stack.Push(trns.RuleOrStateId);
@@ -149,7 +149,7 @@ namespace Pck
 							return true;
 						}
 
-						_nodeType = Lalr1ParserNodeType.Accept;
+						_nodeType = LRNodeType.Accept;
 						_stack.Clear();
 						return true;
 					}
@@ -171,7 +171,7 @@ namespace Pck
 					// the next input token in the GOTO table (and place 
 					// the matching state at the top of the set stack).
 					_stack.Push(_parseTable[_stack.Peek()][trns.Left].RuleOrStateId);
-					_nodeType = Lalr1ParserNodeType.Reduce;
+					_nodeType = LRNodeType.Reduce;
 					return true;
 				}
 			}
@@ -191,14 +191,14 @@ namespace Pck
 			{
 				switch (NodeType)
 				{
-					case Lalr1ParserNodeType.Shift:
+					case LRNodeType.Shift:
 						p = new ParseNode();
 						//p.SetLocationInfo(Line, Column, Position);
 						p.Symbol = Symbol;
 						p.Value = Value;
 						rs.Push(p);
 						break;
-					case Lalr1ParserNodeType.Reduce:
+					case LRNodeType.Reduce:
 						var d = new List<ParseNode>();
 						p = new ParseNode();
 						p.Symbol = RuleDefinition[0];

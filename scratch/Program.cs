@@ -24,7 +24,7 @@ class Program
 		var tokenizer = new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"));
 		var pt = cfg.ToLalrParseTable();
 		var parser = new DebugLalrParser(cfg, tokenizer, pt);
-		while(Lalr1ParserNodeType.EndDocument!=parser.NodeType)
+		while(LRNodeType.EndDocument!=parser.NodeType)
 		{
 			Console.WriteLine(parser.ParseReductions());
 		}

@@ -42,28 +42,28 @@ namespace Pck
 			return @default;
 		}
 		/// <summary>
-		/// Indicates the <see cref="LL1ParserNodeType"/> at the current position.
+		/// Indicates the <see cref="LLNodeType"/> at the current position.
 		/// </summary>
-		public override LL1ParserNodeType NodeType {
+		public override LLNodeType NodeType {
 			get {
 				if (null != _errorToken.Symbol)
-					return LL1ParserNodeType.Error;
+					return LLNodeType.Error;
 				if (_stack.Count > 0)
 				{
 					var s = _stack.Peek();
 					if (0>s)
-						return LL1ParserNodeType.EndNonTerminal;
+						return LLNodeType.EndNonTerminal;
 					if (s == _tokenEnum.Current.SymbolId)
-						return LL1ParserNodeType.Terminal;
-					return LL1ParserNodeType.NonTerminal;
+						return LLNodeType.Terminal;
+					return LLNodeType.NonTerminal;
 				}
 				try
 				{
 					if (_eosSymbolId== _tokenEnum.Current.SymbolId)
-						return LL1ParserNodeType.EndDocument;
+						return LLNodeType.EndDocument;
 				}
 				catch { }
-				return LL1ParserNodeType.Initial;
+				return LLNodeType.Initial;
 			}
 		}
 		public override void Restart(IEnumerable<Token> tokenizer)
@@ -124,9 +124,9 @@ namespace Pck
 			get {
 				switch (NodeType)
 				{
-					case LL1ParserNodeType.Error:
+					case LLNodeType.Error:
 						return _errorToken.Value;
-					case LL1ParserNodeType.Terminal:
+					case LLNodeType.Terminal:
 						return _tokenEnum.Current.Value;
 				}
 				return null;
@@ -191,13 +191,13 @@ namespace Pck
 		bool _ReadImpl()
 		{
 			var n = NodeType;
-			if (LL1ParserNodeType.Error == n && _eosSymbolId == _tokenEnum.Current.SymbolId)
+			if (LLNodeType.Error == n && _eosSymbolId == _tokenEnum.Current.SymbolId)
 			{
 				_errorToken.Symbol = null;
 				_stack.Clear();
 				return true;
 			}
-			if (LL1ParserNodeType.Initial == n)
+			if (LLNodeType.Initial == n)
 			{
 				_stack.Push(_initCfg[0]);
 
