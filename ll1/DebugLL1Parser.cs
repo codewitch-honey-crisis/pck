@@ -121,7 +121,7 @@ namespace Pck
 		{
 			_cfg = cfg;
 			_PopulateAttrs();
-			_parseTable = cfg.ToParseTable();
+			_parseTable = cfg.ToLL1ParseTable();
 			_stack = new Stack<string>();
 			_errorToken.Symbol = null;
 			Restart(tokenizer);

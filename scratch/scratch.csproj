@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\cfg\cfg.csproj" />
     <ProjectReference Include="..\fa\fa.csproj" />
+    <ProjectReference Include="..\lalr1\lalr1.csproj" />
     <ProjectReference Include="..\ll1\ll1.csproj" />
     <ProjectReference Include="..\pck\pck.csproj" />
     <ProjectReference Include="..\xbnf\xbnf.csproj" />

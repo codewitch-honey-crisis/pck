@@ -25,7 +25,7 @@ namespace Pck
 				sm.Add(sym, ii);
 				++ii;
 			}
-			var pt = cfg.ToParseTable();
+			var pt = cfg.ToLL1ParseTable();
 			var ipt = pt.ToArray(syms);
 			var nodeFlags = new int[syms.Count];
 			for (var i = 0; i < nodeFlags.Length; ++i)

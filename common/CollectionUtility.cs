@@ -576,11 +576,7 @@ namespace Pck
 			var al = new ArrayList(source);
 			return al.ToArray(elementType);
 		}
-		public static object[] ToArray(this ICollection source)
-		{
-			var al = new ArrayList(source);
-			return al.ToArray();
-		}
+		
 		public static Array ToArray(this IEnumerable source, Type elementType)
 		{
 			var al = new ArrayList();

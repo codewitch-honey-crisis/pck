@@ -7,19 +7,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fa", "fa\fa.csproj", "{01EB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fagui", "fagui\fagui.csproj", "{32AE975E-116C-4917-A5C2-A3D0C81906C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xbnf", "xbnf\xbnf.csproj", "{55F898F9-CA82-493D-89C1-FE2E32467857}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xbnf", "xbnf\xbnf.csproj", "{55F898F9-CA82-493D-89C1-FE2E32467857}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cfg", "cfg\cfg.csproj", "{DD197B16-7507-4F33-A5E5-1AD439F056ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cfg", "cfg\cfg.csproj", "{DD197B16-7507-4F33-A5E5-1AD439F056ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ll1", "ll1\ll1.csproj", "{D01CA3EE-0667-46DC-AD10-578CDAEC18A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ll1", "ll1\ll1.csproj", "{D01CA3EE-0667-46DC-AD10-578CDAEC18A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pck", "pck\pck.csproj", "{F89B9AF2-D7B1-48BD-9A54-6AD4C1B07511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pck", "pck\pck.csproj", "{F89B9AF2-D7B1-48BD-9A54-6AD4C1B07511}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckw", "pckw\pckw.csproj", "{21C04D7C-C4CE-4B64-A08D-2559DA9FC2D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckp", "pckp\pckp.csproj", "{BBA5F919-6596-45AE-A052-98EC5A25C0F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pckp", "pckp\pckp.csproj", "{BBA5F919-6596-45AE-A052-98EC5A25C0F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scratch", "scratch\scratch.csproj", "{4B4FE9C3-7763-4E3C-A36A-706396F77757}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "scratch", "scratch\scratch.csproj", "{4B4FE9C3-7763-4E3C-A36A-706396F77757}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lalr1", "lalr1\lalr1.csproj", "{1EF97F85-F298-4B08-905C-328CD4280096}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{4B4FE9C3-7763-4E3C-A36A-706396F77757}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B4FE9C3-7763-4E3C-A36A-706396F77757}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B4FE9C3-7763-4E3C-A36A-706396F77757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EF97F85-F298-4B08-905C-328CD4280096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EF97F85-F298-4B08-905C-328CD4280096}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EF97F85-F298-4B08-905C-328CD4280096}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EF97F85-F298-4B08-905C-328CD4280096}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -431,7 +431,7 @@ namespace Pck
 			for (int ic = Rules.Count, i = -1; i < ic; ++i)
 			{
 				// here we augment the grammar by inserting START' -> START #EOS as the first rule.
-				var rule = (-1 < i) ? Rules[i] : new CfgRule(_GetAugmentedStartId(ss), ss, "#EOS");
+				var rule = (-1 < i) ? Rules[i] : new CfgRule(GetAugmentedStartId(ss), ss, "#EOS");
 				ICollection<string> col;
 
 				// traverse the rule looking for symbols that follow non-terminals
@@ -515,7 +515,7 @@ namespace Pck
 			}
 			return result;
 		}
-		string _GetAugmentedStartId(string s)
+		public string GetAugmentedStartId(string s)
 		{
 			var i = 2;
 			var ss = string.Concat(s, "start");

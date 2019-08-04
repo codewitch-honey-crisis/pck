@@ -20,8 +20,15 @@ class Program
 
 	static void Main(string[] args)
 	{
-		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.ll1.pck");
-		
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.pck");
+		var tokenizer = new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"));
+		var pt = cfg.ToLalrParseTable();
+		var parser = new DebugLalrParser(cfg, tokenizer, pt);
+		while(Lalr1ParserNodeType.EndDocument!=parser.NodeType)
+		{
+			Console.WriteLine(parser.ParseReductions());
+		}
+
 		return;
 	}		
 }

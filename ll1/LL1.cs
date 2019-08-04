@@ -6,9 +6,9 @@ namespace Pck
 {
 	public static class LL1
 	{
-		public static LL1Parser ToParser(this CfgDocument cfg,IEnumerable<Token> tokenizer = null)
+		public static LL1Parser ToLL1Parser(this CfgDocument cfg,IEnumerable<Token> tokenizer = null)
 		{
-			var parseTable = cfg.ToParseTable();
+			var parseTable = cfg.ToLL1ParseTable();
 			var syms = new List<string>();
 			cfg.FillSymbols(syms);
 			var nodeFlags = new int[syms.Count];
@@ -44,7 +44,7 @@ namespace Pck
 			return new LL1TableParser(parseTable.ToArray(syms), initCfg, syms.ToArray(), nodeFlags, attrSets, tokenizer);
 
 		}
-		public static CfgLL1ParseTable ToParseTable(this CfgDocument cfg)
+		public static CfgLL1ParseTable ToLL1ParseTable(this CfgDocument cfg)
 		{
 			// Here we populate the outer dictionary with one non-terminal for each key
 			// we populate each inner dictionary with the result terminals and associated 
@@ -111,7 +111,7 @@ namespace Pck
 			CfgException.ThrowIfErrors(exmsgs);
 			return result;
 		}
-		public static IList<CfgMessage> Prepare(this CfgDocument cfg,bool throwIfErrors = true, int repeat = 2)
+		public static IList<CfgMessage> PrepareLL1(this CfgDocument cfg,bool throwIfErrors = true, int repeat = 2)
 		{
 			if (1 > repeat) repeat = 1;
 			var result = new List<CfgMessage>();
@@ -125,14 +125,14 @@ namespace Pck
 				{
 					if (cfg.IsDirectlyLeftRecursive)
 						result.AddRange(EliminateLeftRecursion(cfg));
-					var cc = FillConflicts(cfg);
+					var cc = FillLL1Conflicts(cfg);
 					if (_HasFirstFollowsConflicts(cc))
 						result.AddRange(EliminateFirstFollowsConflicts(cfg));
-					cc = FillConflicts(cfg);
+					cc = FillLL1Conflicts(cfg);
 					if (_HasFirstFirstConflicts(cc))
 						result.AddRange(EliminateFirstFirstConflicts(cfg));
 					//result.AddRange(EliminateUnderivableRules());
-					cc = cfg.FillConflicts();
+					cc = cfg.FillLL1Conflicts();
 					if (0 == cc.Count && !cfg.IsDirectlyLeftRecursive)
 						break;
 					if (old.Equals(cfg))
@@ -157,7 +157,7 @@ namespace Pck
 			}
 			//else if (IsLeftRecursive())
 			//	result.Add(new CfgMessage(CfgErrorLevel.Error, -1, "Grammar is unresolvably and indirectly left recursive and cannot be parsed with an LL parser."));
-			var fc = cfg.FillConflicts();
+			var fc = cfg.FillLL1Conflicts();
 			foreach (var f in fc)
 				result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Format("Grammar has unresolvable first-{0} conflict between {1} and {2} on symbol {3}", f.Kind == CfgLL1ConflictKind.FirstFirst ? "first" : "follows", f.Rule1, f.Rule2, f.Symbol),f.Rule2.Line,f.Rule2.Column,f.Rule2.Position));
 			cfg.FillValidate(throwIfErrors, result);
@@ -274,7 +274,7 @@ namespace Pck
 			}
 			return result;
 		}
-		public static IList<CfgLL1Conflict> FillConflicts(this CfgDocument cfg,IList<CfgLL1Conflict> result = null)
+		public static IList<CfgLL1Conflict> FillLL1Conflicts(this CfgDocument cfg,IList<CfgLL1Conflict> result = null)
 		{
 			if (null == result)
 				result = new List<CfgLL1Conflict>();
@@ -555,7 +555,7 @@ namespace Pck
 		public static IList<CfgMessage> EliminateFirstFollowsConflicts(this CfgDocument cfg)
 		{
 			var result = new List<CfgMessage>();
-			var conflicts = cfg.FillConflicts();
+			var conflicts = cfg.FillLL1Conflicts();
 			for (int ic = conflicts.Count, i = 0; i < ic; ++i)
 			{
 				var conflict = conflicts[i];

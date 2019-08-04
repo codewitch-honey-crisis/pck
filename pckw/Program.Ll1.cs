@@ -40,7 +40,7 @@ namespace Pck
 			var cfg = CfgDocument.Parse(buf);
 			var lex = _RipLex(buf);
 			var hasErrors = false;
-			foreach (var msg in cfg.Prepare())
+			foreach (var msg in cfg.PrepareLL1())
 			{
 				if (CfgErrorLevel.Warning == msg.ErrorLevel || CfgErrorLevel.Error == msg.ErrorLevel)
 				{

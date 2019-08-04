@@ -44,7 +44,7 @@ namespace Pck
 					syms[i] = null;
 			}
 			var tokenizer = new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, (args.Length>1)?(TextReaderEnumerable)new FileReaderEnumerable(args[1]):new ConsoleReaderEnumerable());
-			var parser = cfg.ToParser(tokenizer);
+			var parser = cfg.ToLL1Parser(tokenizer);
 			while (LL1ParserNodeType.EndDocument != parser.NodeType)
 			{
 				Console.WriteLine(parser.ParseSubtree());
