@@ -72,6 +72,7 @@
     <None Include="App.config" />
     <None Include="Key.snk" />
     <None Include="xbnf.l" />
+    <None Include="xbnf.ll1.pck" />
     <None Include="xbnf.pck" />
     <None Include="xbnf.xbnf" />
     <None Include="xbnf.y" />

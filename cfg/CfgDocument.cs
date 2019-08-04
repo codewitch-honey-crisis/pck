@@ -342,29 +342,50 @@ namespace Pck
 		{
 			if (null == result)
 				result = new Dictionary<string, ICollection<(CfgRule Rule, string Symbol)>>();
-			_FillPredictNT(result);
+			var pnt=_FillPredictNT();
 
 			// finally, for each non-terminal N we still have in the firsts, resolve FIRSTS(N)
 			var done = false;
 			while (!done)
 			{
 				done = true;
-				foreach (var kvp in result)
+				foreach (var kvp in pnt)
 				{
+					var col = new HashSet<(CfgRule Rule, string Symbol)>();
+					result.Add(kvp.Key, col);
 					foreach (var item in new List<(CfgRule Rule, string Symbol)>(kvp.Value))
 					{
-						if (IsNonTerminal(item.Symbol))
-						{
-							done = false;
-							kvp.Value.Remove(item);
-							foreach (var f in result[item.Symbol])
-								kvp.Value.Add((item.Rule, f.Symbol));
-						}
+						var syms = new List<string>();
+						_ResolvePredict(item.Symbol, syms, pnt, new HashSet<string>());
+						foreach(var sym in syms)
+							col.Add((item.Rule, sym));
+						
 					}
 				}
 			}
 			
 			return result;
+		}
+		void _ResolvePredict(string symbol,ICollection<string> result,IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> predictNT,HashSet<string> seen)
+		{
+			if (seen.Add(symbol))
+			{
+				if (null != symbol)
+				{
+					foreach (var p in predictNT[symbol])
+					{
+						if (!IsNonTerminal(p.Symbol))
+						{
+							if (!result.Contains(p.Symbol))
+								result.Add(p.Symbol);
+						}
+						else
+						{
+							_ResolvePredict(p.Symbol, result, predictNT, seen);
+						}
+					}
+				}
+			}
 		}
 		public IDictionary<string, ICollection<string>> FillFollows(IDictionary<string, ICollection<string>> result = null)
 		{

@@ -6,7 +6,7 @@ namespace Pck
 {
 	public class RegexOrExpression : RegexBinaryExpression, IEquatable<RegexOrExpression>
 	{
-		public override bool IsSingleElement => true;
+		public override bool IsSingleElement => false;
 		public RegexOrExpression(RegexExpression left, params RegexExpression[] right)
 		{
 			Left = left;

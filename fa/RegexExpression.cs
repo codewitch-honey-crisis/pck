@@ -79,6 +79,8 @@ namespace Pck
 					case '\\':
 						if (-1 != (ich = _ParseEscape(pc)))
 						{
+							next = new RegexLiteralExpression((char)ich);
+							next.SetLocationInfo(line, column, position);
 							next = _ParseModifier(next,pc);
 							if (null != result)
 							{
@@ -146,6 +148,8 @@ namespace Pck
 							pc.Expecting();
 						}
 						var ranges = _ParseRanges(pc);
+						if (ranges.Count==0)
+							System.Diagnostics.Debugger.Break();
 						pc.Expecting(']');
 						pc.Advance();
 						next = new RegexCharsetExpression(ranges, not);
@@ -215,8 +219,8 @@ namespace Pck
 						next = null;
 						break;
 					case '\\':
-						pc.Advance();
-						pc.Expecting();
+						//pc.Advance();
+						//pc.Expecting();
 						var ch = (char)_ParseEscape(pc);
 						if (null == next)
 						{
@@ -272,6 +276,15 @@ namespace Pck
 						}
 						pc.Advance();
 						break;
+				}
+			}
+			if(null!=next)
+			{
+				result.Add(next);
+				if(readDash)
+				{
+					next = new RegexCharsetCharEntry('-');
+					result.Add(next);
 				}
 			}
 			return result;
@@ -584,6 +597,12 @@ namespace Pck
 				return -1;
 			switch (pc.Current)
 			{
+				case 'f':
+					pc.Advance();
+					return '\f';
+				case 'v':
+					pc.Advance();
+					return '\v';
 				case 't':
 					pc.Advance();
 					return '\t';

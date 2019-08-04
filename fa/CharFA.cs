@@ -429,7 +429,12 @@ namespace Pck
 
 				_Concat(left, right);
 			}
-			right.FirstAcceptingState.AcceptSymbol = accept;
+			if (null != right)
+			{
+				right.FirstAcceptingState.AcceptSymbol = accept;	
+			} 
+			else
+				left.FirstAcceptingState.AcceptSymbol = accept;
 			return left;
 		}
 		static void _Concat(CharFA<TAccept> lhs, CharFA<TAccept> rhs)
@@ -465,12 +470,16 @@ namespace Pck
 			var final = new CharFA<TAccept>(true, accept);
 			foreach (var fa in exprs)
 			{
-				var nfa = fa.Clone();
-				result.EpsilonTransitions.Add(nfa);
-				var nffa = nfa.FirstAcceptingState;
-				nffa.IsAccepting = false;
-				nffa.EpsilonTransitions.Add(final);
-
+				if (null != fa)
+				{
+					var nfa = fa.Clone();
+					result.EpsilonTransitions.Add(nfa);
+					var nffa = nfa.FirstAcceptingState;
+					nffa.IsAccepting = false;
+					nffa.EpsilonTransitions.Add(final);
+				}
+				else if(!result.EpsilonTransitions.Contains(final))
+					result.EpsilonTransitions.Add(final);
 			}
 			return result;
 		}
@@ -609,7 +618,8 @@ namespace Pck
 				}
 			} else
 				for (int ic = symbolTable.Count, i = 0; i < ic; ++i)
-					symbolLookup.Add(symbolTable[i], i);
+					if(null!=symbolTable[i])
+						symbolLookup.Add(symbolTable[i], i);
 			
 			var result = new CharDfaEntry[closure.Count];
 			for (var i = 0; i < result.Length; i++)
