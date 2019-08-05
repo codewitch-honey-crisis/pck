@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pck
 {
-	
+
 	/// <summary>
 	/// An LL(1) parser implemented as a pull-style parser. This one uses strings throughout to make it easier to examine while debugging.
 	/// </summary>
@@ -28,7 +28,7 @@ namespace Pck
 			get {
 				if (null != _errorToken.Symbol)
 					return LLNodeType.Error;
-				if(_stack.Count>0)
+				if (_stack.Count > 0)
 				{
 					var s = _stack.Peek();
 					if (s.StartsWith("#END "))
@@ -39,7 +39,7 @@ namespace Pck
 				}
 				try
 				{
-					if("#EOS"==_tokenEnum.Current.Symbol)
+					if ("#EOS" == _tokenEnum.Current.Symbol)
 						return LLNodeType.EndDocument;
 				}
 				catch { }
@@ -49,7 +49,7 @@ namespace Pck
 		public override void Restart(IEnumerable<Token> tokenizer)
 		{
 			Close();
-			if(null!=tokenizer)
+			if (null != tokenizer)
 				_tokenEnum = tokenizer.GetEnumerator();
 		}
 		public override void Restart()
@@ -58,7 +58,7 @@ namespace Pck
 			_tokenEnum.Reset();
 			_stack.Clear();
 		}
-		
+
 		/// <summary>
 		/// Indicates the current symbol
 		/// </summary>
@@ -82,19 +82,19 @@ namespace Pck
 			if (null == s) return @default;
 			return _cfg.GetAttribute(s, name, @default);
 		}
-		public override int SymbolId => _symbolIds[Symbol]; 
+		public override int SymbolId => _symbolIds[Symbol];
 		/// <summary>
 		/// Indicates the current line
 		/// </summary>
-		public override int Line => (null==_errorToken.Symbol)?_tokenEnum.Current.Line:_errorToken.Line;
+		public override int Line => (null == _errorToken.Symbol) ? _tokenEnum.Current.Line : _errorToken.Line;
 		/// <summary>
 		/// Indicates the current column
 		/// </summary>
-		public override int Column => (null == _errorToken.Symbol) ? _tokenEnum.Current.Column:_errorToken.Column;
+		public override int Column => (null == _errorToken.Symbol) ? _tokenEnum.Current.Column : _errorToken.Column;
 		/// <summary>
 		/// Indicates the current position
 		/// </summary>
-		public override long Position => (null == _errorToken.Symbol) ? _tokenEnum.Current.Position:_errorToken.Position;
+		public override long Position => (null == _errorToken.Symbol) ? _tokenEnum.Current.Position : _errorToken.Position;
 		/// <summary>
 		/// Indicates the current value
 		/// </summary>
@@ -139,8 +139,8 @@ namespace Pck
 			{
 				// make sure "hidden" is only applied to terminals.
 				var i = sattr.Value.IndexOf("hidden");
-				
-				if (!_cfg.IsNonTerminal(sattr.Key) && -1<i && sattr.Value[i].Value is bool && (bool)sattr.Value[i].Value)
+
+				if (!_cfg.IsNonTerminal(sattr.Key) && -1 < i && sattr.Value[i].Value is bool && (bool)sattr.Value[i].Value)
 					_hidden.Add(sattr.Key);
 				i = sattr.Value.IndexOf("collapsed");
 				if (-1 < i && sattr.Value[i].Value is bool && (bool)sattr.Value[i].Value)
@@ -148,7 +148,7 @@ namespace Pck
 			}
 
 		}
-		
+
 		/// <summary>
 		/// Reads and parses the next node from the document
 		/// </summary>
@@ -161,7 +161,7 @@ namespace Pck
 			// meaning any symbol with a "collapsed" or "hidden" attribute
 			while ((!ShowCollapsed && result && _IsCollapsed(Symbol)) || (!ShowHidden && result && _IsHidden(Symbol)))
 				result = _ReadImpl();
-			
+
 
 			return result;
 		}
@@ -192,15 +192,15 @@ namespace Pck
 				return true;
 			}
 			_errorToken.Symbol = null; // clear the error status
-			if(0<_stack.Count)
+			if (0 < _stack.Count)
 			{
-				var sid = _stack.Peek(); 
-				if(sid.StartsWith("#END "))
+				var sid = _stack.Peek();
+				if (sid.StartsWith("#END "))
 				{
 					_stack.Pop();
 					return true;
 				}
-				if(sid==_tokenEnum.Current.Symbol) // terminal
+				if (sid == _tokenEnum.Current.Symbol) // terminal
 				{
 					_stack.Pop();
 					// lex the next token
@@ -214,11 +214,11 @@ namespace Pck
 				}
 				// non-terminal
 				IDictionary<string, CfgLL1ParseTableEntry> d;
-				
-				if(_parseTable.TryGetValue(sid, out d))
+
+				if (_parseTable.TryGetValue(sid, out d))
 				{
 					CfgLL1ParseTableEntry re;
-					if(d.TryGetValue(_tokenEnum.Current.Symbol, out re))
+					if (d.TryGetValue(_tokenEnum.Current.Symbol, out re))
 					{
 						_stack.Pop();
 
@@ -227,7 +227,7 @@ namespace Pck
 
 						// push the rule's derivation onto the stack in reverse order
 						var ic = re.Rule.Right.Count;
-						for (var i = ic - 1; 0 <= i;--i)
+						for (var i = ic - 1; 0 <= i; --i)
 						{
 							sid = re.Rule.Right[i];
 							_stack.Push(sid);
@@ -248,19 +248,19 @@ namespace Pck
 			}
 			return false;
 		}
-		
+
 		/// <summary>
 		/// Does panic-mode error recovery
 		/// </summary>
 		void _Panic()
 		{
-			
+
 			// fill the error token
 			_errorToken.Symbol = "#ERROR"; // turn on error reporting
 			_errorToken.Value = "";
 			_errorToken.Column = _tokenEnum.Current.Column;
 			_errorToken.Line = _tokenEnum.Current.Line;
-			_errorToken.Position= _tokenEnum.Current.Position;
+			_errorToken.Position = _tokenEnum.Current.Position;
 			string s;
 			IDictionary<string, CfgLL1ParseTableEntry> d;
 			// check the parse table at the current row
@@ -269,7 +269,7 @@ namespace Pck
 				// append the current error text since we know it already doesn't match
 				_errorToken.Value += _tokenEnum.Current.Value;
 				// if we can move next and we don't have a match on the stack move and append
-				while (!d.Keys.Contains(s = _tokenEnum.Current.Symbol) 
+				while (!d.Keys.Contains(s = _tokenEnum.Current.Symbol)
 					&& s != "#EOS" && _tokenEnum.MoveNext())
 					if (!d.Keys.Contains(_tokenEnum.Current.Symbol))
 						_errorToken.Value += _tokenEnum.Current.Value;
@@ -277,7 +277,7 @@ namespace Pck
 				// TODO: not even 100% sure this works, but it passed the tests so far
 				if (_stack.Contains(_tokenEnum.Current.Symbol))
 					_errorToken.Value += _tokenEnum.Current.Value;
-				
+
 			}
 			else
 			{
@@ -296,7 +296,7 @@ namespace Pck
 		}
 		public override void Close()
 		{
-			if(null!=_tokenEnum)
+			if (null != _tokenEnum)
 				_tokenEnum.Dispose();
 			_stack.Clear();
 			_errorToken.Symbol = null;
