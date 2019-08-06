@@ -11,7 +11,7 @@ namespace Pck
 		public long Position { get; set; } = 0L;
 
 		public abstract bool IsSingleElement { get; }
-		public void SetLocationInfo(int line, int column, long position)
+		public void SetLocation(int line, int column, long position)
 		{
 			Line = line;
 			Column = column;
@@ -45,7 +45,7 @@ namespace Pck
 		/// <param name="accepting">The symbol reported when accepting the specified expression</param>
 		/// <returns>A new expression that represents the regular expression</returns>
 		public static RegexExpression ReadFrom(TextReader reader)
-			=> Parse(ParseContext.Create(reader));
+			=> Parse(ParseContext.CreateFrom(reader));
 		internal static RegexExpression Parse(ParseContext pc)
 		{
 			RegexExpression result=null,next=null;
@@ -62,13 +62,13 @@ namespace Pck
 						return result;
 					case '.':
 						var nset= new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetRangeEntry(char.MinValue, char.MaxValue) }, false);
-						nset.SetLocationInfo(line, column, position);
+						nset.SetLocation(line, column, position);
 						if (null == result)
 							result = nset;
 						else
 						{
 							result = new RegexConcatExpression(result, nset);
-							result.SetLocationInfo(line, column, position);
+							result.SetLocation(line, column, position);
 						}
 						pc.Advance();
 						result = _ParseModifier(result,pc);
@@ -80,12 +80,12 @@ namespace Pck
 						if (-1 != (ich = _ParseEscape(pc)))
 						{
 							next = new RegexLiteralExpression((char)ich);
-							next.SetLocationInfo(line, column, position);
+							next.SetLocation(line, column, position);
 							next = _ParseModifier(next,pc);
 							if (null != result)
 							{
 								result = new RegexConcatExpression(result, next);
-								result.SetLocationInfo(line, column, position);
+								result.SetLocation(line, column, position);
 							} else
 								result = next;
 						}
@@ -112,7 +112,7 @@ namespace Pck
 						else
 						{
 							result = new RegexConcatExpression(result, next);
-							result.SetLocationInfo(line, column, position);
+							result.SetLocation(line, column, position);
 						}
 						line = pc.Line;
 						column = pc.Column;
@@ -123,12 +123,12 @@ namespace Pck
 						{
 							next = Parse(pc);
 							result = new RegexOrExpression(result, next);
-							result.SetLocationInfo(line, column, position);
+							result.SetLocation(line, column, position);
 						}
 						else
 						{
 							result = new RegexOrExpression(result, null);
-							result.SetLocationInfo(line, column, position);
+							result.SetLocation(line, column, position);
 						}
 						line = pc.Line;
 						column = pc.Column;
@@ -153,7 +153,7 @@ namespace Pck
 						pc.Expecting(']');
 						pc.Advance();
 						next = new RegexCharsetExpression(ranges, not);
-						next.SetLocationInfo(line, column, position);
+						next.SetLocation(line, column, position);
 						next = _ParseModifier(next, pc);
 						
 						if (null == result)
@@ -161,7 +161,7 @@ namespace Pck
 						else
 						{
 							result = new RegexConcatExpression(result, next);
-							result.SetLocationInfo(pc.Line, pc.Column, pc.Position);
+							result.SetLocation(pc.Line, pc.Column, pc.Position);
 						}
 						line = pc.Line;
 						column = pc.Column;
@@ -170,7 +170,7 @@ namespace Pck
 					default:
 						ich = pc.Current;
 						next = new RegexLiteralExpression((char)ich);
-						next.SetLocationInfo(line, column, position);
+						next.SetLocation(line, column, position);
 						pc.Advance();
 						next = _ParseModifier(next, pc);
 						if (null == result)
@@ -178,7 +178,7 @@ namespace Pck
 						else
 						{
 							result = new RegexConcatExpression(result, next);
-							result.SetLocationInfo(line, column, position);
+							result.SetLocation(line, column, position);
 						}
 						line = pc.Line;
 						column = pc.Column;
@@ -298,17 +298,17 @@ namespace Pck
 			{
 				case '*':
 					expr = new RegexRepeatExpression(expr);
-					expr.SetLocationInfo(line, column, position);
+					expr.SetLocation(line, column, position);
 					pc.Advance();
 					break;
 				case '+':
 					expr = new RegexRepeatExpression(expr, 1);
-					expr.SetLocationInfo(line, column, position);
+					expr.SetLocation(line, column, position);
 					pc.Advance();
 					break;
 				case '?':
 					expr = new RegexOptionalExpression(expr);
-					expr.SetLocationInfo(line, column, position);
+					expr.SetLocation(line, column, position);
 					pc.Advance();
 					break;
 				case '{':
@@ -340,7 +340,7 @@ namespace Pck
 					pc.Expecting('}');
 					pc.Advance();
 					expr = new RegexRepeatExpression(expr, min, max);
-					expr.SetLocationInfo(line, column, position);
+					expr.SetLocation(line, column, position);
 					break;
 			}
 			return expr;

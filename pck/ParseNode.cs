@@ -27,7 +27,7 @@ namespace Pck
 				Children[i].FillDescendantsAndSelf(result);
 			return result;
 		}
-		public void SetLocationInfo(int line, int column, long position)
+		public void SetLocation(int line, int column, long position)
 		{
 			_line = line;
 			_column = column;

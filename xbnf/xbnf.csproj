@@ -20,7 +20,6 @@
     <Compile Include="..\common\CollectionUtility.cs" Link="CollectionUtility.cs" />
     <Compile Include="..\common\ListDictionary.cs" Link="ListDictionary.cs" />
     <Compile Include="..\common\OrderedCollectionEqualityComparer.cs" Link="OrderedCollectionEqualityComparer.cs" />
-    <Compile Include="..\common\ParseContext.cs" Link="ParseContext.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -30,16 +30,16 @@ namespace Pck
 						pc.Advance();
 						position = pc.Position; line = pc.Line; column = pc.Column;
 						current = new XbnfOrExpression(current, Parse(pc));
-						current.SetLocationInfo(line, column, position);
+						current.SetLocation(line, column, position);
 						break;
 					case '(':
 						pc.Advance();
 						position = pc.Position; line = pc.Line; column = pc.Column;
 						e = Parse(pc);
-						current.SetLocationInfo(line, column, position);
+						current.SetLocation(line, column, position);
 						pc.Expecting(')');
 						pc.Advance();
-						e.SetLocationInfo(line, column, position);
+						e.SetLocation(line, column, position);
 						if (null == current)
 							current = e;
 						else
@@ -49,7 +49,7 @@ namespace Pck
 					case '[':
 						pc.Advance();
 						e = new XbnfOptionalExpression(Parse(pc));
-						e.SetLocationInfo(line, column, position);
+						e.SetLocation(line, column, position);
 						pc.TrySkipCCommentsAndWhiteSpace();
 						pc.Expecting(']');
 						pc.Advance();
@@ -62,7 +62,7 @@ namespace Pck
 					case '{':
 						pc.Advance();
 						e = new XbnfRepeatExpression(Parse(pc));
-						e.SetLocationInfo(line, column, position);
+						e.SetLocation(line, column, position);
 						pc.TrySkipCCommentsAndWhiteSpace();
 						pc.Expecting('}');
 						pc.Advance();
@@ -84,7 +84,7 @@ namespace Pck
 							current = e;
 						else
 							current = new XbnfConcatExpression(current, e);
-						e.SetLocationInfo(line, column, position);
+						e.SetLocation(line, column, position);
 						break;
 
 					case '\'':
@@ -93,12 +93,12 @@ namespace Pck
 						pc.TryReadUntil('\'', '\\', false);
 						pc.Expecting('\'');
 						pc.Advance();
-						e = new XbnfRegexExpression(pc.Capture);
+						e = new XbnfRegexExpression(pc.GetCapture());
 						if (null == current)
 							current = e;
 						else
 							current = new XbnfConcatExpression(current, e);
-						e.SetLocationInfo(line, column, position);
+						e.SetLocation(line, column, position);
 						break;
 					case ';':
 					case ']':
@@ -112,7 +112,7 @@ namespace Pck
 							current = e;
 						else
 							current = new XbnfConcatExpression(current, e);
-						e.SetLocationInfo(line, column, position);
+						e.SetLocation(line, column, position);
 						break;
 				}
 			}

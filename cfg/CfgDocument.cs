@@ -668,7 +668,7 @@ namespace Pck
 		public static CfgDocument Parse(IEnumerable<char> @string)
 			=> Parse(ParseContext.Create(@string));
 		public static CfgDocument ReadFrom(TextReader reader)
-			=> Parse(ParseContext.Create(reader));
+			=> Parse(ParseContext.CreateFrom(reader));
 		public static CfgDocument ReadFrom(string filename)
 		{
 			using (var sr = File.OpenText(filename))
@@ -715,7 +715,7 @@ namespace Pck
 					pc.Advance();
 					CfgNode.SkipCommentsAndWhitespace(pc);
 					var rule = new CfgRule(id);
-					rule.SetLocationInfo(line, column, position);
+					rule.SetLocation(line, column, position);
 					while (-1 != pc.Current && '\n' != pc.Current)
 					{
 						id = CfgNode.ParseIdentifier(pc);

@@ -39,7 +39,7 @@ namespace Pck
 		public static XbnfDocument Parse(IEnumerable<char> @string)
 			=> Parse(ParseContext.Create(@string));
 		public static XbnfDocument ReadFrom(TextReader reader)
-			=> Parse(ParseContext.Create(reader));
+			=> Parse(ParseContext.CreateFrom(reader));
 		public static XbnfDocument ReadFrom(string filename)
 		{
 			using (var sr = File.OpenText(filename))

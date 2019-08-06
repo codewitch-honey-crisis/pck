@@ -45,7 +45,7 @@ namespace Pck
 		{
 			pc.TrySkipCCommentsAndWhiteSpace();
 			var attr = new XbnfAttribute();
-			attr.SetLocationInfo(pc.Line, pc.Column, pc.Position);
+			attr.SetLocation(pc.Line, pc.Column, pc.Position);
 			attr.Name=ParseIdentifier(pc);
 			pc.TrySkipCCommentsAndWhiteSpace();
 			pc.Expecting(',', '=', ',', '>');

@@ -94,7 +94,7 @@ namespace Pck
 		{
 			SkipCommentsAndWhitespace(pc);
 			var attr = new LexAttribute();
-			attr.SetLocationInfo(pc.Line, pc.Column, pc.Position);
+			attr.SetLocation(pc.Line, pc.Column, pc.Position);
 			attr.Name = _ParseAttrName(pc);
 			SkipCommentsAndWhitespace(pc);
 			pc.Expecting(',', '=', ',', '>','\n');

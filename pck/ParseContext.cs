@@ -15,7 +15,7 @@ namespace Pck
 	/// An exception encountered during parsing where the stream contains one thing, but another is expected
 	/// </summary>
 	[Serializable]
-	sealed class ExpectingException : Exception
+	public sealed class ExpectingException : Exception
 	{
 		/// <summary>
 		/// Initialize the exception with the specified message.
@@ -42,10 +42,9 @@ namespace Pck
 	}
 	#endregion ExpectingException
 	/// <summary>
-	/// My old parsecontext class, used by the CharFA to parse a regex. Use this or
-	/// it's replacement here: https://www.codeproject.com/Articles/5162847/ParseContext-2-0-Easier-Hand-Rolled-Parsers
+	/// see https://www.codeproject.com/Articles/5162847/ParseContext-2-0-Easier-Hand-Rolled-Parsers
 	/// </summary>
-	abstract partial class ParseContext : IEnumerator<char>, IDisposable
+	public partial class ParseContext : IDisposable
 	{
 		public bool TryReadWhiteSpace()
 		{
@@ -1331,6 +1330,164 @@ namespace Pck
 				result = true;
 			return result;
 		}
+
+		ParseContext(IEnumerable<char> inner) { _inner = inner.GetEnumerator(); }
+		ParseContext(TextReader inner) { _inner = new _TextReaderEnumerator(inner); }
+		Queue<char> _input = new Queue<char>();
+		IEnumerator<char> _inner = null;
+		public StringBuilder CaptureBuffer { get; } = new StringBuilder();
+		public long Position { get; private set; } = -2;
+		public int Column { get; private set; } = 1;
+		public int Line { get; private set; } = 1;
+		
+		public int Current { get; private set; } = -2;
+		public int TabWidth { get; set; } = 8;
+		bool _EnsureInput()
+		{
+			if (0 == _input.Count)
+			{
+				if (!_inner.MoveNext())
+					return false;
+				_input.Enqueue(_inner.Current);
+				return true;
+			}
+			return true;
+		}
+		public void EnsureStarted()
+		{
+			_CheckDisposed();
+			if (-2 == Current)
+				Advance();
+		}
+		public int Peek(int lookAhead = 1)
+		{
+			_CheckDisposed();
+			if (-2 == Current) throw new InvalidOperationException("The parse context has not been started.");
+			if (0 > lookAhead)
+				lookAhead = 0;
+			if (!EnsureLookAhead(0 != lookAhead ? lookAhead : 1))
+				return -1;
+			int i = 0;
+			foreach (var result in _input)
+			{
+				if (i == lookAhead)
+					return result;
+				++i;
+			}
+			return -1;
+
+		}
+		public bool EnsureLookAhead(int lookAhead = 1)
+		{
+			_CheckDisposed();
+			if (1 > lookAhead) lookAhead = 1;
+			while (_input.Count < lookAhead && _inner.MoveNext())
+				_input.Enqueue(_inner.Current);
+			return _input.Count >= lookAhead;
+		}
+		public int Advance()
+		{
+			_CheckDisposed();
+			if (0 != _input.Count)
+				_input.Dequeue();
+			if (_EnsureInput())
+			{
+				if (-2 == Current)
+				{
+					Position = -1;
+					Column = 0;
+				}
+				Current = _input.Peek();
+				++Column;
+				++Position;
+				if ('\n' == Current)
+				{
+					++Line;
+					Column = 0;
+				}
+				else if ('\r' == Current)
+				{
+					Column = 0;
+				}
+				else if ('\t' == Current && 0 < TabWidth)
+				{
+					Column = ((Column / TabWidth) + 1) * TabWidth;
+				}
+				// handle other whitespace as necessary here...
+				return Current;
+			}
+			if (-1 != Current)
+			{ // last read moves us past the end. subsequent reads don't move anything
+				++Position;
+				++Column;
+			}
+			Current = -1;
+			return -1;
+		}
+		public void Dispose()
+		{
+			if (null != _inner)
+			{
+				Current = -3;
+				_inner.Dispose();
+				_inner = null;
+			}
+		}
+		public void ClearCapture()
+		{
+			_CheckDisposed();
+			CaptureBuffer.Clear();
+		}
+		public void CaptureCurrent()
+		{
+			_CheckDisposed();
+			if (-2 == Current) throw new InvalidOperationException("The parse context has not been started.");
+			if (-1 != Current)
+				CaptureBuffer.Append((char)Current);
+		}
+		public string GetCapture(int startIndex, int count = 0)
+		{
+			_CheckDisposed();
+			if (0 == count)
+				count = CaptureBuffer.Length - startIndex;
+			return CaptureBuffer.ToString(startIndex, count);
+		}
+		public string GetCapture(int startIndex = 0)
+		{
+			_CheckDisposed();
+			return CaptureBuffer.ToString(startIndex, CaptureBuffer.Length - startIndex);
+		}
+		public void SetLocation(int line, int column, long position)
+		{
+			switch (Current)
+			{
+				case -3:
+					throw new ObjectDisposedException(GetType().Name);
+				case -2:
+					throw new InvalidOperationException("The cursor is before the start of the stream.");
+				case -1:
+					throw new InvalidOperationException("The cursor is after the end of the stream.");
+			}
+			Position = position;
+			Line = line;
+			Column = column;
+		}
+		[DebuggerHidden()]
+		public void ThrowExpectingRanges(int[] expecting)
+		{
+			ExpectingException ex = null;
+			ex = new ExpectingException(_GetExpectingMessageRanges(expecting));
+			ex.Position = Position;
+			ex.Line = Line;
+			ex.Column = Column;
+			ex.Expecting = null;
+			throw ex;
+
+		}
+		void _CheckDisposed()
+		{
+			if (-3 == Current) throw new ObjectDisposedException(GetType().Name);
+		}
 		string _GetExpectingMessageRanges(int[] expecting)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -1467,7 +1624,7 @@ namespace Pck
 						ex = new ExpectingException(_GetExpectingMessage(expecting));
 					break;
 				default:
-					if (0 > Array.IndexOf<int>(expecting, Current))
+					if (0 > Array.IndexOf(expecting, Current))
 						ex = new ExpectingException(_GetExpectingMessage(expecting));
 					break;
 			}
@@ -1482,216 +1639,66 @@ namespace Pck
 				throw ex;
 			}
 		}
-		[DebuggerHidden()]
-		public void ThrowExpectingRanges(int[] expecting)
-		{
-			ExpectingException ex = null;
-			ex = new ExpectingException(_GetExpectingMessageRanges(expecting));
-			ex.Position = Position;
-			ex.Line = Line;
-			ex.Column = Column;
-			ex.Expecting = null;
-			throw ex;
+		public static ParseContext Create(IEnumerable<char> @string) { return new ParseContext(@string); }
+		public static ParseContext CreateFrom(TextReader reader) { return new ParseContext(reader); }
+		public static ParseContext CreateFrom(string filename) { return new ParseContext(File.OpenText(filename)); }
 
-		}
-		
-		StringBuilder _captureBuffer;
-		/// <summary>
-		/// Reports the line the parser is on
-		/// </summary>
-		/// <remarks>The line starts at one.</remarks>
-		public int Line { get; set; }
-		/// <summary>
-		/// Reports the column the parser is on
-		/// </summary>
-		/// <remarks>The column starts at one.</remarks>
-		public int Column { get; set; }
-		/// <summary>
-		/// Reports the position the parser is on
-		/// </summary>
-		/// <remarks>The position starts at zero.</remarks>
-		public long Position { get; set; }
-		/// <summary>
-		/// Reports the current character, or -1 if past end of stream
-		/// </summary>
-		public int Current { get; protected set; }
-		protected ParseContext()
-		{
-			_captureBuffer = new StringBuilder();
-			Position = 0;
-			Line = 1;
-			Column = 1;
-			Current = -2;
-		}
-		public void EnsureStarted()
-		{
-			if (-2 == Current)
-				Advance();
-		}
-		public abstract int Advance();
-		public abstract void Close();
-		void IDisposable.Dispose()
-		{
-			Close();
-		}
-		public StringBuilder CaptureBuffer {
-			get { return _captureBuffer; }
-		}
-		public string Capture {
-			get { return _captureBuffer.ToString(); }
-		}
-
-		char IEnumerator<char>.Current { get { if (0 > Current) throw new InvalidOperationException(); return (char)Current; } }
-		object IEnumerator.Current { get { return ((IEnumerator<char>)this).Current; } }
-
-		public string GetCapture(int startIndex, int count)
-		{
-			return _captureBuffer.ToString(startIndex, count);
-		}
-		public string GetCapture(int startIndex=0)
-		{
-			return _captureBuffer.ToString(startIndex, _captureBuffer.Length - startIndex);
-		}
-		public void CaptureCurrent()
-		{
-			if (-1 < Current)
-			{
-				CaptureBuffer.Append((char)Current);
-			}
-		}
-		public void ClearCapture()
-		{
-			CaptureBuffer.Clear();
-		}
-		public static ParseContext Create(IEnumerable<char> input)
-		{
-			return new CharEnumeratorParseContext(input.GetEnumerator());
-		}
-		public static ParseContext Create(TextReader input)
-		{
-			return new TextReaderParseContext(input);
-		}
 		public static ParseContext CreateFromUrl(string url)
 		{
 			var wreq = WebRequest.Create(url);
 			var wresp = wreq.GetResponse();
-			return Create(new StreamReader(wresp.GetResponseStream()));
-		}
-		public static ParseContext CreateFromFile(string filepath)
-		{
-			return Create(new StreamReader(filepath));
-		}
-		bool IEnumerator.MoveNext()
-		{
-			return -1 < Advance();
+			return CreateFrom(new StreamReader(wresp.GetResponseStream()));
 		}
 
-		void IEnumerator.Reset()
+		class _TextReaderEnumerator : IEnumerator<char>
 		{
-			throw new NotImplementedException();
-		}
-		#region CharEnumeratorParseContext
-		internal partial class CharEnumeratorParseContext : ParseContext
-		{
-			IEnumerator<char> _enumerator;
-			internal CharEnumeratorParseContext(IEnumerator<char> enumerator)
-			{
-				_enumerator = enumerator;
-			}
-			public override int Advance()
-			{
-				if (-2 == Current)
-				{
-					if (_enumerator.MoveNext())
+			int _current = -2;
+			TextReader _inner;
+			internal _TextReaderEnumerator(TextReader inner) { _inner = inner; }
+			public char Current {
+				get {
+					switch (_current)
 					{
-						Current = _enumerator.Current;
+						case -1:
+							throw new InvalidOperationException("The enumerator is past the end of the stream.");
+						case -2:
+							throw new InvalidOperationException("The enumerator has not been started.");
 					}
-					else
-						Current = -1;
-					return Current;
+					return unchecked((char)_current);
+				}
+			}
+			object IEnumerator.Current => Current;
 
-				}
-				if (_enumerator.MoveNext())
-				{
-					Current = _enumerator.Current;
-					++Position;
-					++Column;
-					switch (Current)
-					{
-						case '\r':
-							Column = 1;
-							break;
-						case '\n':
-							Column = 1; ++Line;
-							break;
-					}
-				}
-				else
-				{
-					if (-1 != Current)
-					{ // last read moves us past the end. subsequent reads don't move anything
-						++Position;
-						++Column;
-					}
-					Current = -1;
-				}
-				return Current;
-			}
-			public override void Close()
+			public void Dispose()
 			{
-				if (null != _enumerator)
-					_enumerator.Dispose();
-				_enumerator = null;
+				_current = -3;
+				if (null != _inner)
+				{
+					_inner.Dispose();
+					_inner = null;
+				}
+			}
+			public bool MoveNext()
+			{
+				switch (_current)
+				{
+					case -1:
+						return false;
+					case -3:
+						throw new ObjectDisposedException(GetType().Name);
+				}
+				_current = _inner.Read();
+				if (-1 == _current)
+					return false;
+				return true;
+			}
+
+			public void Reset()
+			{
+				throw new NotImplementedException();
 			}
 		}
-		#endregion CharEnumeratorParseContext
-		#region TextReaderParseContext
-		internal partial class TextReaderParseContext : ParseContext
-		{
-			TextReader _reader;
-			internal TextReaderParseContext(TextReader reader)
-			{
-				_reader = reader;
-			}
-			public override int Advance()
-			{
-				int och = Current;
-				if (-2 == och)
-				{
-					return Current = _reader.Read();
-				}
-				if (-1 != (Current = _reader.Read()))
-				{
-					++Position;
-					++Column;
-					switch (Current)
-					{
-						case '\r':
-							Column = 1;
-							break;
-						case '\n':
-							Column = 1; ++Line;
-							break;
-					}
-				}
-				else
-				{
-					if (-1 != och) // last read moves us past the end. subsequent reads don't move anything
-					{
-						++Column;
-						++Position;
-					}
-				}
-				return Current;
-			}
-			public override void Close()
-			{
-				if (null != _reader)
-					_reader.Dispose();
-				_reader = null;
-			}
-		}
-		#endregion TextReaderParseContext
+
 	}
-	
+
 }

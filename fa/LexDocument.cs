@@ -12,7 +12,7 @@ namespace Pck
 		public static LexDocument Parse(IEnumerable<char> @string)
 			=> Parse(ParseContext.Create(@string));
 		public static LexDocument ReadFrom(TextReader reader)
-			=> Parse(ParseContext.Create(reader));
+			=> Parse(ParseContext.CreateFrom(reader));
 		public static LexDocument ReadFrom(string filename)
 		{
 			using (var sr = File.OpenText(filename))
@@ -66,11 +66,10 @@ namespace Pck
 					var rx = pc.GetCapture(l);
 					// make sure to capture the line numbers properly:
 					var rpc = ParseContext.Create(rx);
-					rpc.Line = pc.Line;
-					rpc.Column = pc.Column;
-					rpc.Position = pc.Position;
+					rpc.EnsureStarted();
+					rpc.SetLocation(pc.Line, pc.Column, pc.Position);
 					var rule = new LexRule(id, RegexExpression.Parse(rpc));
-					rule.SetLocationInfo(line, column, position);
+					rule.SetLocation(line, column, position);
 					result.Rules.Add(rule);
 				}
 				else if ('-' == pc.Current)

@@ -196,7 +196,7 @@ namespace Pck
 				{
 					case LRNodeType.Shift:
 						p = new ParseNode();
-						//p.SetLocationInfo(Line, Column, Position);
+						//p.SetLocation(Line, Column, Position);
 						p.Symbol = Symbol;
 						p.Value = Value;
 						rs.Push(p);

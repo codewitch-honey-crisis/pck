@@ -90,7 +90,7 @@ namespace Pck
 			}
 			else if (LLNodeType.Terminal == nn)
 			{
-				result.SetLocationInfo(Line, Column, Position);
+				result.SetLocation(Line, Column, Position);
 				result.Symbol = Symbol;
 				result.SymbolId = SymbolId;
 				result.Value = Value;
@@ -98,7 +98,7 @@ namespace Pck
 			}
 			else if (LLNodeType.Error == nn)
 			{
-				result.SetLocationInfo(Line, Column, Position);
+				result.SetLocation(Line, Column, Position);
 				result.Symbol = Symbol;
 				result.SymbolId = SymbolId;
 				result.Value = Value;

@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Compile Include="..\common\ListDictionary.cs" Link="ListDictionary.cs" />
-    <Compile Include="..\common\ParseContext.cs" Link="ParseContext.cs" />
   </ItemGroup>
 
   <ItemGroup>

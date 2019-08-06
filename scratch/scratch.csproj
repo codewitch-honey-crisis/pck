@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\common\ParseContext.cs" Link="ParseContext.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\cfg\cfg.csproj" />
     <ProjectReference Include="..\fa\fa.csproj" />
     <ProjectReference Include="..\lalr1\lalr1.csproj" />

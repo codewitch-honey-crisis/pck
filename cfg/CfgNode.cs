@@ -10,7 +10,7 @@ namespace Pck
 		public int Column { get; set; } = 1;
 		public long Position { get; set; } = 0L;
 
-		public void SetLocationInfo(int line, int column, long position)
+		public void SetLocation(int line, int column, long position)
 		{
 			Line = line;
 			Column = column;
