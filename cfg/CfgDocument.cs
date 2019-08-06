@@ -424,9 +424,12 @@ namespace Pck
 			if (null == result)
 				result = new Dictionary<string, ICollection<string>>();
 
-			// we'll need the predict table
-			var predict = FillPredict();
+			var	followsNT = new Dictionary<string, ICollection<string>>();
 
+			// we'll need the predict table
+			//Console.Error.WriteLine("Computing predict...");
+			var predict = FillPredict();
+			//Console.Error.WriteLine("Done!");
 			var ss = StartSymbol;
 			for (int ic = Rules.Count, i = -1; i < ic; ++i)
 			{
@@ -444,10 +447,10 @@ namespace Pck
 						var target = rule.Right[j - 1];
 						if (IsNonTerminal(target))
 						{
-							if (!result.TryGetValue(target, out col))
+							if (!followsNT.TryGetValue(target, out col))
 							{
 								col = new HashSet<string>();
-								result.Add(target, col);
+								followsNT.Add(target, col);
 							}
 							foreach (var f in predict[r])
 							{
@@ -468,10 +471,10 @@ namespace Pck
 					var rr = rule.Right[jc - 1];
 					if (IsNonTerminal(rr))
 					{
-						if (!result.TryGetValue(rr, out col))
+						if (!followsNT.TryGetValue(rr, out col))
 						{
 							col = new HashSet<string>();
-							result.Add(rr, col);
+							followsNT.Add(rr, col);
 						}
 						if (!col.Contains(rule.Left))
 							col.Add(rule.Left);
@@ -480,40 +483,51 @@ namespace Pck
 				else // rule is nil
 				{
 					// what follows is the rule's left nonterminal itself
-					if (!result.TryGetValue(rule.Left, out col))
+					if (!followsNT.TryGetValue(rule.Left, out col))
 					{
 						col = new HashSet<string>();
-						result.Add(rule.Left, col);
+						followsNT.Add(rule.Left, col);
 					}
 
 					if (!col.Contains(rule.Left))
 						col.Add(rule.Left);
 				}
 			}
+			//Console.Error.WriteLine("Resolving follows...");
 			// below we look for any non-terminals in the follows result and replace them
 			// with their follows, so for example if N appeared, N would be replaced with 
 			// the result of FOLLOW(N)
-			var done = false;
-			while (!done)
+			
+			foreach (var nt in EnumNonTerminals())
 			{
-				done = true;
-				foreach (var kvp in result)
+				var col = new HashSet<string>();
+				var res = new List<string>();
+				_ResolveFollows(nt, col, followsNT, new HashSet<string>());
+				result.Add(nt, col);
+			}
+			//Console.Error.WriteLine("Done!");
+			return result;
+	
+		}
+		void _ResolveFollows(string symbol, ICollection<string> result, IDictionary<string, ICollection<string>> followsNT, HashSet<string> seen)
+		{
+			if (seen.Add(symbol))
+			{
+				if (IsNonTerminal(symbol))
 				{
-					foreach (var item in new List<string>(kvp.Value))
+					foreach (var f in followsNT[symbol])
 					{
-						if (IsNonTerminal(item))
+						if (!IsNonTerminal(f))
 						{
-							done = false;
-							kvp.Value.Remove(item);
-							foreach (var f in result[item])
-								kvp.Value.Add(f);
-
-							break;
+							if (!result.Contains(f))
+								result.Add(f);
 						}
+						else
+							_ResolveFollows(f, result, followsNT, seen);
+
 					}
 				}
 			}
-			return result;
 		}
 		public string GetAugmentedStartId(string s)
 		{

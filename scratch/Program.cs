@@ -20,6 +20,8 @@ class Program
 
 	static void Main(string[] args)
 	{
+		//foreach (var test in _tests)
+		//	Console.WriteLine(RegexExpression.Parse(test));
 		_RunLalr(args);	
 	}
 	static void _RunLalr(string[] args)

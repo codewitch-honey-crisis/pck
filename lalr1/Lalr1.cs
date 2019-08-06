@@ -10,7 +10,10 @@ namespace Pck
 		{
 			var start = cfg.GetAugmentedStartId(cfg.StartSymbol);
 			var pda = _ToLrfa(cfg);
+			//Console.Error.WriteLine("Creating lookahead grammar");
 			var trnsCfg = _ToLRTransitionGrammar(cfg,pda);
+			//Console.Error.WriteLine("Done!");
+			//Console.Error.WriteLine("Walking the LR(0) states");
 			var closure = new List<FA<string, ICollection<LRItem>>>();
 			var lalrclosure = new Lalr1ParseTable();
 
@@ -47,9 +50,13 @@ namespace Pck
 				}
 				++i;
 			}
+			//Console.Error.WriteLine("Done!");
+			//Console.Error.WriteLine("Computing follows...");
+			var follows = trnsCfg.FillFollows();
+			//Console.Error.WriteLine("Done!");
+			//Console.Error.WriteLine("Working on reductions");
 			// work on our reductions now
 			var map = new Dictionary<CfgRule, ICollection<string>>(_TransitionMergeRuleComparer.Default);
-			var follows = trnsCfg.FillFollows();
 			var rtbl = new List<IDictionary<object, CfgRule>>();
 			foreach (var rule in trnsCfg.Rules)
 			{
@@ -61,6 +68,7 @@ namespace Pck
 						if (!f.Contains(o))
 							f.Add(o);
 			}
+			//var j = 0;
 			foreach (var me in map)
 			{
 				var rule = me.Key;
@@ -97,7 +105,10 @@ namespace Pck
 								(rid, newRule.Left, rr));
 						}
 					}
+				//++j;
+				//Console.Error.WriteLine("Processing map entry {0} of {1}", j, map.Count);
 			}
+			//Console.Error.WriteLine("Done!");
 			return lalrclosure;
 		}
 		static ICollection<LRItem> _FillLRMove(this CfgDocument cfg,IEnumerable<LRItem> itemSet, object input, ICollection<LRItem> result = null)
@@ -188,6 +199,7 @@ namespace Pck
 			var lrfa = new FA<string, ICollection<LRItem>>(true,cl);
 			map.Add(cl, lrfa);
 			var done = false;
+			var oc = 0;
 			while (!done)
 			{
 				done = true;
@@ -207,8 +219,20 @@ namespace Pck
 								map.Add(n, npda);
 							}
 							map[itemSet].Transitions[next] = map[n];
+							
 						}
 					}
+				
+				}
+				if (map.Count == oc)
+				{
+					//Console.Error.WriteLine("Done!");
+					done = true;
+				}
+				else
+				{
+					oc = map.Count;
+					//Console.Error.WriteLine("Map count {0}", oc);
 				}
 			}
 
