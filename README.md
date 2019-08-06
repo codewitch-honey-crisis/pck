@@ -35,7 +35,7 @@ pckw ll1gen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namesp
 
   Generates an LL(1) parser in the specified .NET language.
 
-pckw ll1 [<specfile> [<outputfile>]]
+pckw ll1factor [<specfile> [<outputfile>]]
 
   <specfile>    The pck specification file to use (or stdin)
   <outputfile>  The file to write (or stdout)
@@ -119,7 +119,7 @@ now, before you can use it with an LL(1) parser (including mine, or say Coco/R) 
 
 from the command line
 
-`pckw ll1 xbnf.pck xbnf.ll1.pck`
+`pckw ll1factor xbnf.pck xbnf.ll1.pck`
 
 
 you can then generate the code for it or export it whatever
@@ -131,7 +131,7 @@ you can then generate the code for it or export it whatever
 
 or you can pipe these operations. Like, turn an xbnf grammar into a parser:
 
-`pckw xlt xbnf.xbnf /transform xbnfToPck | pckw ll1 | pckw ll1gen /class XbnfParser > XbnfParser.cs`
+`pckw xlt xbnf.xbnf /transform xbnfToPck | pckw ll1factor | pckw ll1gen /class XbnfParser > XbnfParser.cs`
 
 I plan on adding more xlt transformations. They're relatively easy to implement, considering. Right now it's just lex and yacc
 
