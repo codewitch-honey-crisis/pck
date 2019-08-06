@@ -62,7 +62,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Program.Fagen.cs" />
     <Compile Include="Program.Ll1gen.cs" />
-    <Compile Include="Program.Ll1.cs" />
+    <Compile Include="Program.Ll1factor.cs" />
     <Compile Include="Program.LL1Tree.cs" />
     <Compile Include="Program.Xlt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="javascript.xbnf" />
     <None Include="Key.snk" />
     <None Include="xbnf.l" />
     <None Include="xbnf.ll1.pck" />

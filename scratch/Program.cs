@@ -20,14 +20,19 @@ class Program
 
 	static void Main(string[] args)
 	{
-		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.pck");
-		var tokenizer = new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"));
-		var pt = cfg.ToLalrParseTable();
-		var parser = new DebugLalrParser(cfg, tokenizer, pt);
-		while(LRNodeType.EndDocument!=parser.NodeType)
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\javascript.pck");
+		var tokenizer = new JSTokenizer(new FileReaderEnumerable(@"..\..\..\hello.js"));
+		var pt = cfg.ToLalr1ParseTable();
+		var parser = new DebugLalr1Parser2(cfg, tokenizer, pt);
+		parser.ShowHiddenTerminals =false;
+		while (parser.Read())
 		{
-			Console.WriteLine(parser.ParseReductions());
+			Console.WriteLine("{0}: {1}, {2}", parser.NodeType, parser.Symbol, parser.Value);
 		}
+		parser = new DebugLalr1Parser2(cfg, tokenizer, pt);
+		parser.ShowHiddenTerminals =true;
+		while (LRNodeType.EndDocument != parser.NodeType)
+			Console.WriteLine(parser.ParseReductions());
 
 		return;
 	}		

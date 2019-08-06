@@ -40,7 +40,7 @@ namespace Pck
 		static void _PrintUsageLl1()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
-			Console.Error.WriteLine("ll1 [<specfile> [<outputfile>]]");
+			Console.Error.WriteLine("ll1factor [<specfile> [<outputfile>]]");
 			Console.Error.WriteLine();
 			Console.Error.WriteLine("  <specfile>\tThe pck specification file to use (or stdin)");
 			Console.Error.WriteLine("  <outputfile>\tThe file to write (or stdout)");
@@ -122,8 +122,8 @@ namespace Pck
 					return _Fagen(sargs);
 				case "ll1gen":
 					return _Ll1gen(sargs);
-				case "ll1":
-					return _Ll1(sargs);
+				case "ll1factor":
+					return _Ll1Factor(sargs);
 				case "xlt":
 					return _Xlt(sargs);
 				case "ll1tree":

@@ -2,7 +2,7 @@
 
 namespace Pck
 {
-	public class LalrParseTable : List<IDictionary<string, (int RuleOrStateId, string Left, string[] Right)>>
+	public class Lalr1ParseTable : List<IDictionary<string, (int RuleOrStateId, string Left, string[] Right)>>
 	{
 
 	}

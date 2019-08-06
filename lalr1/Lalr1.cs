@@ -6,13 +6,13 @@ namespace Pck
 {
 	public static class Lalr1
 	{
-		public static LalrParseTable ToLalrParseTable(this CfgDocument cfg)
+		public static Lalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg)
 		{
 			var start = cfg.GetAugmentedStartId(cfg.StartSymbol);
 			var pda = _ToLrfa(cfg);
 			var trnsCfg = _ToLRTransitionGrammar(cfg,pda);
 			var closure = new List<FA<string, ICollection<LRItem>>>();
-			var lalrclosure = new LalrParseTable();
+			var lalrclosure = new Lalr1ParseTable();
 
 			var itemSets = new List<ICollection<LRItem>>();
 
@@ -428,6 +428,8 @@ namespace Pck
 			public static readonly _TransitionMergeRuleComparer Default = new _TransitionMergeRuleComparer();
 			public bool Equals(CfgRule x, CfgRule y)
 			{
+				if (ReferenceEquals(x, y))
+					return true;
 				if (!_SymEq(_LrtSymbol.Parse(x.Left), _LrtSymbol.Parse(y.Left)))
 					return false;
 				var c = x.Right.Count;

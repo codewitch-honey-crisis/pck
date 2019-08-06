@@ -1,0 +1,235 @@
+﻿identifier    = '[A-Za-z_][0-9A-Z_a-z]*';
+stringLiteral<terminal> = '"([^"\\]|\\.)*"'|'\'([^\'\\]|\\.)*\'';
+
+HexIntegerLiteral = '0x[0-9A-Fa-f]+';
+
+DecimalLiteral= '\-?(0|[1-9][0-9]*)(\.[0-9]+)?([Ee][\+\-]?[0-9]+)?';
+
+whitespace<hidden>='[ \t\v\f\r\n]+';
+
+blockComment<blockEnd="*/",hidden> = "/*";
+lineComment<hidden> = '//[^\n]*[\n]';
+
+literal = nullLiteral
+            | booleanLiteral
+            | numericLiteral
+            | stringLiteral;
+
+nullLiteral    = "null";
+booleanLiteral = "true"
+                    | "false";
+
+numericLiteral = DecimalLiteral
+                    | HexIntegerLiteral;
+
+
+primaryExpression = "this"
+                       | identifier
+                       | literal 
+                       | arrayLiteral
+                       | objectLiteral
+                       | "(" expression ")";
+
+arrayLiteral = "[" "]"
+                  | "[" elision "]"
+                  | "[" elementList "]"
+                  | "[" elementList "," elision "]";
+
+elision = ","
+            | elision ",";
+
+// too recursive 
+elementList = elision assignmentExpression
+                 | elementList "," elision assignmentExpression
+                 | elementList "," assignmentExpression
+                 | assignmentExpression;
+
+objectLiteral = "{" propertyNameAndValueList "}";
+
+propertyNameAndValueList = propertyName ":" assignmentExpression
+                                 | propertyNameAndValueList "," propertyName ":" assignmentExpression;
+
+propertyName = identifier
+                  | stringLiteral
+                  | numericLiteral;
+
+memberExpression = primaryExpression
+                       | functionExpression
+                       | memberExpression "[" expression "]"
+                       | memberExpression "." identifier
+                       | "new" memberExpression arguments;
+
+newExpression = memberExpression
+                   | "new" newExpression;
+
+callExpression = memberExpression arguments
+                    | callExpression arguments 
+                    | callExpression "[" expression "]"
+                    | callExpression "." identifier;
+
+arguments = "(" ")"
+              | "(" argumentList ")";
+
+argumentList = assignmentExpression
+                  | argumentList "," assignmentExpression;
+
+
+leftHandSideExpression = newExpression 
+                              | callExpression;
+
+postfixExpression = leftHandSideExpression
+                       | postfixExpression "++"
+                       | postfixExpression "--";
+
+unaryExpression = postfixExpression
+                     | "delete" unaryExpression
+                     | "void" unaryExpression
+                     | "typeof" unaryExpression
+                     | "++" unaryExpression
+                     | "--" unaryExpression
+                     | "+" unaryExpression
+                     | "-" unaryExpression
+                     | "~" unaryExpression
+                     | "!" unaryExpression;
+
+multiplicativeExpression = unaryExpression
+                              | unaryExpression "*" multiplicativeExpression 
+                              | unaryExpression "/" multiplicativeExpression                               
+                              | unaryExpression "%" multiplicativeExpression ;
+
+additiveExpression = additiveExpression "+" multiplicativeExpression 
+                        | additiveExpression "-" multiplicativeExpression  
+                        | multiplicativeExpression;
+
+
+
+shiftExpression = shiftExpression "<<" additiveExpression
+                     | shiftExpression ">>" additiveExpression
+                     | shiftExpression ">>>" additiveExpression
+                     | additiveExpression;
+
+relationalExpression= shiftExpression 
+                         | relationalExpression "<" shiftExpression 
+                         | relationalExpression ">" shiftExpression 
+                         | relationalExpression "<=" shiftExpression 
+                         | relationalExpression ">=" shiftExpression 
+                         | relationalExpression "instanceof" shiftExpression;
+
+equalityExpression = relationalExpression
+                        | equalityExpression "==" relationalExpression
+                        | equalityExpression "!=" relationalExpression
+                        | equalityExpression "===" relationalExpression
+                        | equalityExpression "!==" relationalExpression;
+
+bitwiseAndExpression = equalityExpression
+                           | bitwiseAndExpression "&" equalityExpression;
+
+bitwiseXorExpression = bitwiseAndExpression
+                           | bitwiseXorExpression "^" bitwiseAndExpression;
+
+bitwiseOrExpression = bitwiseXorExpression
+                          | bitwiseOrExpression "|" bitwiseXorExpression;
+
+logicalAndExpression = bitwiseOrExpression
+                           | logicalAndExpression "&&" bitwiseOrExpression;
+
+logicalOrExpression = logicalAndExpression
+                          | logicalOrExpression "||" logicalAndExpression;
+
+conditionalExpression = logicalOrExpression 
+                           | logicalOrExpression "?" assignmentExpression ":" assignmentExpression;
+
+assignmentExpression = conditionalExpression
+                          | leftHandSideExpression assignmentOperator assignmentExpression ;
+                          
+assignmentOperator = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=";
+
+expression = assignmentExpression
+               | expression "," assignmentExpression;
+
+statement = block
+              | variableStatement
+              | emptyStatement
+              | ifStatement
+              | ifElseStatement
+              | iterationStatement
+              | continueStatement
+              | breakStatement
+              | returnStatement
+              | withStatement
+              | labelledStatement
+              | throwStatement
+              | tryStatement
+              | expression;
+
+block = "{" "}"
+           | "{" statementList "}";
+
+statementList = statement
+                   | statementList statement;
+
+variableStatement = "var" variableDeclarationList ";";
+
+variableDeclarationList = variableDeclaration
+                              | variableDeclarationList "," variableDeclaration;
+
+variableDeclaration = identifier
+                         | identifier initializer;
+
+initializer = "=" assignmentExpression;
+
+emptyStatement = ";";
+
+ifStatement = "if" "(" expression ")" statement ;
+ifElseStatement = "if" "(" expression ")" statement "else" statement;
+
+iterationStatement = "do" statement "while" "(" expression ")" ";"
+                        | "while" "(" expression ")" statement 
+                        | "for" "(" expression ";" expression ";" expression ")" statement 
+                        | "for" "(" "var" variableDeclarationList ";" expression ";" expression ")" statement 
+                        | "for" "(" leftHandSideExpression "in" expression ")" statement 
+                        | "for" "(" "var" variableDeclaration "in" expression ")" statement ;
+
+continueStatement = "continue" ";"
+                       | "continue" identifier ";";
+
+breakStatement = "break" ";"
+                       | "break" identifier ";";
+
+returnStatement = "return" ";"
+                       | "return" expression ";";
+
+withStatement = "with" "(" expression ")" statement ";";
+
+labelledStatement = identifier ":" statement;
+
+throwStatement = "throw" expression;
+
+tryStatement = "try" block catch
+                  | "try" block finally
+                  | "try" block catch finally;
+
+catch = "catch" "(" identifier ")" block;
+
+finally = "finally" block;
+
+functionDeclaration = "function" identifier "(" formalParameterList ")" "{" functionBody "}"
+                         | "function" identifier "(" ")" "{" functionBody "}";
+
+functionExpression = "function" "(" ")" "{" functionBody "}"
+                        | "function" "(" formalParameterList ")" "{" functionBody "}";
+
+
+formalParameterList = identifier
+                          | formalParameterList "," identifier;
+
+functionBody = sourceElements
+                  | ;
+
+program<start> = sourceElements;
+
+sourceElements = sourceElement
+                    | sourceElements sourceElement;
+
+sourceElement = statement
+                   | functionDeclaration;

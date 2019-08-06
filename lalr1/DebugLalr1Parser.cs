@@ -4,26 +4,25 @@ using System.Text;
 
 namespace Pck
 {
-	public class DebugLalrParser
+	public class DebugLalr1Parser
 	{
 		CfgDocument _cfg;
 		IEnumerator<Token> _tokenEnum;
-		LalrParseTable _parseTable;
+		Lalr1ParseTable _parseTable;
 		HashSet<string> _hiddenTerminals;
 		Stack<int> _stack = new Stack<int>();
 
 		LRNodeType _nodeType;
 		int _ruleId;
 		string[] _ruleDef;
-
 		string _symbol;
 		Token _token;
 		//Token _errorToken;
-		public DebugLalrParser(CfgDocument cfg, IEnumerable<Token> tokenizer, LalrParseTable parseTable = null)
+		public DebugLalr1Parser(CfgDocument cfg, IEnumerable<Token> tokenizer, Lalr1ParseTable parseTable = null)
 		{
 			_cfg = cfg;
 			_PopulateHiddenTerminals();
-			_parseTable = parseTable ?? _cfg.ToLalrParseTable();
+			_parseTable = parseTable ?? _cfg.ToLalr1ParseTable();
 			Restart(tokenizer);
 
 		}
@@ -182,6 +181,10 @@ namespace Pck
 				return true;
 			}
 
+		}
+		bool _IsHidden(string symbol)
+		{
+			return _hiddenTerminals.Contains(symbol);
 		}
 		public ParseNode ParseReductions()
 		{

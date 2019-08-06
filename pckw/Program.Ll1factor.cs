@@ -5,7 +5,7 @@ namespace Pck
 {
 	partial class Program
 	{
-		static int _Ll1(string[] args)
+		static int _Ll1Factor(string[] args)
 		{
 			TextReader inp = null;
 			TextWriter outp = null;

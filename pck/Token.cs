@@ -17,5 +17,10 @@ namespace Pck
 		public long Position { get; set; }
 		public int Length { get; set; }
 		public string Value { get; set; }
+
+		public override string ToString()
+		{
+			return string.Concat(Symbol, ": ", Value);
+		}
 	}
 }
