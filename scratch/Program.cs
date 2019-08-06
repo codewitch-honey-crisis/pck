@@ -20,6 +20,10 @@ class Program
 
 	static void Main(string[] args)
 	{
+		_RunLalr(args);	
+	}
+	static void _RunLalr(string[] args)
+	{
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\javascript.pck");
 		var tokenizer = new JSTokenizer(new FileReaderEnumerable(@"..\..\..\hello.js"));
 		var pt = cfg.ToLalr1ParseTable();
