@@ -120,6 +120,11 @@ namespace Pck
 			});
 			ctor.Attributes = MemberAttributes.Public;
 			result.Members.Add(ctor);
+			ctor = new CodeConstructor();
+			ctor.ChainedConstructorArgs.AddRange(new CodeExpression[] {new CodePrimitiveExpression(null)
+			});
+			ctor.Attributes = MemberAttributes.Public;
+			result.Members.Add(ctor);
 			return result;
 		}
 		
@@ -139,7 +144,7 @@ namespace Pck
 				cns.Types.Add(parser);
 				cdp.GenerateCodeFromNamespace(cns, writer, opts);
 			}
-			cdp.GenerateCodeFromType(parser, writer, opts);
+			//cdp.GenerateCodeFromType(parser, writer, opts);
 		}
 		
 	}

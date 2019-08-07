@@ -100,7 +100,7 @@ namespace Pck
 					{
 						if (null != outFile)
 							@class = Path.GetFileNameWithoutExtension(outFile);
-						if (null == @class && 0 < cfg.Rules.Count)
+						else if (null == @class && 0 < cfg.Rules.Count)
 							@class = string.Concat(cfg.StartSymbol, "Parser");
 						else
 							@class = "Parser";
