@@ -124,6 +124,42 @@ namespace Pck
 			}
 			return result.ToDfa() as CharFA<string>;
 		}
+		public IEnumerable<Token> ToTokenizer(IEnumerable<char> input, IEnumerable<string> symbols = null)
+		{
+			var lexer = ToLexer();
+			var ii = 0;
+			List<string> syms;
+			if (null==symbols)
+			{
+				syms = new List<string>();
+				for(int ic=Rules.Count,i=0;i<ic;++i)
+				{
+					var s = Rules[i].Left;
+					if(!syms.Contains(s))
+						syms.Add(s);
+				}
+			} else
+				syms = new List<string>(symbols);
+			var bes = new string[syms.Count];
+			for (ii = 0; ii < bes.Length; ii++)
+				bes[ii] = GetAttribute(syms[ii], "blockEnd", null) as string;
+			var dfaTable = lexer.ToArray(syms);
+			var tt = new List<string>();
+			for (int ic = Rules.Count, i = 0; i < ic; ++i)
+			{
+				var t = Rules[i].Left;
+				if (!tt.Contains(t))
+					tt.Add(t);
+			}
+			tt.Add("#EOS");
+			tt.Add("#ERROR");
+
+			for (int ic = syms.Count, i = 0; i < ic; ++i)
+				if (!tt.Contains(syms[i]))
+					syms[i] = null;
+
+			return new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, input);
+		}
 
 		public LexDocument Clone()
 		{

@@ -21,29 +21,11 @@ namespace Pck
 
 			var cfg = CfgDocument.Parse(pck);
 			var lex = LexDocument.Parse(pck);
-			var lexer = lex.ToLexer();
-			var ii = 0;
-			var syms = new List<string>();
-			cfg.FillSymbols(syms);
-			var bes = new string[syms.Count];
-			for (ii = 0; ii < bes.Length; ii++)
-				bes[ii] = lex.GetAttribute(syms[ii], "blockEnd", null) as string;
-			var dfaTable = lexer.ToArray(syms);
-			var tt = new List<string>();
-			for (int ic = lex.Rules.Count, i = 0; i < ic; ++i)
-			{
-				var t = lex.Rules[i].Left;
-				if (!tt.Contains(t))
-					tt.Add(t);
-			}
-			tt.Add("#EOS");
-			tt.Add("#ERROR");
-
-			for (int ic = syms.Count, i = 0; i < ic; ++i)
-				if (!tt.Contains(syms[i]))
-					syms[i] = null;
-
-			var tokenizer = new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, (1<args.Length)?(TextReaderEnumerable)new FileReaderEnumerable(args[1]):new ConsoleReaderEnumerable());
+		
+			var tokenizer = lex.ToTokenizer(
+				(1<args.Length)?(TextReaderEnumerable)new FileReaderEnumerable(args[1]):
+					new ConsoleReaderEnumerable(),
+				cfg.EnumSymbols());
 			var parser = cfg.ToLL1Parser(tokenizer);
 			while (LLNodeType.EndDocument != parser.NodeType)
 				Console.WriteLine(parser.ParseSubtree());
