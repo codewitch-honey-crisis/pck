@@ -164,6 +164,9 @@ namespace Pck
 					foreach (var cattr in type.GetCustomAttributes<TransformAttribute>())
 					{
 						var meth = type.GetMethod("Transform", new Type[] { typeof(TextReader), typeof(TextWriter) });
+						if (null == meth || !meth.IsStatic)
+							meth = type.GetMethod("Transform", new Type[] { typeof(Stream), typeof(Stream) });
+
 						if (null != meth && meth.IsStatic)
 						{
 							var entry = new KeyValuePair<TransformAttribute, MethodInfo>(cattr, meth);
@@ -263,6 +266,7 @@ namespace Pck
 			}
 			return sb.ToString();
 		}
+		
 		const string _NotIdentifierChars = "()[]{}<>,:;-=|/\'\" \t\r\n\f\v";
 		static readonly IDictionary<string, KeyValuePair<TransformAttribute, MethodInfo>> _byName = new Dictionary<string, KeyValuePair<TransformAttribute, MethodInfo>>(StringComparer.InvariantCultureIgnoreCase);
 		static readonly IDictionary<KeyValuePair<string, string>, KeyValuePair<TransformAttribute, MethodInfo>> _byExts = new Dictionary<KeyValuePair<string, string>, KeyValuePair<TransformAttribute, MethodInfo>>();

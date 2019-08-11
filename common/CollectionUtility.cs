@@ -651,6 +651,13 @@ namespace Pck
 				if (null != item)
 					yield return item;
 		}
+		public static IEnumerable<T> Unique<T>(this IEnumerable<T> collection)
+		{
+			var seen = new HashSet<T>();
+			foreach (var item in collection)
+				if (seen.Add(item))
+					yield return item;
+		}
 		public static string ToString(this IEnumerable e, string itemFormat = null)
 		{
 			if (null != itemFormat)

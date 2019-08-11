@@ -67,8 +67,8 @@ namespace Pck
 					}
 				}
 			}
-			TextReader inp = null;
-			TextWriter outp = null;
+			Stream inp = null;
+			Stream outp = null;
 			try
 			{
 				// first, if assembly is specified, load it
@@ -82,13 +82,13 @@ namespace Pck
 				// just loading it was enough
 				_PopulateTransforms();
 				if (null == inpFile)
-					inp = Console.In;
+					inp = Console.OpenStandardInput();
 				else
-					inp = new StreamReader(inpFile);
+					inp = File.OpenRead(inpFile);
 				if (null == outFile)
-					outp = Console.Out;
+					outp = Console.OpenStandardOutput();
 				else
-					outp = new StreamWriter(outFile);
+					outp = File.OpenWrite(outFile);
 				MethodInfo meth = null;
 				if (!string.IsNullOrEmpty(transform))
 				{
@@ -119,7 +119,12 @@ namespace Pck
 				if (null == meth)
 					Console.Error.WriteLine("Error: Transform not found (did you forget an assembly reference?)");
 				else
-					meth.Invoke(null, new object[] { inp, outp });
+				{
+					if (typeof(Stream) == meth.GetParameters()[0].ParameterType)
+						meth.Invoke(null, new object[] { inp, outp });
+					else
+						meth.Invoke(null, new object[] { new StreamReader(inp), new StreamWriter(outp) });
+				}
 				Console.Error.WriteLine("Translation complete.");
 				return 0;
 			}

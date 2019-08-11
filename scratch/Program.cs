@@ -28,7 +28,7 @@ class Program
 	{
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\javascript.pck");
 		var tokenizer = new JSTokenizer(new FileReaderEnumerable(@"..\..\..\hello.js"));
-		var pt = cfg.ToLalr1ParseTable();// new _ConsoleProgress());
+		var pt = cfg.ToLalr1ParseTable( new _ConsoleProgress());
 		var parser = new DebugLalr1Parser2(cfg, tokenizer, pt);
 		parser.ShowHiddenTerminals =false;
 		while (parser.Read())

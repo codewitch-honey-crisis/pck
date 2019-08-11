@@ -18,6 +18,7 @@
     <Compile Include="..\common\CollectionUtility.cs" Link="CollectionUtility.cs" />
     <Compile Include="..\common\ListDictionary.cs" Link="ListDictionary.cs" />
     <Compile Include="..\common\OrderedCollectionEqualityComparer.cs" Link="OrderedCollectionEqualityComparer.cs" />
+    <Compile Include="..\pckw\CgtToPckTransform.cs" Link="CgtToPckTransform.cs" />
     <Compile Include="..\pckw\LL1ParserCodeGenerator.cs" Link="LL1ParserCodeGenerator.cs" />
     <Compile Include="..\pckw\PckToLexTransform.cs" Link="PckToLexTransform.cs" />
     <Compile Include="..\pckw\PckToYaccTransform.cs" Link="PckToYaccTransform.cs" />

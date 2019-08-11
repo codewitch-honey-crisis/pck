@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 namespace Pck
 {
-	[Transform("pckToLex",".pck",".l","Translates a pck spec to a lex/flex spec")]
+	[Transform("pckToLex",".pck",".l","Translates a pck spec to a lex/flex spec. (requires manual intervention)")]
 	class PckToLexTransform
 	{
 		public static void Transform(TextReader input, TextWriter output)
