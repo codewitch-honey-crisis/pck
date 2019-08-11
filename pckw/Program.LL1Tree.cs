@@ -27,6 +27,7 @@ namespace Pck
 					new ConsoleReaderEnumerable(),
 				cfg.EnumSymbols());
 			var parser = cfg.ToLL1Parser(tokenizer);
+			parser.ShowHidden = true;
 			while (LLNodeType.EndDocument != parser.NodeType)
 				Console.WriteLine(parser.ParseSubtree());
 			

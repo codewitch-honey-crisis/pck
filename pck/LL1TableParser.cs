@@ -200,9 +200,9 @@ namespace Pck
 			if (LLNodeType.Initial == n)
 			{
 				_stack.Push(_initCfg[0]);
-
 				if (_tokenEnum.MoveNext() && _IsHidden(_tokenEnum.Current.SymbolId))
 					_stack.Push(_tokenEnum.Current.SymbolId);
+
 
 				return true;
 			}

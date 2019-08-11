@@ -7,6 +7,22 @@ namespace Pck
 {
 	public class CfgDocument : IEquatable<CfgDocument>, ICloneable
 	{
+		HashSet<string> _ntCache = null;
+		HashSet<string> _tCache = null;
+		HashSet<string> _sCache = null;
+
+		public void ClearCache()
+		{
+			_ntCache = null;
+			_tCache = null;
+			_sCache = null;
+		}
+		public void RebuildCache()
+		{
+			_ntCache = new HashSet<string>(EnumNonTerminals());
+			_tCache = new HashSet<string>(EnumTerminals());
+			_sCache = new HashSet<string>(EnumSymbols());
+		}
 		public IDictionary<string, CfgAttributeList> AttributeSets { get; } = new ListDictionary<string, CfgAttributeList>();
 		public IList<CfgRule> Rules { get; } = new List<CfgRule>();
 
@@ -52,6 +68,12 @@ namespace Pck
 					}
 				}
 			}
+		}
+		public void InternSymbols()
+		{
+			var syms = FillSymbols();
+			for(int ic=syms.Count,i=0;i<ic;++i)
+				string.Intern(syms[i]);
 		}
 		public bool IsDirectlyLeftRecursive {
 			get {
@@ -605,6 +627,7 @@ namespace Pck
 		}
 		public bool IsNonTerminal(string symbol)
 		{
+			if (null != _ntCache) return _ntCache.Contains(symbol);
 			for(int ic=Rules.Count,i=0;i<ic;++i)
 				if (Rules[i].Left == symbol)
 					return true;
@@ -612,6 +635,7 @@ namespace Pck
 		}
 		public bool IsSymbol(string symbol)
 		{
+			if (null != _sCache) return _sCache.Contains(symbol);
 			for (int ic = Rules.Count, i = 0; i < ic; ++i)
 			{
 				var rule = Rules[i];

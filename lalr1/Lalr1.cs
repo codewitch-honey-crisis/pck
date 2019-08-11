@@ -9,20 +9,23 @@ namespace Pck
 		public static Lalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg)
 		{
 			var start = cfg.GetAugmentedStartId(cfg.StartSymbol);
-			var pda = _ToLrfa(cfg);
+			var lrfa = _ToLrfa(cfg);
 			//Console.Error.WriteLine("Creating lookahead grammar");
-			var trnsCfg = _ToLRTransitionGrammar(cfg,pda);
+			var trnsCfg = _ToLRTransitionGrammar(cfg,lrfa);
+			trnsCfg.RebuildCache();
 			//Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Walking the LR(0) states");
-			var closure = new List<FA<string, ICollection<LRItem>>>();
+			var closure = new List<_Lrfa>();
 			var lalrclosure = new Lalr1ParseTable();
 
 			var itemSets = new List<ICollection<LRItem>>();
 
-			pda.FillClosure(closure);
+			lrfa.FillClosure(closure);
 			var i = 0;
 			foreach (var p in closure)
 			{
+				if (!p.IsAccepting)
+					System.Diagnostics.Debugger.Break();
 				itemSets.Add(p.AcceptSymbol);
 				lalrclosure.Add(new Dictionary<string, (int RuleOrStateId, string Left, string[] Right)>());
 				++i;
@@ -51,9 +54,9 @@ namespace Pck
 				++i;
 			}
 			//Console.Error.WriteLine("Done!");
-			//Console.Error.WriteLine("Computing follows...");
+			Console.Error.WriteLine("Computing follows...");
 			var follows = trnsCfg.FillFollows();
-			//Console.Error.WriteLine("Done!");
+			Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Working on reductions");
 			// work on our reductions now
 			var map = new Dictionary<CfgRule, ICollection<string>>(_TransitionMergeRuleComparer.Default);
@@ -187,16 +190,16 @@ namespace Pck
 				}
 			}
 		}
-		static FA<string, ICollection<LRItem>> _ToLrfa(CfgDocument cfg)
+		static _Lrfa _ToLrfa(CfgDocument cfg)
 		{
 			// TODO: this takes a long time sometimes
-			var map = new Dictionary<ICollection<LRItem>, FA<string, ICollection<LRItem>>>(_LRItemSetComparer.Default);
+			var map = new Dictionary<ICollection<LRItem>, _Lrfa>(_LRItemSetComparer.Default);
 			// create an augmented grammar - add rule {start} -> [[StartId]] 
 			var start = new CfgRule(cfg.GetAugmentedStartId(cfg.StartSymbol), new string[] { cfg.StartSymbol });
 			var cl = new List<LRItem>();
 			cl.Add(new LRItem(start, 0));
 			_FillLRClosureInPlace(cfg,cl);
-			var lrfa = new FA<string, ICollection<LRItem>>(true,cl);
+			var lrfa = new _Lrfa(true,cl);
 			map.Add(cl, lrfa);
 			var done = false;
 			var oc = 0;
@@ -204,8 +207,9 @@ namespace Pck
 			{
 				done = true;
 				var arr = map.Keys.ToArray();
-				foreach (var itemSet in new List<ICollection<LRItem>>(map.Keys))
+				for(var i = 0;i<arr.Length;++i)
 				{
+					var itemSet = arr[i];
 					foreach (var item in itemSet)
 					{
 						var next = item.RightIndex < item.Rule.Right.Count ? item.Rule.Right[item.RightIndex] : null;
@@ -215,7 +219,7 @@ namespace Pck
 							if (!_ContainsItemSet(map.Keys, n))
 							{
 								done = false;
-								var npda = new FA<string, ICollection<LRItem>>(true, n);
+								var npda = new _Lrfa(true, n);
 								map.Add(n, npda);
 							}
 							map[itemSet].Transitions[next] = map[n];
@@ -224,27 +228,27 @@ namespace Pck
 					}
 				
 				}
-				if (map.Count == oc)
+				if (done)
 				{
-					//Console.Error.WriteLine("Done!");
+					Console.Error.WriteLine("Done!");
 					done = true;
 				}
 				else
 				{
 					oc = map.Count;
-					//Console.Error.WriteLine("Map count {0}", oc);
+					Console.Error.WriteLine("Map count {0}", oc);
 				}
 			}
 
 
 			return lrfa;
 		}
-		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,FA<string, ICollection<LRItem>> pda = null)
+		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,_Lrfa pda = null)
 		{
 			var result = new CfgDocument();
 			if (null == pda)
 				pda = _ToLrfa(cfg);
-			var closure = new List<FA<string, ICollection<LRItem>>>();
+			var closure = new List<_Lrfa>();
 			var itemSets = new List<ICollection<LRItem>>();
 			pda.FillClosure(closure);
 			foreach (var p in closure)
@@ -264,10 +268,10 @@ namespace Pck
 						if (item.RightIndex < item.Rule.Right.Count)
 						{
 							int dst = -1;
-							FA<string, ICollection<LRItem>> dsts;
+							_Lrfa dsts;
 							if (p.Transitions.ContainsKey(rule.Left))
 							{
-								dsts = p.Transitions[rule.Left] as FA<string, ICollection<LRItem>>;
+								dsts = p.Transitions[rule.Left];
 								dst = itemSets.IndexOf(dsts.AcceptSymbol, _LRItemSetComparer.Default);
 							}
 
@@ -279,7 +283,7 @@ namespace Pck
 							foreach (var sym in rule.Right)
 							{
 								int s1 = itemSets.IndexOf(pc.AcceptSymbol, _LRItemSetComparer.Default);
-								var pt = pc.Transitions[sym] as FA<string, ICollection<LRItem>>;
+								var pt = pc.Transitions[sym];
 								int s2 = itemSets.IndexOf(pt.AcceptSymbol, _LRItemSetComparer.Default);
 								_LrtSymbol n = new _LrtSymbol(s1, sym, s2);
 								right.Add(n.ToString());
@@ -385,6 +389,30 @@ namespace Pck
 				if (null == obj) return result;
 				foreach (var lri in obj)
 					result ^= lri.GetHashCode();
+				return result;
+			}
+		}
+		class _Lrfa
+		{
+			public _Lrfa(bool isAccepting,ICollection<LRItem> acceptSymbol)
+			{
+				IsAccepting = isAccepting;
+				AcceptSymbol = acceptSymbol;
+			}
+			public _Lrfa() { }
+			public Dictionary<string, _Lrfa> Transitions { get; } = new Dictionary<string, _Lrfa>();
+			public ICollection<LRItem> AcceptSymbol { get; set; }
+			public bool IsAccepting { get; set; }
+
+			public ICollection<_Lrfa> FillClosure(ICollection<_Lrfa> result = null)
+			{
+				if (null == result)
+					result = new List<_Lrfa>();
+				else if (result.Contains(this))
+					return result;
+				result.Add(this);
+				foreach(var trns in Transitions)
+					trns.Value.FillClosure(result);
 				return result;
 			}
 		}
