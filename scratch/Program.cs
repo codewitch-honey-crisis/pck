@@ -28,7 +28,7 @@ class Program
 	{
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\javascript.pck");
 		var tokenizer = new JSTokenizer(new FileReaderEnumerable(@"..\..\..\hello.js"));
-		var pt = cfg.ToLalr1ParseTable();
+		var pt = cfg.ToLalr1ParseTable();// new _ConsoleProgress());
 		var parser = new DebugLalr1Parser2(cfg, tokenizer, pt);
 		parser.ShowHiddenTerminals =false;
 		while (parser.Read())
@@ -42,5 +42,23 @@ class Program
 
 		return;
 	}		
+	class _ConsoleProgress : IProgress<Lalr1Progress>
+	{
+		public void Report(Lalr1Progress progress)
+		{
+			switch(progress.Status)
+			{
+				case Lalr1Status.ComputingClosure:
+				case Lalr1Status.ComputingMove:
+				case Lalr1Status.ComputingConfigurations:
+				case Lalr1Status.CreatingLookaheadGrammar:
+					break;
+				default:
+					Console.Error.WriteLine("{0}: {1}", progress.Status, progress.Count);
+					break;
+			}
+			
+		}
+	}
 }
 

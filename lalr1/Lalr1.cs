@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Pck
 {
 	public static class Lalr1
 	{
-		public static Lalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg)
+		public static Lalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg, IProgress<Lalr1Progress> progress=null)
 		{
 			var start = cfg.GetAugmentedStartId(cfg.StartSymbol);
-			var lrfa = _ToLrfa(cfg);
+			var lrfa = _ToLrfa(cfg,progress);
 			//Console.Error.WriteLine("Creating lookahead grammar");
-			var trnsCfg = _ToLRTransitionGrammar(cfg,lrfa);
+			var trnsCfg = _ToLRTransitionGrammar(cfg,lrfa,progress);
 			trnsCfg.RebuildCache();
 			//Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Walking the LR(0) states");
@@ -24,8 +25,7 @@ namespace Pck
 			var i = 0;
 			foreach (var p in closure)
 			{
-				if (!p.IsAccepting)
-					System.Diagnostics.Debugger.Break();
+
 				itemSets.Add(p.AcceptSymbol);
 				lalrclosure.Add(new Dictionary<string, (int RuleOrStateId, string Left, string[] Right)>());
 				++i;
@@ -54,9 +54,9 @@ namespace Pck
 				++i;
 			}
 			//Console.Error.WriteLine("Done!");
-			Console.Error.WriteLine("Computing follows...");
+			//Console.Error.WriteLine("Computing follows...");
 			var follows = trnsCfg.FillFollows();
-			Console.Error.WriteLine("Done!");
+			//Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Working on reductions");
 			// work on our reductions now
 			var map = new Dictionary<CfgRule, ICollection<string>>(_TransitionMergeRuleComparer.Default);
@@ -71,9 +71,11 @@ namespace Pck
 						if (!f.Contains(o))
 							f.Add(o);
 			}
-			//var j = 0;
+			var j = 0;
 			foreach (var me in map)
 			{
+				if (null != progress)
+					progress.Report(new Lalr1Progress(Lalr1Status.ComputingReductions, j));
 				var rule = me.Key;
 				var lr = _LrtSymbol.Parse(rule.Right[rule.Right.Count - 1]);
 				var left = _LrtSymbol.Parse(rule.Left).Id;
@@ -92,15 +94,15 @@ namespace Pck
 						var iid = _LrtSymbol.Parse(f).Id;
 						(int RuleOrStateId, string Left, string[] Right) tuple;
 						var rid = cfg.Rules.IndexOf(newRule);
-						if (0 > rid)
-							System.Diagnostics.Debugger.Break(); // couldn't find our rule
+						//if (0 > rid)
+						//	System.Diagnostics.Debugger.Break(); // couldn't find our rule
 
 						// this gets rid of duplicate entries which seem to crop up in the table
 						// TODO: I think this is a shift reduce conflict if it debugger-breaks
 						if (lalrclosure[lr.To].TryGetValue(iid, out tuple))
 						{
-							if (rid != tuple.RuleOrStateId)
-								System.Diagnostics.Debugger.Break(); // possible shift-reduce conflice?
+						//	if (rid != tuple.RuleOrStateId)
+						//		System.Diagnostics.Debugger.Break(); // possible shift-reduce conflice?
 						}
 						else
 						{
@@ -108,30 +110,34 @@ namespace Pck
 								(rid, newRule.Left, rr));
 						}
 					}
-				//++j;
+				++j;
 				//Console.Error.WriteLine("Processing map entry {0} of {1}", j, map.Count);
 			}
 			//Console.Error.WriteLine("Done!");
 			return lalrclosure;
 		}
-		static ICollection<LRItem> _FillLRMove(this CfgDocument cfg,IEnumerable<LRItem> itemSet, object input, ICollection<LRItem> result = null)
+		static ICollection<LRItem> _FillLRMove(this CfgDocument cfg,IEnumerable<LRItem> itemSet, object input,IProgress<Lalr1Progress> progress,ICollection<LRItem> result = null)
 		{
 			if (null == result)
-				result = new List<LRItem>();
+				result = new HashSet<LRItem>();
+			int i = 0;
 			foreach (var item in itemSet)
 			{
+				if (null != progress)
+					progress.Report(new Lalr1Progress(Lalr1Status.ComputingMove, i));
 				var next = item.RightIndex < item.Rule.Right.Count ? item.Rule.Right[item.RightIndex] : null;
 				if (item.RightIndex < item.Rule.Right.Count)
 				{
 					if (Equals(next, input))
 					{
 						var lri = new LRItem(item.Rule, item.RightIndex + 1);
-						if (!result.Contains(lri))
+						//if (!result.Contains(lri))
 							result.Add(lri);
 					}
 				}
+				++i;
 			}
-			_FillLRClosureInPlace(cfg,result);
+			_FillLRClosureInPlace(cfg, progress,result);
 			return result;
 		}
 		static bool _ContainsItemSet(IEnumerable<ICollection<LRItem>> sets, ICollection<LRItem> set)
@@ -157,7 +163,7 @@ namespace Pck
 			}
 			return false;
 		}
-		static void _FillLRClosureInPlace(CfgDocument cfg,ICollection<LRItem> result)
+		static void _FillLRClosureInPlace(CfgDocument cfg,IProgress<Lalr1Progress> progress, ICollection<LRItem> result=null)
 		{
 			var done = false;
 			while (!done)
@@ -166,11 +172,13 @@ namespace Pck
 				var l = result.ToArray();
 				for (var i = 0; i < l.Length; ++i)
 				{
+					if(null!=progress)
+						progress.Report(new Lalr1Progress(Lalr1Status.ComputingClosure, i));
 					var item = l[i];
 					var next = item.RightIndex < item.Rule.Right.Count ? item.Rule.Right[item.RightIndex] : null;
 					if (item.RightIndex < item.Rule.Right.Count)
 					{
-						if (cfg.EnumNonTerminals().Contains(next))
+						if (cfg.IsNonTerminal(next))
 						{
 							for (int jc = cfg.Rules.Count, j = 0; j < jc; ++j)
 							{
@@ -190,16 +198,19 @@ namespace Pck
 				}
 			}
 		}
-		static _Lrfa _ToLrfa(CfgDocument cfg)
+		static _Lrfa _ToLrfa(CfgDocument cfg,IProgress<Lalr1Progress> progress)
 		{
+			if(null!=progress)
+				progress.Report(new Lalr1Progress(Lalr1Status.ComputingStates, 0));
 			// TODO: this takes a long time sometimes
 			var map = new Dictionary<ICollection<LRItem>, _Lrfa>(_LRItemSetComparer.Default);
 			// create an augmented grammar - add rule {start} -> [[StartId]] 
 			var start = new CfgRule(cfg.GetAugmentedStartId(cfg.StartSymbol), new string[] { cfg.StartSymbol });
-			var cl = new List<LRItem>();
+			var cl = new HashSet<LRItem>();
 			cl.Add(new LRItem(start, 0));
-			_FillLRClosureInPlace(cfg,cl);
+			_FillLRClosureInPlace(cfg,progress,cl);
 			var lrfa = new _Lrfa(true,cl);
+			var items = cl.Count;
 			map.Add(cl, lrfa);
 			var done = false;
 			var oc = 0;
@@ -215,12 +226,15 @@ namespace Pck
 						var next = item.RightIndex < item.Rule.Right.Count ? item.Rule.Right[item.RightIndex] : null;
 						if (item.RightIndex < item.Rule.Right.Count)
 						{
-							var n = _FillLRMove(cfg,itemSet, next);
+							var n = _FillLRMove(cfg,itemSet, next,progress);
 							if (!_ContainsItemSet(map.Keys, n))
 							{
 								done = false;
 								var npda = new _Lrfa(true, n);
 								map.Add(n, npda);
+								items += n.Count;
+								if(null!=progress)
+									progress.Report(new Lalr1Progress(Lalr1Status.ComputingConfigurations, items));
 							}
 							map[itemSet].Transitions[next] = map[n];
 							
@@ -228,35 +242,33 @@ namespace Pck
 					}
 				
 				}
-				if (done)
-				{
-					Console.Error.WriteLine("Done!");
-					done = true;
-				}
-				else
+				if(!done)
 				{
 					oc = map.Count;
-					Console.Error.WriteLine("Map count {0}", oc);
+					if(null!=progress)
+						progress.Report(new Lalr1Progress(Lalr1Status.ComputingStates, oc));
 				}
 			}
 
 
 			return lrfa;
 		}
-		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,_Lrfa pda = null)
+		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,_Lrfa lrfa, IProgress<Lalr1Progress> progress)
 		{
 			var result = new CfgDocument();
-			if (null == pda)
-				pda = _ToLrfa(cfg);
 			var closure = new List<_Lrfa>();
 			var itemSets = new List<ICollection<LRItem>>();
-			pda.FillClosure(closure);
+			lrfa.FillClosure(closure);
 			foreach (var p in closure)
 				itemSets.Add(p.AcceptSymbol);
 
 			_LrtSymbol start = null;
+			int j = 0;
 			foreach (var p in closure)
 			{
+				if (null != progress)
+					progress.Report(new Lalr1Progress(Lalr1Status.CreatingLookaheadGrammar, j));
+
 				int si = itemSets.IndexOf(p.AcceptSymbol, _LRItemSetComparer.Default);
 
 				foreach (var item in p.AcceptSymbol)
@@ -293,6 +305,7 @@ namespace Pck
 						}
 					}
 				}
+				++j;
 			}
 			result.StartSymbol = start.ToString();
 			return result;
@@ -365,8 +378,11 @@ namespace Pck
 				if (null == x || null == y) return false;
 				if (x.Count != y.Count)
 					return false;
-
 				foreach (var xx in x)
+					if (!y.Contains(xx))
+						return false;
+				
+				/*foreach (var xx in x)
 				{
 					var found = false;
 					foreach (var yy in y)
@@ -379,7 +395,7 @@ namespace Pck
 					}
 					if (!found)
 						return false;
-				}
+				}*/
 				return true;
 			}
 
