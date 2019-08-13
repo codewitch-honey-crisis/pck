@@ -100,8 +100,6 @@ namespace Pck
 								}
 							}
 						}
-						//if (!trimEmpties || ((null != k.Value) || 0 < k.Children.Count))
-						//	result.Children.Add(k);
 					}
 					else
 						break;

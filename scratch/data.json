@@ -1,0 +1,4600 @@
+﻿{
+  "backdrop_path": "/lgTB0XOd4UFixecZgwWrsR69AxY.jpg",
+  "created_by": [
+      {
+        "id": 1233032,
+        "credit_id": "525749f819c29531db09b231",
+        "name": "Matt Nix",
+        "profile_path": "/qvfbD7kc7nU3RklhFZDx9owIyrY.jpg"
+      }
+    ],
+  "episode_run_time": [
+      45
+    ],
+  "first_air_date": "2007-06-28",
+  "genres": [
+      {
+        "id": 10759,
+        "name": "Action & Adventure"
+      },
+      {
+        "id": 18,
+        "name": "Drama"
+      }
+    ],
+  "homepage": "http://usanetwork.com/burnnotice",
+  "id": 2919,
+  "in_production": false,
+  "languages": [
+      "en"
+    ],
+  "last_air_date": "2013-09-12",
+  "last_episode_to_air": {
+      "air_date": "2013-09-12",
+      "episode_number": 13,
+      "id": 224759,
+      "name": "Reckoning",
+      "overview": "Series Finale. Michael must regain the trust of those closest to him in order to finish what he started.",
+      "production_code": null,
+      "season_number": 7,
+      "show_id": 2919,
+      "still_path": "/lGdhFXEi29e2HeXMzgA9bvvIIJU.jpg",
+      "vote_average": 0,
+      "vote_count": 0
+    },
+  "name": "Burn Notice",
+  "next_episode_to_air": null,
+  "networks": [
+      {
+        "name": "USA Network",
+        "id": 30,
+        "logo_path": "/g1e0H0Ka97IG5SyInMXdJkHGKiH.png",
+        "origin_country": "US"
+      }
+    ],
+  "number_of_episodes": 111,
+  "number_of_seasons": 7,
+  "origin_country": [
+      "US"
+    ],
+  "original_language": "en",
+  "original_name": "Burn Notice",
+  "overview": "A formerly blacklisted spy uses his unique skills and training to help people in desperate situations.",
+  "popularity": 12.174,
+  "poster_path": "/A9EmzNtwfEnXYdMTgGKcL4kiZm2.jpg",
+  "production_companies": [
+      {
+        "id": 6981,
+        "logo_path": null,
+        "name": "Fuse Entertainment",
+        "origin_country": ""
+      },
+      {
+        "id": 6529,
+        "logo_path": null,
+        "name": "Fox Television Studios",
+        "origin_country": ""
+      }
+    ],
+  "seasons": [
+      {
+        "_id": "525749cc19c29531db0988cc",
+        "air_date": "2011-04-17",
+        "episodes": [
+            {
+              "air_date": "2011-04-17",
+              "episode_number": 1,
+              "id": 224659,
+              "name": "The Fall of Sam Axe",
+              "overview": "The Fall of Sam Axe is a 2011 American television film based on the USA Network television series Burn Notice. It was the first official Burn Notice spin-off, and was directed by Jeffrey Donovan. The show was broadcast in the United States on April 17, 2011, on the U.S. television network USA Network. The film, while not an episode of the show, introduced plot elements for the show's fifth season.",
+              "production_code": null,
+              "season_number": 0,
+              "show_id": 2919,
+              "still_path": "/dchZWB1GoBuk1l4HFtmbVdIfE6w.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 52886,
+                    "credit_id": "525749ee19c29531db09a624",
+                    "name": "Jeffrey Donovan",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/5i47zZDpnAjLBtQdlqhg5AIYCuT.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            }
+          ],
+        "name": "Specials",
+        "overview": "",
+        "poster_path": "/AoMKrA2j56SrQMBc3hp5jVmLv3B.jpg",
+        "season_number": 0
+      },
+      {
+        "_id": "525749cb19c29531db09884d",
+        "air_date": "2007-06-28",
+        "episodes": [
+            {
+              "air_date": "2007-06-28",
+              "episode_number": 1,
+              "id": 223655,
+              "name": "Burn Notice",
+              "overview": "Michael Westen is a spy who receives a \"burn notice\" while on assignment. Spies are not fired, rather they are issued a burn notice to let the agent know their services are no longer required.\n\nPenniless, Michael returns to his roots in Miami where he freelances his skills to earn money. First up, Michael helps a man clear his name after valuable pieces of art and jewelery are stolen.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/7lypjkgNLkYDxwcqGWmZmHH5ieq.jpg",
+              "vote_average": 8,
+              "vote_count": 1,
+              "crew": [
+                  {
+                    "id": 20833,
+                    "credit_id": "525749d019c29531db098a72",
+                    "name": "Jace Alexander",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/nkmQTpXAvsDjA9rt0hxtr1VnByF.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 6719,
+                    "name": "Ray Wise",
+                    "credit_id": "525749cc19c29531db098912",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/z1EXC8gYfFddC010e9YK5kI5NKC.jpg"
+                  },
+                  {
+                    "id": 92866,
+                    "name": "China Chow",
+                    "credit_id": "525749cc19c29531db098942",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/kUsfftCYQ7PoFL74wUNwwhPgxYK.jpg"
+                  },
+                  {
+                    "id": 17194,
+                    "name": "Chance Kelly",
+                    "credit_id": "525749cc19c29531db09896c",
+                    "character": "",
+                    "order": 2,
+                    "profile_path": "/hUfIviyweiBZk4JKoCIKyuo6HGH.jpg"
+                  },
+                  {
+                    "id": 95796,
+                    "name": "Dan Martin",
+                    "credit_id": "525749cd19c29531db098996",
+                    "character": "",
+                    "order": 3,
+                    "profile_path": "/u24mFuqwEE7kguXK32SS1UzIQzJ.jpg"
+                  },
+                  {
+                    "id": 173269,
+                    "name": "Dimitri Diatchenko",
+                    "credit_id": "525749cd19c29531db0989c0",
+                    "character": "",
+                    "order": 4,
+                    "profile_path": "/vPScVMpccnmNQSsvYhdwGcReblD.jpg"
+                  },
+                  {
+                    "id": 22821,
+                    "name": "David Zayas",
+                    "credit_id": "525749cd19c29531db0989ea",
+                    "character": "",
+                    "order": 5,
+                    "profile_path": "/eglTZ63x2lu9I2LiDmeyPxhgwc8.jpg"
+                  },
+                  {
+                    "id": 1233031,
+                    "name": "Nick Simmons",
+                    "credit_id": "525749cf19c29531db098a17",
+                    "character": "",
+                    "order": 6,
+                    "profile_path": "/xsc2u2QQA6Nu7SvUYUPKFlGl9fw.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-07-05",
+              "episode_number": 2,
+              "id": 223761,
+              "name": "Identity",
+              "overview": "Michael helps Madeline's friend retrieve money from a swindler, and in return he receives information about some visitors that came to his mother's home.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/xCrSERQLCemCuosWvsClTtyfbwe.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 29078,
+                    "credit_id": "525749d119c29531db098b10",
+                    "name": "Rod Hardy",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 20833,
+                    "credit_id": "525749d019c29531db098a72",
+                    "name": "Jace Alexander",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/nkmQTpXAvsDjA9rt0hxtr1VnByF.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 56162,
+                    "name": "Josh Randall",
+                    "credit_id": "525749d119c29531db098aac",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/2Ff16QWWbCF4Crs8oTBFM3S9Mar.jpg"
+                  },
+                  {
+                    "id": 1236,
+                    "name": "Mark Pellegrino",
+                    "credit_id": "525749d119c29531db098ad6",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/meXeaopncCQEw7saya4z0MhkUK2.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-07-12",
+              "episode_number": 3,
+              "id": 223777,
+              "name": "Fight or Flight",
+              "overview": "A drug dealer is witnessed brutally beating up a man by a single mother. Oleg asks Michael to help the woman, Cara, his best waitress, after she stops showing up for work.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/ulNHMwdWeVhx6YgfCq5dvsibKhv.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1212287,
+                    "credit_id": "525749d119c29531db098ba2",
+                    "name": "Colin Bucksey",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/M0HLG2t9vO31EOyn0XYYi48Zl5.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 207899,
+                    "name": "Natalie Dreyfuss",
+                    "credit_id": "525749d119c29531db098b74",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/rM1OBz1DsIxjdM5Hjhm7i1HjIdC.jpg"
+                  },
+                  {
+                    "id": 91332,
+                    "name": "Dedee Pfeiffer",
+                    "credit_id": "525749d119c29531db098b4a",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/9kgehqEvh92wzKzFpunMIckZTHf.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-07-19",
+              "episode_number": 4,
+              "id": 223786,
+              "name": "Old Friends",
+              "overview": "Michael's friend, Bill, asks for the spy's help in freeing his daughter from a prostitution ring. Meanwhile, Michael dodges multiple assassination attempts.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/q9ANd8nOUXdDL21S1a4h2M6xt8z.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1222761,
+                    "credit_id": "525749d219c29531db098cdc",
+                    "name": "David Solomon",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 109667,
+                    "name": "Ilia Volok",
+                    "credit_id": "525749d219c29531db098cae",
+                    "character": "",
+                    "order": 5,
+                    "gender": 2,
+                    "profile_path": "/k5ACLMgPMrZjKbnOmHmaeBLx2Te.jpg"
+                  },
+                  {
+                    "id": 1216160,
+                    "name": "Mark Totty",
+                    "credit_id": "525749d219c29531db098c84",
+                    "character": "",
+                    "order": 4,
+                    "gender": 0,
+                    "profile_path": null
+                  },
+                  {
+                    "id": 108696,
+                    "name": "Susie Abromeit",
+                    "credit_id": "525749d219c29531db098c5a",
+                    "character": "",
+                    "order": 3,
+                    "gender": 1,
+                    "profile_path": "/zcltq1oJQW2UA62JHRG9EUcYTUv.jpg"
+                  },
+                  {
+                    "id": 78116,
+                    "name": "William Haze",
+                    "credit_id": "525749d219c29531db098c30",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/hDqhc1vl0YAAMX6hzvyPVnEbktT.jpg"
+                  },
+                  {
+                    "id": 116514,
+                    "name": "Eric Lange",
+                    "credit_id": "525749d219c29531db098c06",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/ziOcfPKJ5jjyUikOOoCfjusy0Ut.jpg"
+                  },
+                  {
+                    "id": 109524,
+                    "name": "Seth Peterson",
+                    "credit_id": "525749d219c29531db098bdc",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/f12QauyfUcKLL6CkPhDdWTcRALV.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-07-26",
+              "episode_number": 5,
+              "id": 974681,
+              "name": "Family Business",
+              "overview": "Michael takes on arms dealers for an airport worker, while Nate obsesses about the car and their dad's will. ",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/sBFMZr2VClct1BqfvpoDF4vqQz5.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2007-08-02",
+              "episode_number": 6,
+              "id": 223862,
+              "name": "Unpaid Debts",
+              "overview": "Michael discovers a surprise aboard a boat he has retrieved from Jamaican gangsters. Meanwhile, a CSS agent urges Michael to stop his investigation into who burned him.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/mrFDLnhb1ppNYvaoKbK11HGzhS5.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1216149,
+                    "credit_id": "525749d519c29531db098f47",
+                    "name": "Paul Holahan",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/1ukdGo9KJ5EgOaXMpFAPLvIYxYN.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 1221481,
+                    "name": "Alex Carter",
+                    "credit_id": "525749d519c29531db098f19",
+                    "character": "",
+                    "order": 7,
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233031,
+                    "name": "Nick Simmons",
+                    "credit_id": "525749cf19c29531db098a17",
+                    "character": "",
+                    "order": 6,
+                    "profile_path": "/xsc2u2QQA6Nu7SvUYUPKFlGl9fw.jpg"
+                  },
+                  {
+                    "id": 65141,
+                    "name": "Laurence Mason",
+                    "credit_id": "525749d519c29531db098ee9",
+                    "character": "",
+                    "order": 5,
+                    "profile_path": "/lYWBLjfpeZS84FhwzrBWFMe3c3C.jpg"
+                  },
+                  {
+                    "id": 20562,
+                    "name": "Antoni Corone",
+                    "credit_id": "525749d519c29531db098ebf",
+                    "character": "",
+                    "order": 4,
+                    "profile_path": "/2Zyedc6NhCmRIIgf7INEf7Gqq7i.jpg"
+                  },
+                  {
+                    "id": 1223755,
+                    "name": "David Lomax",
+                    "credit_id": "525749d519c29531db098e95",
+                    "character": "",
+                    "order": 3,
+                    "profile_path": null
+                  },
+                  {
+                    "id": 100601,
+                    "name": "Audrey Landers",
+                    "credit_id": "525749d419c29531db098d43",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/qThVtmGSdt2fgWazMJmFFOxSGva.jpg"
+                  },
+                  {
+                    "id": 8191,
+                    "name": "Chris Ellis",
+                    "credit_id": "525749d519c29531db098e65",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/vbltM7DQXON9xvpiyNuUCglNRmz.jpg"
+                  },
+                  {
+                    "id": 21724,
+                    "name": "Alex Carter",
+                    "credit_id": "525749d519c29531db098e3b",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/sBt6dJhsdQih3fKBHH2TYkn8VFX.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-08-09",
+              "episode_number": 7,
+              "id": 223886,
+              "name": "Broken Rules",
+              "overview": "Michael works to rid a community in little Havana of a crime boss, all the while baiting Jason Bly at the risk of his family and friends.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/5PCNDe8UZhpA1ipnKkObkY7BtyQ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1227656,
+                    "credit_id": "525749d619c29531db09901b",
+                    "name": "Mere Smith",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 20833,
+                    "credit_id": "525749d019c29531db098a72",
+                    "name": "Jace Alexander",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/nkmQTpXAvsDjA9rt0hxtr1VnByF.jpg"
+                  },
+                  {
+                    "id": 21561,
+                    "credit_id": "525749d619c29531db09904d",
+                    "name": "Tim Matheson",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/iQQCtIS9bQJlQ8OMOzeidsJptAQ.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 65344,
+                    "name": "Esai Morales",
+                    "credit_id": "525749d519c29531db098f81",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/qeOm5PAxV0vDg5l9l0oqZsZg7PR.jpg"
+                  },
+                  {
+                    "id": 21724,
+                    "name": "Alex Carter",
+                    "credit_id": "525749d519c29531db098e3b",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/sBt6dJhsdQih3fKBHH2TYkn8VFX.jpg"
+                  },
+                  {
+                    "id": 100601,
+                    "name": "Audrey Landers",
+                    "credit_id": "525749d419c29531db098d43",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/qThVtmGSdt2fgWazMJmFFOxSGva.jpg"
+                  },
+                  {
+                    "id": 52416,
+                    "name": "Idalis DeLeón",
+                    "credit_id": "525749d519c29531db098fab",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/o7uGH4nMOYa45ZSqxdV3gB7OBUn.jpg"
+                  },
+                  {
+                    "id": 78498,
+                    "name": "Tony Perez",
+                    "credit_id": "525749d619c29531db098fe9",
+                    "character": "",
+                    "order": 4,
+                    "profile_path": "/xuVOZ1a9WvhSNyr2t89gu8W2QHx.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-08-16",
+              "episode_number": 8,
+              "id": 223904,
+              "name": "Wanted Man",
+              "overview": "With Michael's assistance, Fiona helps a man who has been framed for the theft of an expensive brooch.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/uaSgC1sedyz0XPtb9JZJgYRyoN2.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1214076,
+                    "credit_id": "525749d719c29531db099187",
+                    "name": "Ken Girotti",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 31028,
+                    "name": "Richard Schiff",
+                    "credit_id": "525749d619c29531db099087",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/bRvVZOj484MUq9np4JRajZg7XGq.jpg"
+                  },
+                  {
+                    "id": 56448,
+                    "name": "Jeff Chase",
+                    "credit_id": "525749d619c29531db0990b1",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/x7W1nwnsITcPdODJ5OEP0HF71BH.jpg"
+                  },
+                  {
+                    "id": 1214630,
+                    "name": "Michael Robinson",
+                    "credit_id": "525749d619c29531db0990db",
+                    "character": "",
+                    "order": 2,
+                    "gender": 0,
+                    "profile_path": null
+                  },
+                  {
+                    "id": 16841,
+                    "name": "Brett Cullen",
+                    "credit_id": "525749d619c29531db099105",
+                    "character": "",
+                    "order": 3,
+                    "gender": 2,
+                    "profile_path": "/dSucCeOCUJy8nDjUjxmWguu3W1D.jpg"
+                  },
+                  {
+                    "id": 88962,
+                    "name": "Chris Payne Gilbert",
+                    "credit_id": "525749d619c29531db09912f",
+                    "character": "",
+                    "order": 4,
+                    "gender": 0,
+                    "profile_path": "/7NGThqCD6IXU9wtVcKqmhnSf4cm.jpg"
+                  },
+                  {
+                    "id": 116907,
+                    "name": "Marshall Manesh",
+                    "credit_id": "525749d619c29531db099159",
+                    "character": "",
+                    "order": 5,
+                    "gender": 2,
+                    "profile_path": "/168Eocdc4VrVHMf76kLU6QqK6cL.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-08-23",
+              "episode_number": 9,
+              "id": 974682,
+              "name": "Hard Bargain",
+              "overview": "A slightly dim house sitter's fiancée has been kidnapped, and Sam guilts Michael into a rescue while he's negotiating with a D.C. bureaucrat to stop the burn notice.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/r4I1FemxANb9XbPzx7LefCVof4Q.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2007-09-13",
+              "episode_number": 10,
+              "id": 953468,
+              "name": "False Flag",
+              "overview": "Michael is hired to track down a woman's estranged husband, who has disappeared with their son. Michael soon finds himself pitted against somebody just as skilled and dangerous as he is.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/5R2mYtrLLAR37s8CVwzYap78M60.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1226123,
+                    "credit_id": "525749da19c29531db0992dc",
+                    "name": "Paul Shapiro",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 17312,
+                    "credit_id": "525749da19c29531db099306",
+                    "name": "Paul Shapiro",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 10682,
+                    "name": "Anthony Starke",
+                    "credit_id": "52714500760ee37ebb002a29",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/qBFnwUROHkoSTqOTsZZBF4lcjtM.jpg"
+                  },
+                  {
+                    "id": 92866,
+                    "name": "China Chow",
+                    "credit_id": "525749cc19c29531db098942",
+                    "character": "",
+                    "order": 1,
+                    "gender": 1,
+                    "profile_path": "/kUsfftCYQ7PoFL74wUNwwhPgxYK.jpg"
+                  },
+                  {
+                    "id": 20584,
+                    "name": "Lucy Lawless",
+                    "credit_id": "52714500760ee37ebb002a65",
+                    "character": "",
+                    "order": 2,
+                    "gender": 1,
+                    "profile_path": "/5A3gJXknAF0rKJAaBbHPr0IqS2q.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-09-20",
+              "episode_number": 11,
+              "id": 953469,
+              "name": "Dead Drop (1)",
+              "overview": "Sam takes on a case for a woman named Gillian, who is being blackmailed into using her security clearance to help smuggle heroin into the United States. Meanwhile, Michael is busy trying to arrange a meeting with Philip Cowan.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/kIcACK5vPi5iYSaGht5trUqKN4O.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 20833,
+                    "credit_id": "525749d019c29531db098a72",
+                    "name": "Jace Alexander",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/nkmQTpXAvsDjA9rt0hxtr1VnByF.jpg"
+                  },
+                  {
+                    "id": 34682,
+                    "credit_id": "525749db19c29531db09934b",
+                    "name": "Jeremiah S. Chechik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/avEcJTGsWFEzxpSOutwhkP3adQ8.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 31028,
+                    "name": "Richard Schiff",
+                    "credit_id": "525749d619c29531db099087",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/bRvVZOj484MUq9np4JRajZg7XGq.jpg"
+                  },
+                  {
+                    "id": 109524,
+                    "name": "Seth Peterson",
+                    "credit_id": "525749d219c29531db098bdc",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/f12QauyfUcKLL6CkPhDdWTcRALV.jpg"
+                  },
+                  {
+                    "id": 1216290,
+                    "name": "Raymond M. Lloyd",
+                    "credit_id": "525749db19c29531db0993af",
+                    "character": "",
+                    "order": 1,
+                    "gender": 0,
+                    "profile_path": "/cxKfiwb87x2epF9lyfOoQApyDsu.jpg"
+                  },
+                  {
+                    "id": 35241,
+                    "name": "Nicholle Tom",
+                    "credit_id": "52714501760ee37ebb002aed",
+                    "character": "",
+                    "order": 2,
+                    "gender": 1,
+                    "profile_path": "/nQm9DdqlqSkavXrfXAgMoDYxHxS.jpg"
+                  },
+                  {
+                    "id": 71838,
+                    "name": "Carmen López",
+                    "credit_id": "525749db19c29531db099409",
+                    "character": "",
+                    "order": 4,
+                    "gender": 0,
+                    "profile_path": "/eZ3HNOxMmii9S91q1K6MkyMfsT9.jpg"
+                  },
+                  {
+                    "id": 75671,
+                    "name": "Maya Stange",
+                    "credit_id": "52714501760ee37ebb002b35",
+                    "character": "",
+                    "order": 5,
+                    "gender": 1,
+                    "profile_path": "/4LnkpvHqTMAidrzQALnj9NkQZJ1.jpg"
+                  },
+                  {
+                    "id": 46922,
+                    "name": "Jeffrey Johnson",
+                    "credit_id": "52714502760ee37ebb002b75",
+                    "character": "",
+                    "order": 6,
+                    "gender": 2,
+                    "profile_path": null
+                  }
+                ]
+            },
+            {
+              "air_date": "2007-09-20",
+              "episode_number": 12,
+              "id": 224029,
+              "name": "Loose Ends (2)",
+              "overview": "Michael must rescue Sam from heroin smugglers, who happen to be ex-Special Forces, while also evading agents who are out to get him.",
+              "production_code": null,
+              "season_number": 1,
+              "show_id": 2919,
+              "still_path": "/1Dxa46IAu164hZDXks7jrrkCcfN.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 20833,
+                    "credit_id": "525749d019c29531db098a72",
+                    "name": "Jace Alexander",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/nkmQTpXAvsDjA9rt0hxtr1VnByF.jpg"
+                  },
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 71838,
+                    "name": "Carmen López",
+                    "credit_id": "525749db19c29531db099409",
+                    "character": "",
+                    "order": 4,
+                    "gender": 0,
+                    "profile_path": "/eZ3HNOxMmii9S91q1K6MkyMfsT9.jpg"
+                  },
+                  {
+                    "id": 21798,
+                    "name": "Johnny Messner",
+                    "credit_id": "525749db19c29531db0993d9",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/1TL83UaGFeBg0Se3h9r066VcHjo.jpg"
+                  },
+                  {
+                    "id": 1216290,
+                    "name": "Raymond M. Lloyd",
+                    "credit_id": "525749db19c29531db0993af",
+                    "character": "",
+                    "order": 1,
+                    "gender": 0,
+                    "profile_path": "/cxKfiwb87x2epF9lyfOoQApyDsu.jpg"
+                  },
+                  {
+                    "id": 109524,
+                    "name": "Seth Peterson",
+                    "credit_id": "525749d219c29531db098bdc",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/f12QauyfUcKLL6CkPhDdWTcRALV.jpg"
+                  },
+                  {
+                    "id": 19277,
+                    "name": "Todd Stashwick",
+                    "credit_id": "525749db19c29531db099385",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/ggwdShwfPVZ4pIhKECqpVObPRJe.jpg"
+                  }
+                ]
+            }
+          ],
+        "name": "Season 1",
+        "overview": "Season one of the American television series Burn Notice originally aired from June 28, 2007 to September 20, 2007.",
+        "poster_path": "/bla4mmSBi4xH1Be1rljjhSfpE4p.jpg",
+        "season_number": 1
+      },
+      {
+        "_id": "525749cb19c29531db098867",
+        "air_date": "2008-07-10",
+        "episodes": [
+            {
+              "air_date": "2008-07-10",
+              "episode_number": 1,
+              "id": 224054,
+              "name": "Breaking and Entering",
+              "overview": "Having been recruited by the people who burned him, Michael's new handler, Carla, tasks him with helping a computer tech, whose wife and daughter were kidnapped, liberate some information that is guarded by mercenaries.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/ul8m8k6mOKIxxALDczw2dF1XIpj.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1216149,
+                    "credit_id": "525749d519c29531db098f47",
+                    "name": "Paul Holahan",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/1ukdGo9KJ5EgOaXMpFAPLvIYxYN.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 52801,
+                    "name": "Patrick Fischler",
+                    "credit_id": "525749dc19c29531db099515",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/x7btvLV8RnW5dw9Of1uYRp86E7V.jpg"
+                  },
+                  {
+                    "id": 113006,
+                    "name": "James C. Burns",
+                    "credit_id": "525749dc19c29531db09953f",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/1MEq61zJXqriqhbOINrR0CwPExj.jpg"
+                  },
+                  {
+                    "id": 1233036,
+                    "name": "Joel Spence",
+                    "credit_id": "525749de19c29531db09956c",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/xfpsTePEVneoG2vs57st9mnmhoo.jpg"
+                  },
+                  {
+                    "id": 74423,
+                    "name": "Tricia Helfer",
+                    "credit_id": "525749de19c29531db099596",
+                    "character": "Carla",
+                    "order": 3,
+                    "gender": 1,
+                    "profile_path": "/uEQgBzR1Bk4cIsPFLAfZ6ckm7EK.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2008-07-17",
+              "episode_number": 2,
+              "id": 224108,
+              "name": "Turn and Burn",
+              "overview": "While Michael's new handler asks him to locate a Tunisian counterfeiter, Sam asks him to help a woman who says she is being stalked by a drug dealer, and his mother asks him to join her in seeing a therapist.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/fXPj4CnhxmZGdfPfdVtmoUCYJyZ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1214626,
+                    "credit_id": "525749df19c29531db099668",
+                    "name": "John T. Kretchmer",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 74423,
+                    "name": "Tricia Helfer",
+                    "credit_id": "525749de19c29531db099596",
+                    "character": "Carla",
+                    "order": 3,
+                    "gender": 1,
+                    "profile_path": "/uEQgBzR1Bk4cIsPFLAfZ6ckm7EK.jpg"
+                  },
+                  {
+                    "id": 26651,
+                    "name": "Mario Ernesto Sánchez",
+                    "credit_id": "525749df19c29531db099634",
+                    "character": "",
+                    "order": 2,
+                    "gender": 0,
+                    "profile_path": "/f6XWjHEPuPf35RswwZJBzV8bAq.jpg"
+                  },
+                  {
+                    "id": 18917,
+                    "name": "Erick Avari",
+                    "credit_id": "525749df19c29531db09960a",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/aO53uKgLUCID9rCI0SRAIEdsIex.jpg"
+                  },
+                  {
+                    "id": 116474,
+                    "name": "Kevin Alejandro",
+                    "credit_id": "525749df19c29531db0995e0",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/ag6WtAsjqwyy85HeB4lpOgdYMQJ.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2008-07-24",
+              "episode_number": 3,
+              "id": 224050,
+              "name": "Trust Me",
+              "overview": "Andy, a cell-phone salesman, was conned into investing in a fake Cuban nightclub. Michael helps Andy when the people he borrowed the money from come knocking.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/n9mNTQUwborcskkg4NpMJSKpZxJ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1216149,
+                    "credit_id": "525749d519c29531db098f47",
+                    "name": "Paul Holahan",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/1ukdGo9KJ5EgOaXMpFAPLvIYxYN.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 117824,
+                    "name": "Assaf Cohen",
+                    "credit_id": "525749dc19c29531db0994d1",
+                    "character": "",
+                    "order": 2,
+                    "profile_path": "/oomyDwiJ6LxMH6CCx8oyzDC6kZZ.jpg"
+                  },
+                  {
+                    "id": 58791,
+                    "name": "Patrick Fabian",
+                    "credit_id": "525749dc19c29531db0994a7",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/qVBTTDdWkMaElKx77VFz8zy3Noq.jpg"
+                  },
+                  {
+                    "id": 74276,
+                    "name": "Cindy Pickett",
+                    "credit_id": "525749db19c29531db09947d",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/6CqKvPebiGfLtPkUO2wJi9kd572.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2008-07-31",
+              "episode_number": 4,
+              "id": 224116,
+              "name": "Comrades",
+              "overview": "Michael helps a Russian woman, Katya, whose sister was smuggled into the U.S. by gangsters; however, Katya cannot afford their extortionate demands and her sister is being held captive.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/xfbzj5n6tIYqy94ERNmJWg2XZFp.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1214626,
+                    "credit_id": "525749df19c29531db099668",
+                    "name": "John T. Kretchmer",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 109524,
+                    "name": "Seth Peterson",
+                    "credit_id": "525749d219c29531db098bdc",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/f12QauyfUcKLL6CkPhDdWTcRALV.jpg"
+                  },
+                  {
+                    "id": 36218,
+                    "name": "Andrew Divoff",
+                    "credit_id": "525749df19c29531db0996cc",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/3ana0vJs5uLDXb6dSHvp5naKmcl.jpg"
+                  },
+                  {
+                    "id": 1211,
+                    "name": "Larry Miller",
+                    "credit_id": "525749df19c29531db0996fc",
+                    "character": "",
+                    "order": 3,
+                    "gender": 2,
+                    "profile_path": "/xA8zCxNrwtamLaLWNBkLyX5tGtU.jpg"
+                  },
+                  {
+                    "id": 209200,
+                    "name": "Emily Baldoni",
+                    "credit_id": "525749df19c29531db099726",
+                    "character": "",
+                    "order": 4,
+                    "gender": 1,
+                    "profile_path": "/hgpVZzjuhPuz8el23FhiMQJAzyA.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2008-08-07",
+              "episode_number": 5,
+              "id": 224129,
+              "name": "Scatter Point",
+              "overview": "Michael poses as a safe cracker to help out a reformed ex-con who is unwillingly part of a heist, and tries to sneak into the heavily-guarded office of his handler. Meanwhile, Sam gets an unexpected proposition from his girlfriend.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/rrE0qgIKPaLB9nIBD3f4591nt17.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 29078,
+                    "credit_id": "525749d119c29531db098b10",
+                    "name": "Rod Hardy",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 59153,
+                    "name": "Robin Givens",
+                    "credit_id": "525749df19c29531db09976a",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/sFJW5HWMK2oEYES9f59DzdFPhVh.jpg"
+                  },
+                  {
+                    "id": 100601,
+                    "name": "Audrey Landers",
+                    "credit_id": "525749d419c29531db098d43",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/qThVtmGSdt2fgWazMJmFFOxSGva.jpg"
+                  },
+                  {
+                    "id": 48530,
+                    "name": "Maurice Compte",
+                    "credit_id": "525749df19c29531db09979a",
+                    "character": "",
+                    "order": 2,
+                    "profile_path": "/gt8vrkSOmv4dt5AfIcVsevNQ05b.jpg"
+                  },
+                  {
+                    "id": 18041,
+                    "name": "Oded Fehr",
+                    "credit_id": "525749e019c29531db0997c4",
+                    "character": "",
+                    "order": 3,
+                    "profile_path": "/yv1u3LNPbk95STpGTJJ1pWiROua.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2008-08-14",
+              "episode_number": 6,
+              "id": 224141,
+              "name": "Bad Blood",
+              "overview": "When someone's suspected of embezzling from a hip-hop mogul's charity, Michael attempts to trick the thief into stealing a larger sum.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/sD2o6Nom9PHwmBIY80Z3R9vih0X.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 18320,
+                    "credit_id": "525749e219c29531db0998ed",
+                    "name": "Bronwen Hughes",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/eOCUyOpDGsliiWA3c5qc2CGS5he.jpg"
+                  },
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 26086,
+                    "name": "Michael Shanks",
+                    "credit_id": "525749e019c29531db09980e",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/aa3Pa5w4d06P0JghMjg5wQtVQJK.jpg"
+                  },
+                  {
+                    "id": 5384,
+                    "name": "Method Man",
+                    "credit_id": "525749e019c29531db099838",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/3LXIZTItw2fnA8gdBLJPLXg0DEC.jpg"
+                  },
+                  {
+                    "id": 52937,
+                    "name": "Rob Benedict",
+                    "credit_id": "525749e019c29531db099862",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/9HvfCh12BQIKnViqt8xpGWdkbqV.jpg"
+                  },
+                  {
+                    "id": 1233035,
+                    "name": "Ben Watkins",
+                    "credit_id": "525749e019c29531db09988c",
+                    "character": "",
+                    "order": 3,
+                    "gender": 0,
+                    "profile_path": null
+                  }
+                ]
+            },
+            {
+              "air_date": "2008-08-21",
+              "episode_number": 7,
+              "id": 224198,
+              "name": "Rough Seas",
+              "overview": "Michael is hired to track down nearly a million dollars worth of pharmaceuticals that were stolen by thieves on their way to Tanzania.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/bp3RKyELMVDvHtIyGw7DI1vfaJ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  },
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 26086,
+                    "name": "Michael Shanks",
+                    "credit_id": "525749e019c29531db09980e",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/aa3Pa5w4d06P0JghMjg5wQtVQJK.jpg"
+                  },
+                  {
+                    "id": 8191,
+                    "name": "Chris Ellis",
+                    "credit_id": "525749d519c29531db098e65",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/vbltM7DQXON9xvpiyNuUCglNRmz.jpg"
+                  },
+                  {
+                    "id": 94864,
+                    "name": "Max Martini",
+                    "credit_id": "525749e219c29531db099933",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/fUGKNDsQnKCLzNrWyyBkx7O26XC.jpg"
+                  },
+                  {
+                    "id": 49815,
+                    "name": "Silas Weir Mitchell",
+                    "credit_id": "525749e219c29531db09995d",
+                    "character": "",
+                    "order": 3,
+                    "gender": 2,
+                    "profile_path": "/jWt5ZZCY9dV7R8ZkkyxZ2VEYNFt.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2008-09-11",
+              "episode_number": 8,
+              "id": 974683,
+              "name": "Double Booked",
+              "overview": "Michael and Sam discover the location of Bill Johnson (Joe Kimble) by going through his trash and finding laundry bluing, a staple among spies to prevent snooping in trash. Michael returns to his loft to find Larry Sizemore (Tim Matheson), a former mentor of Michael's. Larry offers Michael $20,000, but then Michael raises it to $30,000, to kill a nurse named Jeannie (Amy Pietz) who stands to gain a lot of money when her ailing husband dies. Michael and Fiona track down Jeannie and inform her that Drew (Zachery Ty Bryan), her stepson, has placed out a bounty on her head. Michael protects Jeannie by faking her poisoning, aided by Fiona's new boyfriend, Campbell (Gary Weeks), a paramedic. Larry kills Drew to cover his tracks and leaves Miami. Michael and Sam follow Bill Johnson into a building and find out that Carla has been using Michael for tactical support for an unknown operation. Michael had collected the ID card for entry into the building (Episode 2), and the rifle that sniper Bill Johnson would be using. Michael also attends family counseling with his mother.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/sF7qwjICsgU1Oe6OrbTizboj1wC.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2008-09-18",
+              "episode_number": 9,
+              "id": 224253,
+              "name": "Good Soldier",
+              "overview": "Hired by Fiona's boyfriend's friend Henry, Michael poses as a disgruntled bodyguard to thwart a kidnapping plot masterminded by a ruthless man named Lesher.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/65VCk66rRWJ3SDJGYARue7TqFg4.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 80246,
+                    "name": "John Allen Nelson",
+                    "credit_id": "525749e519c29531db099a66",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/ncb6RcxTCM8Kx7pMmo1bX9k8StL.jpg"
+                  },
+                  {
+                    "id": 168875,
+                    "name": "Gary Weeks",
+                    "credit_id": "525749e419c29531db099a22",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/eZNvAf6RaRs0bYrc6lzTzXXuBSC.jpg"
+                  },
+                  {
+                    "id": 1223970,
+                    "name": "Larry Clarke",
+                    "credit_id": "525749e519c29531db099a96",
+                    "character": "",
+                    "order": 2,
+                    "gender": 0,
+                    "profile_path": "/4XGjmZXOnM0aNXhIS1b7rwIKn4X.jpg"
+                  },
+                  {
+                    "id": 1946010,
+                    "name": "Louis Aguirre",
+                    "credit_id": "5bba1a6a9251417f4901ee0f",
+                    "character": "",
+                    "order": 143,
+                    "gender": 2,
+                    "profile_path": null
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-01-22",
+              "episode_number": 10,
+              "id": 224259,
+              "name": "Do No Harm",
+              "overview": "Michael prevents a man from committing suicide, whose son suffers from a heart condition. He had lost his savings in a scam after investing in a \"miracle drug\" for his son, so Michael decides to get him his money back.\n\nMeanwhile, he has to deal with an explosion at his place and his brother in jail.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/fOy8YJMsbkFdBzPv8qSCUB3pNnE.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749e519c29531db099b62",
+                    "name": "Matt Nix",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 94974,
+                    "name": "David Barry Gray",
+                    "credit_id": "525749e519c29531db099ada",
+                    "character": "Kenny",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": null
+                  },
+                  {
+                    "id": 154491,
+                    "name": "Stacy Haiduk",
+                    "credit_id": "525749e519c29531db099b04",
+                    "character": "Rachel",
+                    "order": 2,
+                    "gender": 1,
+                    "profile_path": "/9ka4TeJyHGbafuMvts15XjOoNad.jpg"
+                  },
+                  {
+                    "id": 74423,
+                    "name": "Tricia Helfer",
+                    "credit_id": "525749de19c29531db099596",
+                    "character": "Carla",
+                    "order": 3,
+                    "gender": 1,
+                    "profile_path": "/uEQgBzR1Bk4cIsPFLAfZ6ckm7EK.jpg"
+                  },
+                  {
+                    "id": 92615,
+                    "name": "Graham Shiels",
+                    "credit_id": "550a83e9c3a3684883000e9d",
+                    "character": "Todd",
+                    "order": 129,
+                    "gender": 2,
+                    "profile_path": "/qH1mrJ880LQBeGsJP8b1iQRW2gL.jpg"
+                  },
+                  {
+                    "id": 1921112,
+                    "name": "Charlie Nix",
+                    "credit_id": "5a91ab75c3a368252900f3b6",
+                    "character": "Jack",
+                    "order": 140,
+                    "gender": 2,
+                    "profile_path": null
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-01-29",
+              "episode_number": 11,
+              "id": 224269,
+              "name": "Hot Spot",
+              "overview": "Sam calls in a favor and asks Michael to talk to Sean Martin, a football coach who helps impoverished kids. Sean wants Michael's assistance helping one of his players, Corey Jensen, who's being targeted by gangsters.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/1vR55FVRMcMGRSptbkvuWF5PGse.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  },
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 135651,
+                    "name": "Michael B. Jordan",
+                    "credit_id": "525749e519c29531db099b9c",
+                    "character": "Corey Jensen",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/4vXkRCbrquoP5Lrb4px7tubDLMC.jpg"
+                  },
+                  {
+                    "id": 69127,
+                    "name": "Michael Irvin",
+                    "credit_id": "525749e519c29531db099bc6",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/8ID3JJbdyO7VIleSJBDafX7773c.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-02-05",
+              "episode_number": 12,
+              "id": 224288,
+              "name": "Seek and Destroy",
+              "overview": "Michael, under the alias of Miles Parker, is hired by Scott Chandler to investigate strange activity - log-ins at odd hours, unusual computer activity and telephone bugging - at an art gallery. But after being attacked by the the gallery's receptionist, Michael finds himself working against Chandler.\n\nMeanwhile, Michael needs to find the person who planted the bomb at his loft, therefor he turns to arms dealer Seymour for help.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/q5RPonp0pVcNpEJX6NGmDcXhgca.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1212957,
+                    "credit_id": "525749e619c29531db099c9e",
+                    "name": "Scott Peters",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 25376,
+                    "name": "Joel Gretsch",
+                    "credit_id": "525749e619c29531db099c10",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/5CeKN4wIQUAvF3mlRdeVAQ5ybSs.jpg"
+                  },
+                  {
+                    "id": 22132,
+                    "name": "M.C. Gainey",
+                    "credit_id": "525749e619c29531db099c3a",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/icWXPTZlbOytDwMzRLM37TyBcox.jpg"
+                  },
+                  {
+                    "id": 80109,
+                    "name": "Marla Sokoloff",
+                    "credit_id": "525749e619c29531db099c64",
+                    "character": "",
+                    "order": 2,
+                    "profile_path": "/qNyn2sQpvMxmZjaEVXElUYb9IRl.jpg"
+                  },
+                  {
+                    "id": 49815,
+                    "name": "Silas Weir Mitchell",
+                    "credit_id": "525749e219c29531db09995d",
+                    "character": "",
+                    "order": 3,
+                    "profile_path": "/jWt5ZZCY9dV7R8ZkkyxZ2VEYNFt.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-02-12",
+              "episode_number": 13,
+              "id": 224299,
+              "name": "Bad Breaks",
+              "overview": "A federal agent with a knack for giving Michael trouble returns to Miami to force Michael to hand over blackmail materials; the two enemies must work together during a bank robbery.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/5xQ55dM73dqZW02PvAAOmaZT1nJ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1214626,
+                    "credit_id": "525749df19c29531db099668",
+                    "name": "John T. Kretchmer",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 21724,
+                    "name": "Alex Carter",
+                    "credit_id": "525749d519c29531db098e3b",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/sBt6dJhsdQih3fKBHH2TYkn8VFX.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-02-19",
+              "episode_number": 14,
+              "id": 224303,
+              "name": "Truth & Reconciliation",
+              "overview": "Michael takes on a sympathy case for a Haitian man whose daughter was murdered by a corrupt government official he believes is hiding in Miami. Michael gets closer to tracking down the person who tried to kill him.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/ppvsolJ5p0BTg4m04FrSfOR5k6J.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 15521,
+                    "credit_id": "525749e719c29531db099d08",
+                    "name": "Ernest R. Dickerson",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/2WSGP4pQ2ICukCnbvFNeHRcMEIM.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 26086,
+                    "name": "Michael Shanks",
+                    "credit_id": "525749e019c29531db09980e",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/aa3Pa5w4d06P0JghMjg5wQtVQJK.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-02-26",
+              "episode_number": 15,
+              "id": 224308,
+              "name": "Sins of Omission",
+              "overview": "Michael's ex-fiancé seeks the spy's help in freeing her son, who was kidnapped by a disillusioned ex-spy named Brennen.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/e6UGwxxWTdfp2pM8syPbgPXxsQr.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 66960,
+                    "credit_id": "525749e719c29531db099da6",
+                    "name": "Dennie Gordon",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/3ykd6ByuQ77EpPYVGWate1BBtVP.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 26086,
+                    "name": "Michael Shanks",
+                    "credit_id": "525749e019c29531db09980e",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/aa3Pa5w4d06P0JghMjg5wQtVQJK.jpg"
+                  },
+                  {
+                    "id": 2133,
+                    "name": "Dina Meyer",
+                    "credit_id": "525749e719c29531db099d42",
+                    "character": "",
+                    "order": 0,
+                    "gender": 1,
+                    "profile_path": "/a208ijs7X3u8lPzKWHeXSp3PiMd.jpg"
+                  },
+                  {
+                    "id": 155934,
+                    "name": "Jay Karnes",
+                    "credit_id": "525749e719c29531db099d72",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/pC5Lv7HDOlii5HnhmpS2h0Rtusb.jpg"
+                  },
+                  {
+                    "id": 74423,
+                    "name": "Tricia Helfer",
+                    "credit_id": "525749de19c29531db099596",
+                    "character": "Carla",
+                    "order": 3,
+                    "gender": 1,
+                    "profile_path": "/uEQgBzR1Bk4cIsPFLAfZ6ckm7EK.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-03-05",
+              "episode_number": 16,
+              "id": 224321,
+              "name": "Lesser Evil",
+              "overview": "Michael gets to know Victor's motivation and his connection to Carla after capturing him. When the truth about Carla's organization is revealed, everyone is put in danger.",
+              "production_code": null,
+              "season_number": 2,
+              "show_id": 2919,
+              "still_path": "/zoYIXsd4V0xIPUOv7BV8LT3Bz0t.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 21561,
+                    "credit_id": "525749d619c29531db09904d",
+                    "name": "Tim Matheson",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/iQQCtIS9bQJlQ8OMOzeidsJptAQ.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 26086,
+                    "name": "Michael Shanks",
+                    "credit_id": "525749e019c29531db09980e",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/aa3Pa5w4d06P0JghMjg5wQtVQJK.jpg"
+                  },
+                  {
+                    "id": 4251,
+                    "name": "John Mahoney",
+                    "credit_id": "525749e719c29531db099de0",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/jK2uDKxfysuYjNAgUxbwyhd4fKD.jpg"
+                  },
+                  {
+                    "id": 74423,
+                    "name": "Tricia Helfer",
+                    "credit_id": "525749de19c29531db099596",
+                    "character": "Carla",
+                    "order": 3,
+                    "gender": 1,
+                    "profile_path": "/uEQgBzR1Bk4cIsPFLAfZ6ckm7EK.jpg"
+                  }
+                ]
+            }
+          ],
+        "name": "Season 2",
+        "overview": "",
+        "poster_path": "/t0HYW8qoCmPIoLVioF9GckhI5kt.jpg",
+        "season_number": 2
+      },
+      {
+        "_id": "525749cb19c29531db09887e",
+        "air_date": "2009-06-04",
+        "episodes": [
+            {
+              "air_date": "2009-06-04",
+              "episode_number": 1,
+              "id": 224412,
+              "name": "Friends and Family",
+              "overview": "Michael is bailed out of jail by an old friend who asks for his help in return.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/eewiUcjwFrZKtDO8eBw1Xp3mZrc.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 21561,
+                    "credit_id": "525749d619c29531db09904d",
+                    "name": "Tim Matheson",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/iQQCtIS9bQJlQ8OMOzeidsJptAQ.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 3979,
+                    "name": "Castulo Guerra",
+                    "credit_id": "525749ea19c29531db09a276",
+                    "character": "",
+                    "order": 2,
+                    "profile_path": "/njap7gZlVKHMKFb0aMQB17kMUNh.jpg"
+                  },
+                  {
+                    "id": 54865,
+                    "name": "Jeff Kober",
+                    "credit_id": "525749ea19c29531db09a24c",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/eMp9ZsC77yddwW4SMiuZ7xOd0GS.jpg"
+                  },
+                  {
+                    "id": 12792,
+                    "name": "Brian Van Holt",
+                    "credit_id": "525749ea19c29531db09a222",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/tGRqXOj0pCLjzI8lC3GD3u5HpXM.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-06-11",
+              "episode_number": 2,
+              "id": 224419,
+              "name": "Question & Answer",
+              "overview": "Michael faces a new foe in Detective Paxson, who has tracked down some explosives Michael has been hiding in a storage facility, forcing Michael to surreptitiously get them out before Paxson gets a warrant.  Meanwhile, Michael and team must rescue a kidnapped child by using reverse interrogation.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/e3cXYtQivHzjDiBvNb6se4ixMr3.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1214626,
+                    "credit_id": "525749df19c29531db099668",
+                    "name": "John T. Kretchmer",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 166667,
+                    "name": "Rebecca Lowman",
+                    "credit_id": "525749ea19c29531db09a314",
+                    "character": "",
+                    "order": 2,
+                    "gender": 0,
+                    "profile_path": "/4cgv0GPPUD8AcWKHY6P71ozgiHe.jpg"
+                  },
+                  {
+                    "id": 7497,
+                    "name": "Holt McCallany",
+                    "credit_id": "525749ea19c29531db09a2ea",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/5Mw4StSwWwTLyBapXz9nOg7iUl5.jpg"
+                  },
+                  {
+                    "id": 56455,
+                    "name": "Moon Bloodgood",
+                    "credit_id": "525749ea19c29531db09a2c0",
+                    "character": "",
+                    "order": 0,
+                    "gender": 1,
+                    "profile_path": "/kqzvpsAgrwMaRK80jO6wHN550wI.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-06-18",
+              "episode_number": 3,
+              "id": 974684,
+              "name": "End Run",
+              "overview": "Nate returns from Las Vegas to meet with an investor to expand his limo company, and is questioned by Detective Paxson, who tries to convince Nate to betray and reveal everything about Michael's private investigations. Although Nate remains firm and refuses, Michael and the team plan to get Paxson into trouble with the Mayor's office and make her break off her investigation. As Michael goes to his car, he is surprised by Tyler Brennen, an arms trader and dealer who proceeds to disable Michael's car (due to holding a grudge against Michael since Season 2; \"Sins of Omission\"). Brennen has returned to Miami, after succeeding in getting rid of his South American pursuers by anonymously financing and supplying a private, bloody war between them and a rival cartel. He has taken on the role of Nate's investor and brought a Sicilian enforcer, \"The Butcher\", who is currently in a meeting with Nate. Brennen threatens to have Nate killed if Michael doesn't help him pull off an elaborate heist. Michael proceeds to do so, eventually realizing Brennen plans to steal a government weapon, but gradually lays an elaborate plan, with the help of the team and Barry, to destroy Brennen's presence in Miami. To force Michael to finish the job, Nate is brought to the heist by Brennen and is subsequently shot and injured. Michael, refusing to steal the weapon, is forced to spring his trap: Sam and Fiona blow up Brennen's house, and Barry tricks Brennen into giving him his financial info and pretends to drain his accounts (Barry pretends to be the bank manager). Brennen is undeterred, until Michael claims to have put an assassin in place to kill Annabelle; Brennen's secret young daughter, who is away at private school in Switzerland. Terrified for his child's safety, Brennen departs, but not before saying they will meet again. In the end, it is revealed the plan to get Paxson into trouble failed: it only succeeded in getting Paxson's partner suspended, driving Paxson to declare to Michael she will play just as under-handed.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/1fcQORUe5vYjRX8H5y58UC7Q8Ho.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2009-06-25",
+              "episode_number": 4,
+              "id": 224434,
+              "name": "Fearless Leader",
+              "overview": "Michael gets a hold of a crime lord who seems to be the prime suspect in a Miami PD investigation, so he wants to hand him over in return for being left alone.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/A3IdwZauBevxHYCLkxS43NSTdih.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1214626,
+                    "credit_id": "525749df19c29531db099668",
+                    "name": "John T. Kretchmer",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 43902,
+                    "name": "Erik Palladino",
+                    "credit_id": "525749eb19c29531db09a3d8",
+                    "character": "",
+                    "order": 2,
+                    "profile_path": "/8pa03e4XTU8UIOWABONZJZuokjg.jpg"
+                  },
+                  {
+                    "id": 32897,
+                    "name": "Nicholas Turturro",
+                    "credit_id": "525749eb19c29531db09a3ae",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/wEHGvoVgA7fEl93jmAYD3JRsX3b.jpg"
+                  },
+                  {
+                    "id": 1211946,
+                    "name": "P. J. Byrne",
+                    "credit_id": "525749eb19c29531db09a384",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/y2ZxfTzMfXdGdqdDAyCPHFcHjqy.jpg"
+                  },
+                  {
+                    "id": 56455,
+                    "name": "Moon Bloodgood",
+                    "credit_id": "525749ea19c29531db09a2c0",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/kqzvpsAgrwMaRK80jO6wHN550wI.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-07-09",
+              "episode_number": 5,
+              "id": 224448,
+              "name": "Signals and Codes",
+              "overview": "A paranoid mathematician enlists Michael's help to stop the vice president of a defense firm from selling company secrets; Michael tracks down a new contact in the intelligence community.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/jJIM03mir77tjRn1htkg9eWderV.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 34682,
+                    "credit_id": "525749db19c29531db09934b",
+                    "name": "Jeremiah S. Chechik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/avEcJTGsWFEzxpSOutwhkP3adQ8.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 51381,
+                    "name": "Michael Weston",
+                    "credit_id": "525749eb19c29531db09a428",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/1bZX1MS5NZxiqFmhmZhnhAJI2hB.jpg"
+                  },
+                  {
+                    "id": 169337,
+                    "name": "Katherine LaNasa",
+                    "credit_id": "525749eb19c29531db09a452",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/9cG8jSI1WheeZWAxtXxUHAt1y99.jpg"
+                  },
+                  {
+                    "id": 59739,
+                    "name": "Otto Sanchez",
+                    "credit_id": "525749e819c29531db099ede",
+                    "character": "",
+                    "order": 4,
+                    "profile_path": "/mlRevsrPkl0UJ4oRZTIjTHwKQAw.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-07-16",
+              "episode_number": 6,
+              "id": 224452,
+              "name": "The Hunter",
+              "overview": "When he hears about an operative from his past who is hunting him, Michael turns to a prominent member of Miami's underworld for help; a man approaches Michael with an offer.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/nUo85CceA8UWkZkVydQDn3rqtRr.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 42111,
+                    "credit_id": "525749eb19c29531db09a4d0",
+                    "name": "Bryan Spicer",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/yyqVSx1GZlUQbAPncdrgzcqSNVX.jpg"
+                  },
+                  {
+                    "id": 1497967,
+                    "credit_id": "584ec8bac3a36871d0000432",
+                    "name": "Lisa Joy",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": "/gaHPV9066HYWytaOa0V04GJBOH.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 154629,
+                    "name": "Keith Diamond",
+                    "credit_id": "525749eb19c29531db09a4a2",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/yCjWqiIccAoN8vuAm0tM3l5Qnyu.jpg"
+                  },
+                  {
+                    "id": 6437,
+                    "name": "Ben Shenkman",
+                    "credit_id": "525749e819c29531db099eb4",
+                    "character": "",
+                    "order": 3,
+                    "profile_path": "/ocLEexcLxffgLJ41wuqc80YmdeY.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-07-23",
+              "episode_number": 7,
+              "id": 224331,
+              "name": "Shot In The Dark",
+              "overview": "Michael convinces an abusive stepfather of a young boy to leave town by telling him he is the target of an assassination plot. Elsewhere, Strickler makes a promise to Michael that he will help him get back into the intelligence community if they can work together.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/wBWrJT886Uon7TCG5xCainQbV6g.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 15521,
+                    "credit_id": "525749e719c29531db099d08",
+                    "name": "Ernest R. Dickerson",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/2WSGP4pQ2ICukCnbvFNeHRcMEIM.jpg"
+                  },
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 1283293,
+                    "name": "Nick Galarza",
+                    "credit_id": "5a682c239251411bca0060a4",
+                    "character": "Joey (as Nicholas Galarza)",
+                    "order": 138,
+                    "gender": 2,
+                    "profile_path": "/rS8MLmbyCDlzqOkmX7xcXdJJGUw.jpg"
+                  },
+                  {
+                    "id": 59739,
+                    "name": "Otto Sanchez",
+                    "credit_id": "525749e819c29531db099ede",
+                    "character": "",
+                    "order": 4,
+                    "gender": 2,
+                    "profile_path": "/fquEoppmo6DtjjP3RAzCQJwRcJb.jpg"
+                  },
+                  {
+                    "id": 6437,
+                    "name": "Ben Shenkman",
+                    "credit_id": "525749e819c29531db099eb4",
+                    "character": "",
+                    "order": 3,
+                    "gender": 2,
+                    "profile_path": "/xxbxVCo30nF0PT6q0P6VJ0pc2iD.jpg"
+                  },
+                  {
+                    "id": 108889,
+                    "name": "Jay Harrington",
+                    "credit_id": "525749e819c29531db099e8a",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/lFlCR0QXJWHcf6BVLJrCsXX8tk.jpg"
+                  },
+                  {
+                    "id": 42706,
+                    "name": "Nicholas Lea",
+                    "credit_id": "525749e819c29531db099e60",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/tXfhqYTwSixZW623zvM9QyPbyPV.jpg"
+                  },
+                  {
+                    "id": 142607,
+                    "name": "Josie Davis",
+                    "credit_id": "525749e819c29531db099e36",
+                    "character": "",
+                    "order": 0,
+                    "gender": 1,
+                    "profile_path": "/kwQlb0PpAlh28eAdEsmRPea88lq.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-07-30",
+              "episode_number": 8,
+              "id": 224349,
+              "name": "Friends Like These",
+              "overview": "Barry enlists Michael's help in tracking down his money-laundering client list, which has been stolen by a vicious thief. Michael goes after the thief, only to find that there's a lot more to the situation than he realized. Fiona tries to be supportive of Michael's efforts to reconnect with the intelligence community, but she and Michael find that their differences on the subject may not be reconcilable.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/vpsqzXoUqLiSzXo2l5j97aPTXcv.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 77211,
+                    "credit_id": "525749e819c29531db099f92",
+                    "name": "Félix Enríquez Alcalá",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/8kXECHCbnWXf59MN9nF83CoG48v.jpg"
+                  },
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 59739,
+                    "name": "Otto Sanchez",
+                    "credit_id": "525749e819c29531db099ede",
+                    "character": "",
+                    "order": 4,
+                    "profile_path": "/mlRevsrPkl0UJ4oRZTIjTHwKQAw.jpg"
+                  },
+                  {
+                    "id": 6437,
+                    "name": "Ben Shenkman",
+                    "credit_id": "525749e819c29531db099eb4",
+                    "character": "",
+                    "order": 3,
+                    "profile_path": "/ocLEexcLxffgLJ41wuqc80YmdeY.jpg"
+                  },
+                  {
+                    "id": 164397,
+                    "name": "Callie Thorne",
+                    "credit_id": "525749e819c29531db099f58",
+                    "character": "",
+                    "order": 2,
+                    "profile_path": "/sTbZc9R8fKHPXDPQXMBdV2xz9C9.jpg"
+                  },
+                  {
+                    "id": 5578,
+                    "name": "Debi Mazar",
+                    "credit_id": "525749e819c29531db099f2e",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/lASXuaRAzlZmv8YEI8YsSmJvzZi.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2009-08-06",
+              "episode_number": 9,
+              "id": 224358,
+              "name": "Long Way Back",
+              "overview": "A dangerous man from Fiona's past resurfaces in Miami after years of hiding, with deadly intentions. Teaming up with Fiona's ruthless brother, Michael will do whatever it takes to save her... even if that means crossing a few lines.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/um5L9vdgXvLFA4wCzgbyBZWmfgF.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 35981,
+                    "name": "Gideon Emery",
+                    "credit_id": "525749e819c29531db099fcc",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/csFpjCQyI2GXnTpsaOc2TzCGYVy.jpg"
+                  },
+                  {
+                    "id": 43231,
+                    "name": "Paul Blackthorne",
+                    "credit_id": "525749e919c29531db099ff6",
+                    "character": "",
+                    "order": 1,
+                    "profile_path": "/cr11VQutjQCjPK8sq1ec08c04yw.jpg"
+                  },
+                  {
+                    "id": 6437,
+                    "name": "Ben Shenkman",
+                    "credit_id": "525749e819c29531db099eb4",
+                    "character": "",
+                    "order": 3,
+                    "profile_path": "/ocLEexcLxffgLJ41wuqc80YmdeY.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-01-21",
+              "episode_number": 10,
+              "id": 224373,
+              "name": "A Dark Road",
+              "overview": "When a recently widowed woman hires Michael and Fiona to get her away from a group of violent con men, Michael turns to Madeline for help — but he may ask her to go too far. Meanwhile, a mysterious contact goes to extreme lengths to get Michael's attention.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/fs4jvW3A2dAW5OY8gC2th3omzjs.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1214626,
+                    "credit_id": "525749df19c29531db099668",
+                    "name": "John T. Kretchmer",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-01-28",
+              "episode_number": 11,
+              "id": 224378,
+              "name": "Friendly Fire",
+              "overview": "When Sam gets an unexpected visit from a former Seal buddy asking for help, Michael must infiltrate a protected urban barrio and hunt down a child predator. Michael also befriends a psychotic former spy runner in order to learn more about his destructive plans while in town.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/dIGZutJHZr5KmS2Ll3Yf5RsVJOK.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 75183,
+                    "name": "Chris Vance",
+                    "credit_id": "525749e919c29531db09a05a",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/uO7Q2koF6c9xb7YlMI833jcBy3n.jpg"
+                  },
+                  {
+                    "id": 11160,
+                    "name": "Danny Trejo",
+                    "credit_id": "525749e919c29531db09a084",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/p88bF0qtdFE1xaSQxLtaQBkmVwk.jpg"
+                  },
+                  {
+                    "id": 16429,
+                    "name": "Jacob Vargas",
+                    "credit_id": "525749e919c29531db09a0ae",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/IP7LaQDCFgoM6rKp8lGG2GUXNU.jpg"
+                  },
+                  {
+                    "id": 162339,
+                    "name": "Luis Antonio Ramos",
+                    "credit_id": "525749e919c29531db09a0d8",
+                    "character": "",
+                    "order": 3,
+                    "gender": 0,
+                    "profile_path": "/nwcozsF1bhRAda8dxqw72JIpQSR.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-02-04",
+              "episode_number": 12,
+              "id": 224385,
+              "name": "Noble Causes",
+              "overview": "Michael is caught off guard by a visit from his drug dealing neighbor Sugar. But to Michael’s surprise, Sugar isn't looking for trouble; He needs Michael's help fending off a crew of notorious thieves. Meanwhile, Michael struggles with working beside an unexpected partner.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/ilhVKxdIckNthLa51smqgsaAF2A.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 128172,
+                    "credit_id": "525749ea19c29531db09a1ce",
+                    "name": "Michael Zinberg",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/hJErSwaNj4zbpjyMMComD8aqID2.jpg"
+                  },
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 25867,
+                    "name": "Carlos Bernard",
+                    "credit_id": "525749e919c29531db09a19a",
+                    "character": "",
+                    "order": 4,
+                    "gender": 2,
+                    "profile_path": "/f6GCYuquQ9YeWKuSFldyqQ0dj85.jpg"
+                  },
+                  {
+                    "id": 49275,
+                    "name": "Spencer Garrett",
+                    "credit_id": "525749e919c29531db09a170",
+                    "character": "",
+                    "order": 3,
+                    "gender": 2,
+                    "profile_path": "/gzhIgjFtWeAhfp2yZsiUpD0XAaX.jpg"
+                  },
+                  {
+                    "id": 154759,
+                    "name": "Erik King",
+                    "credit_id": "525749e919c29531db09a140",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/svrv513FlrnRshuA5YSaCLIcix9.jpg"
+                  },
+                  {
+                    "id": 32598,
+                    "name": "Daniel Franzese",
+                    "credit_id": "525749e919c29531db09a116",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/9Jq9OC6dFWon23CdgwZHz2guxZe.jpg"
+                  },
+                  {
+                    "id": 75183,
+                    "name": "Chris Vance",
+                    "credit_id": "525749e919c29531db09a05a",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/uO7Q2koF6c9xb7YlMI833jcBy3n.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-02-11",
+              "episode_number": 13,
+              "id": 224459,
+              "name": "Enemies Closer",
+              "overview": "When Michael's old acquaintance Larry shows up unannounced, it is up to Michael to clean up his mess. Meanwhile, Michael's brother Nate shows up with his new wife Ruth.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/sv36eanmsok4f5h9ouF17AxPrSp.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 34453,
+                    "credit_id": "525749ec19c29531db09a50e",
+                    "name": "Kevin Bray",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/npkd2oUXtUvNPTfN4YDIMsXKznm.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-02-18",
+              "episode_number": 14,
+              "id": 224402,
+              "name": "Partners in Crime",
+              "overview": "Sam convinces Michael to investigate a robbery at a chic fashion house, but they quickly realize the world of design isn't always pretty. Meanwhile, Michael and Fiona gain the trust of a Polish intelligence officer to get information on an unlisted \"black flight,\" transporting dangerous cargo.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/fyHqs9wm4TaQUdlo4PNbCmXglOU.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-02-25",
+              "episode_number": 15,
+              "id": 953470,
+              "name": "Good Intentions",
+              "overview": "Fiona deals with a paranoid kidnapper who's hiding a secret. Elsewhere, Michael tries to take down a black operative, but the mission soon gets out of control.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/r0MdL68wyVppag2GH80NZdrE18B.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 66960,
+                    "credit_id": "525749e719c29531db099da6",
+                    "name": "Dennie Gordon",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/3ykd6ByuQ77EpPYVGWate1BBtVP.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-03-04",
+              "episode_number": 16,
+              "id": 224469,
+              "name": "Devil You Know",
+              "overview": "International fugitive Simon is loose and Michael's on the run from the FBI for his role in Simon’s escape. When Simon confronts Michael and threatens to blow up a Miami Beach hotel, Michael must call on his friends and an old enemy to help him avoid disaster and put Simon back in the dark hole where he belongs.",
+              "production_code": null,
+              "season_number": 3,
+              "show_id": 2919,
+              "still_path": "/kN6zlKjmdArqa6Wa9EiKwESsfcX.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749e519c29531db099b62",
+                    "name": "Matt Nix",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            }
+          ],
+        "name": "Season 3",
+        "overview": "The third season of the American television spy drama Burn Notice premiered on June 4, 2009 on the cable television channel USA Network. Season three consists of sixteen episodes, split between a nine-episode summer season and a seven-episode winter season.",
+        "poster_path": "/2j7e8MJVovhbBVqwTbD418gJAfn.jpg",
+        "season_number": 3
+      },
+      {
+        "_id": "525749cc19c29531db098895",
+        "air_date": "2010-06-03",
+        "episodes": [
+            {
+              "air_date": "2010-06-03",
+              "episode_number": 1,
+              "id": 224474,
+              "name": "Friends and Enemies",
+              "overview": "Michael helps Fiona and Sam protect a lawyer against the city's most dangerous biker gang. Meanwhile, he must team up with an unlikely ally to stop a looming terrorist threat... but quickly finds that no mission is without its price.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/5el3daSn0FHJP0aWFMVTxYvJx4K.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 21561,
+                    "credit_id": "525749d619c29531db09904d",
+                    "name": "Tim Matheson",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/iQQCtIS9bQJlQ8OMOzeidsJptAQ.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-06-10",
+              "episode_number": 2,
+              "id": 224478,
+              "name": "Fast Friends",
+              "overview": "Michael meets Jesse, a recently burned counterintelligence agent looking for Michael's help. Michael agrees to help Jesse clear his name, but first must get him out of the crosshairs of a ruthless drug trafficker seeking revenge.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/uhE1BKmudChV7V8t3YAxdxPkIBj.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 66960,
+                    "credit_id": "525749e719c29531db099da6",
+                    "name": "Dennie Gordon",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/3ykd6ByuQ77EpPYVGWate1BBtVP.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-06-17",
+              "episode_number": 3,
+              "id": 224483,
+              "name": "Made Man",
+              "overview": "When dangerous mobsters threaten a port worker, Michael takes on the case. With Jesse, Michael also looks for intel on an underground-artillery operation.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/ftPWM9t0HICyFxCUkReUuVqwsu8.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 21561,
+                    "credit_id": "525749d619c29531db09904d",
+                    "name": "Tim Matheson",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/iQQCtIS9bQJlQ8OMOzeidsJptAQ.jpg"
+                  },
+                  {
+                    "id": 1233039,
+                    "credit_id": "525749ee19c29531db09a5f2",
+                    "name": "Alfredo Barrios, Jr.",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 52886,
+                    "credit_id": "525749ee19c29531db09a624",
+                    "name": "Jeffrey Donovan",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/5i47zZDpnAjLBtQdlqhg5AIYCuT.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 102775,
+                    "name": "Coby Bell",
+                    "credit_id": "525749ec19c29531db09a5c3",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/pdXnmZkrLiHVybdEpwKiCNrGMo8.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-06-24",
+              "episode_number": 4,
+              "id": 224534,
+              "name": "Breach of Faith",
+              "overview": "A hostage situation at a local bank. Meanwhile, Fiona helps Jesse track down information about a recently deceased weapons runner.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/1woO3PUpN1J4vd9BaEifR8hnQrM.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 34682,
+                    "credit_id": "525749db19c29531db09934b",
+                    "name": "Jeremiah S. Chechik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/avEcJTGsWFEzxpSOutwhkP3adQ8.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 43778,
+                    "name": "Navi Rawat",
+                    "credit_id": "525749ee19c29531db09a664",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/neAo8dukxSDh5Hn1Gjqi8nkz1aD.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-07-01",
+              "episode_number": 5,
+              "id": 224524,
+              "name": "Neighborhood Watch",
+              "overview": "A doctor seeks help when drug dealers terrorize his clinic; Michael is drawn into a game of cat and mouse with a killer.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/rBtsZb2CV0LQEOyD9JF76BtLSSP.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 34453,
+                    "credit_id": "525749ec19c29531db09a50e",
+                    "name": "Kevin Bray",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/npkd2oUXtUvNPTfN4YDIMsXKznm.jpg"
+                  },
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 43778,
+                    "name": "Navi Rawat",
+                    "credit_id": "525749ee19c29531db09a664",
+                    "character": "",
+                    "order": 0,
+                    "gender": 1,
+                    "profile_path": "/neAo8dukxSDh5Hn1Gjqi8nkz1aD.jpg"
+                  },
+                  {
+                    "id": 113563,
+                    "name": "Rhys Coiro",
+                    "credit_id": "525749ee19c29531db09a68e",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/tRX5cemKIZmqYGqIM3h05u4ssOm.jpg"
+                  },
+                  {
+                    "id": 2137,
+                    "name": "Benito Martinez",
+                    "credit_id": "525749ee19c29531db09a6b8",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/6cMiGYgjFFYY8sWITXiE0SrEnt8.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-07-15",
+              "episode_number": 6,
+              "id": 224538,
+              "name": "Entry Point",
+              "overview": "Sam and Jesse interrogate a captured contract killer in order to find out who ordered a recent assassination. Meanwhile, Michael and Fiona pose as security consultants to stop a notorious antiquities thief from stealing a priceless artifact.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/lVMsVxOktvQGyNcxBLLTjz0wJ9N.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 204608,
+                    "credit_id": "525749ef19c29531db09a732",
+                    "name": "Jeffrey G. Hunt",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/fXPHft7qPjp2cZRYaFhaLngXTCe.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 43778,
+                    "name": "Navi Rawat",
+                    "credit_id": "525749ee19c29531db09a664",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/neAo8dukxSDh5Hn1Gjqi8nkz1aD.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-07-22",
+              "episode_number": 7,
+              "id": 224544,
+              "name": "Past & Future Tense",
+              "overview": "Michael helps an ex-CIA operative who has become a target of Russian spies.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/ey2HnBWP2vVPwebY8qu3Ilrl2O4.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 21125,
+                    "name": "Richard Kind",
+                    "credit_id": "525749ef19c29531db09a76c",
+                    "character": "",
+                    "order": 0,
+                    "gender": 2,
+                    "profile_path": "/xpLufPiiFgoCEdIMqD4RY79PKGb.jpg"
+                  },
+                  {
+                    "id": 4735,
+                    "name": "John Doman",
+                    "credit_id": "525749ef19c29531db09a796",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/xfcSluMohRbnMySSlosFmlZyLLy.jpg"
+                  },
+                  {
+                    "id": 16475,
+                    "name": "Burt Reynolds",
+                    "credit_id": "525749ef19c29531db09a7c0",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/az0ywVQY1RLbHYJrIhw61N6w8d8.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-07-29",
+              "episode_number": 8,
+              "id": 224550,
+              "name": "Where There's Smoke",
+              "overview": "Michael, Sam, and Jesse must try to rescue Fiona when their plan to protect a wealthy business bigwig at his house party go horribly awry.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/zYaWZTcxGQLATSX4nUIfZoe5tfi.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 34453,
+                    "credit_id": "525749ec19c29531db09a50e",
+                    "name": "Kevin Bray",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/npkd2oUXtUvNPTfN4YDIMsXKznm.jpg"
+                  },
+                  {
+                    "id": 1497967,
+                    "credit_id": "584ec8bac3a36871d0000432",
+                    "name": "Lisa Joy",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": "/gaHPV9066HYWytaOa0V04GJBOH.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-08-05",
+              "episode_number": 9,
+              "id": 224553,
+              "name": "Center of the Storm",
+              "overview": "Michael impersonates a hitman in order to protect the target who is a crucial witness to criminal activity.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/3IgJ6fYEBWP0jjs4tnpCksBMMP0.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1212287,
+                    "credit_id": "525749d119c29531db098ba2",
+                    "name": "Colin Bucksey",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/M0HLG2t9vO31EOyn0XYYi48Zl5.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 288,
+                    "name": "Jon Seda",
+                    "credit_id": "525749ef19c29531db09a818",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/zYDXb5F4IyzuODWSuGa2mLU8HMz.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2010-08-12",
+              "episode_number": 10,
+              "id": 224560,
+              "name": "Hard Time",
+              "overview": "Michael infiltrates a high-security prison in order to protect an inmate (a good friend of Sam’s) who is marked for death by a fellow prisoner",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/cs7zHnGbT98DhOKwzaNEd2rM7TA.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 66960,
+                    "credit_id": "525749e719c29531db099da6",
+                    "name": "Dennie Gordon",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/3ykd6ByuQ77EpPYVGWate1BBtVP.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-08-19",
+              "episode_number": 11,
+              "id": 224564,
+              "name": "Blind Spot",
+              "overview": "Michael and team come to the aid of a woman who has her entire life savings wiped out by a sleazy womanizer.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/smlNphiZeaQVflxgXu2mMnS9CeZ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1232639,
+                    "credit_id": "525749f019c29531db09a880",
+                    "name": "Michael Smith",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-08-26",
+              "episode_number": 12,
+              "id": 224570,
+              "name": "Guilty As Charged",
+              "overview": "Fiona attempts to find Jesse and convince him to meet with Michael. Meanwhile, Michael helps a criminal defense attorney rescue his daughter after she is kidnapped by one of his clients.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/9ViNr9GoX2RF3VZQ7y0cthnXUgB.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-11-11",
+              "episode_number": 13,
+              "id": 224573,
+              "name": "Eyes Open",
+              "overview": "Michael tries to prevent a bombing arranged by a lawyer out for revenge against a local gang. Elsewhere, Michael and Jesse must track down a highly sensitive document that's been stolen.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/7eIZTOKyuDpIoJrEDSjCMCpJKAH.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 66960,
+                    "credit_id": "525749e719c29531db099da6",
+                    "name": "Dennie Gordon",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/3ykd6ByuQ77EpPYVGWate1BBtVP.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-11-18",
+              "episode_number": 14,
+              "id": 224579,
+              "name": "Hot Property",
+              "overview": "Michael must work with an enemy to keep chemical weapons out of the wrong hands.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/bO3QmDWgOcVxB101qC6DZ7ZuRus.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 2388,
+                    "credit_id": "525749f019c29531db09a918",
+                    "name": "Jonathan Frakes",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/51Z5EbZxtVPm6GiN0Wc9CLP4z3s.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-12-02",
+              "episode_number": 15,
+              "id": 224582,
+              "name": "Brotherly Love",
+              "overview": "When Nate gets in over his head tracking down a stolen car filled with a drug kingpin's merchandise, Michael brings back an old alias to save his brother's life.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/sr2HuBo5Ze3QceqSBhIqswoQD4.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-12-09",
+              "episode_number": 16,
+              "id": 224583,
+              "name": "Dead or Alive",
+              "overview": "Sam tries to help a friend who's been deemed a dirty cop clear his name. Elsewhere, Michael plans to meet with Jesse's former handler in order to make sure government documents end up in the right hands.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/vC3WKcGAxa4Npe41A7ibJ5ndjLL.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 67632,
+                    "credit_id": "525749f019c29531db09a970",
+                    "name": "Peter Markle",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/1fFVurMyXSE742lnz5jCfcNJmCH.jpg"
+                  },
+                  {
+                    "id": 1497967,
+                    "credit_id": "584ec8bac3a36871d0000432",
+                    "name": "Lisa Joy",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": "/gaHPV9066HYWytaOa0V04GJBOH.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-12-16",
+              "episode_number": 17,
+              "id": 224584,
+              "name": "Out of the Fire",
+              "overview": "Michael's enemy Brennen and Michael's former friend Larry team up to pressure Michael into killing the individuals on the stolen NOC list.  Meanwhile, Sam, Jesse, and Fiona try to help Michael turn the tables on Brennen and Larry.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/o0h7OODh79E0POgZLu7Y2OkKbMQ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2010-12-16",
+              "episode_number": 18,
+              "id": 224576,
+              "name": "Last Stand",
+              "overview": "Michael, Fiona, and Jessie try to keep the NOC list away from Vaughn and his strike team.  Meanwhile Sam and Madeline try to convince Congressman Cowley to pass the list higher up.",
+              "production_code": null,
+              "season_number": 4,
+              "show_id": 2919,
+              "still_path": "/4D40EoBBM3wzOWjP1qwwZvBmhtm.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            }
+          ],
+        "name": "Season 4",
+        "overview": "The fourth season of the American television spy drama Burn Notice premiered on June 3, 2010 on the cable television channel USA Network. Coby Bell joined the main cast as Jesse Porter, a counter-intelligence agent Michael unwittingly burns.",
+        "poster_path": "/t2F4yVFlLPCUNLt5g2jZsOdX8kb.jpg",
+        "season_number": 4
+      },
+      {
+        "_id": "525749cc19c29531db0988b8",
+        "air_date": "2011-06-23",
+        "episodes": [
+            {
+              "air_date": "2011-06-23",
+              "episode_number": 1,
+              "id": 224585,
+              "name": "Company Man",
+              "overview": "Michael works with his old agency to go after the people who burned him in a case that leads the group to Venezuela.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/aPuWQyzHowschHRO9GMcXy98pPT.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-06-30",
+              "episode_number": 2,
+              "id": 224596,
+              "name": "Bloodlines",
+              "overview": "Michael has to balance his new agency duties and helping a woman recover her cousin, who is one of many being trafficked into the U.S. by the Yakuza. Against Michael's wishes, Madeline becomes a critical component of the plan to find the girls.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/mPjgELJwikzWSctFM6stGqMPDR5.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1212287,
+                    "credit_id": "525749d119c29531db098ba2",
+                    "name": "Colin Bucksey",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/M0HLG2t9vO31EOyn0XYYi48Zl5.jpg"
+                  },
+                  {
+                    "id": 1233039,
+                    "credit_id": "525749ee19c29531db09a5f2",
+                    "name": "Alfredo Barrios, Jr.",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 1813954,
+                    "name": "Eiko Nijo",
+                    "credit_id": "59130c8e9251414ead050611",
+                    "character": "Ryoko Maji",
+                    "order": 136,
+                    "gender": 0,
+                    "profile_path": "/3332dSkkUjcOBJrYy3eTerSA8nY.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2011-07-07",
+              "episode_number": 3,
+              "id": 224592,
+              "name": "Mind Games",
+              "overview": "Nate returns to Miami to seek Michael's help to go after a loan shark who's harassing a widow. The guys soon discover that the loan shark is not all that he seems, however.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/9oX9NXY3F2Pek8hPW6kxFtzMQhj.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1212957,
+                    "credit_id": "525749e619c29531db099c9e",
+                    "name": "Scott Peters",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-07-14",
+              "episode_number": 4,
+              "id": 224599,
+              "name": "No Good Deed",
+              "overview": "The team searches for a super-computer to clear Barry's brother of a server heist.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/cLXO06LxZriwsYLKTXIQhb8DYd7.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-07-21",
+              "episode_number": 5,
+              "id": 224605,
+              "name": "Square One",
+              "overview": "Michael plays a key role in a CIA murder investigation. Meanwhile, the team helps a client who reminds them of Michael — a former army sniper who wants revenge on the men who put his sister on the hospital.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/yVjrUm7IgZiFGAM0cqqyRq3BkAQ.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 1224390,
+                    "name": "Matt Lauria",
+                    "credit_id": "556d1defc3a3686aa40008c7",
+                    "character": "Ethan",
+                    "order": 131,
+                    "profile_path": "/bwjaTXlNIbogNqJmvL350oNlm8w.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2011-07-28",
+              "episode_number": 6,
+              "id": 224602,
+              "name": "Enemy of My Enemy",
+              "overview": "The CIA abandons Sam after he goes undercover with a heroin dealer while trying to recover a weapon. Meanwhile, Pearce continues searching for Max's killer.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/wPNuKRrYYJVGnpIhj3thyrJrDMK.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 2388,
+                    "credit_id": "525749f019c29531db09a918",
+                    "name": "Jonathan Frakes",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/51Z5EbZxtVPm6GiN0Wc9CLP4z3s.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 147404,
+                    "name": "Charlie Weber",
+                    "credit_id": "551109a49251410701006df5",
+                    "character": "Jacob Starky",
+                    "order": 130,
+                    "profile_path": "/iiBq6ciCuHJiy0So58iuhqrirBl.jpg"
+                  },
+                  {
+                    "id": 1654187,
+                    "name": "Brendan O'Malley",
+                    "credit_id": "579143109251416ba1001be1",
+                    "character": "Gabriel Manaro",
+                    "order": 133,
+                    "profile_path": "/kMBirKtjEZnvSgRfrI7rFLixqb6.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2011-08-04",
+              "episode_number": 7,
+              "id": 224613,
+              "name": "Besieged",
+              "overview": "Michael and Sam try to retrieve a boy from an armed compound. Fiona and Jesse babysit a day laborer.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/eEaVkuPn4URynEGCfP69UsUV9GI.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 1388733,
+                    "name": "Thor Wahlestedt",
+                    "credit_id": "5a97d6ce0e0a26015300f443",
+                    "character": "Tommy",
+                    "order": 500,
+                    "gender": 0,
+                    "profile_path": "/xW3DOFPpiscEwhV861RHOHAg2wq.jpg"
+                  },
+                  {
+                    "id": 147404,
+                    "name": "Charlie Weber",
+                    "credit_id": "551109a49251410701006df5",
+                    "character": "Jacob Starky",
+                    "order": 130,
+                    "gender": 2,
+                    "profile_path": "/iiBq6ciCuHJiy0So58iuhqrirBl.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2011-08-11",
+              "episode_number": 8,
+              "id": 224608,
+              "name": "Hard Out",
+              "overview": "Michael and Jesse go on an extraction mission on a Caribbean island but end up trapped there by mercenaries. Meanwhile, Fiona tries to get information out of an ex by doing a favor for him.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/yzcV00E5REui18Psnt24bqqAvAx.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 10961,
+                    "name": "Gavin Rossdale",
+                    "credit_id": "525749f119c29531db09aa6c",
+                    "character": "",
+                    "order": 0,
+                    "profile_path": "/1tgaFlNL7dO9kzJADYtwQJqTeeF.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2011-08-18",
+              "episode_number": 9,
+              "id": 224615,
+              "name": "Eye for an Eye",
+              "overview": "Fiona and Jesse work together for a pharmaceuticals magnate, but soon realize that he is hiding something. Meanwhile, Michael and Sam take on a bomb-maker involved in Max's death.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/eq54CFk1KHsKW2gKlaR25LyolxS.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-08-25",
+              "episode_number": 10,
+              "id": 224621,
+              "name": "Army of One",
+              "overview": "Michael goes undercover with a group of hijackers in order to assist Jesse with a security job, but he changes the plan when the hijackers take hostages at the airport. Madeline assists Michael by organizing the hostages and trying to lead them to safety.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/hQWzh6bFAdwrdCYdOHYT9eNa4XM.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1224653,
+                    "credit_id": "525749f119c29531db09ab02",
+                    "name": "Tawnia McKiernan",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/2x4LQIDdCCyWHThfcttGGWhkidt.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-09-01",
+              "episode_number": 11,
+              "id": 224625,
+              "name": "Better Halves",
+              "overview": "Michael and Fiona pose as a wealthy couple at a South American resort in order to extract a bioweapons specialist. Elsewhere, Sam and Jesse try to trap Max's killer.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/myxPrLhsWrA6KeHfz3dn9y3MOGB.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1232639,
+                    "credit_id": "525749f019c29531db09a880",
+                    "name": "Michael Smith",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1497967,
+                    "credit_id": "584ec8bac3a36871d0000432",
+                    "name": "Lisa Joy",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": "/gaHPV9066HYWytaOa0V04GJBOH.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 1661359,
+                    "name": "Fiona Landers",
+                    "credit_id": "5afbb3130e0a26345e002daf",
+                    "character": "Karina",
+                    "order": 141,
+                    "gender": 1,
+                    "profile_path": "/A7m4kBOBiZrRKlJwXjr9DDiMmaG.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2011-09-08",
+              "episode_number": 12,
+              "id": 224617,
+              "name": "Dead to Rights",
+              "overview": "With convincing from Sam and Jesse, Pearce begrudgingly lets Michael take drastic measures attempting to clear himself of Max's murder. Meanwhile, Larry returns, having kidnapped a government psychiatrist, and insists that Michael help him with a job.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/OSvEEfms0phiMbI7qu3IkrBgjC.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749e519c29531db099b62",
+                    "name": "Matt Nix",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-11-03",
+              "episode_number": 13,
+              "id": 224633,
+              "name": "Damned If You Do",
+              "overview": "Michael and Fiona plan to abduct a hacker in Puerto Rico in order to obtain his software, but the man has several other enemies to contend with. Elsewhere, Madeline learns to retrieve information from the police under the tutelage of Sam and Jesse.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/g5dJLFpRwzR18eGwUocdt8YK9ZN.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-11-10",
+              "episode_number": 14,
+              "id": 224628,
+              "name": "Breaking Point",
+              "overview": "When gang warfare claims the life of one of Michael's childhood friends, he teams up with the victim's brother to entrap the gang in a weapons scheme.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/3waPFrLewnaFvpJOCqzvCWt0KiM.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 16938,
+                    "credit_id": "56237361c3a3680e1900d72d",
+                    "name": "Renny Harlin",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/lOCRZzC1UZfkObWpQtKxga5ZV8F.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-11-17",
+              "episode_number": 15,
+              "id": 224647,
+              "name": "Necessary Evil",
+              "overview": "Michael leads a rescue mission for a scientist abducted by an African warlord, while Sam and Jesse get in trouble during an undercover mission. Meanwhile, Madeline discovers that someone close to her is keeping secrets.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/oXvDe1MDflc3Zfl8CMoRgFocxSh.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-12-01",
+              "episode_number": 16,
+              "id": 224626,
+              "name": "Depth Perception",
+              "overview": "Sam reunites with Beatriz after an attempt is made on her life by a Russian spy, and Michael is forced to trust Anson in order to save her. Jesse and Fiona must travel to the Cayman Islands to track down a banker in order to obtain financial information for Anson.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/f64Vqy3cZrbmbAMK0uPgz0HXDqp.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-12-08",
+              "episode_number": 17,
+              "id": 224642,
+              "name": "Acceptable Loss",
+              "overview": "A friend of Jesse asks the team to help take out his boss, who has been smuggling blood diamonds into the country with the help of diplomatic immunity. Michael asks Pearce for help transferring a prisoner who may be able to provide him with information on Anson.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/iFaBTaLhqxTaiY8lr7T0melzjR9.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 2388,
+                    "credit_id": "525749f019c29531db09a918",
+                    "name": "Jonathan Frakes",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/51Z5EbZxtVPm6GiN0Wc9CLP4z3s.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2011-12-15",
+              "episode_number": 18,
+              "id": 224650,
+              "name": "Fail Safe",
+              "overview": "As the team reaches a breaking point with Anson and his sinister plans, Pearce puts Michael in charge of his biggest CIA mission yet.",
+              "production_code": null,
+              "season_number": 5,
+              "show_id": 2919,
+              "still_path": "/lbxkDK1Fa0bcOZ0sfoUcuim7nP0.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 16938,
+                    "credit_id": "56237361c3a3680e1900d72d",
+                    "name": "Renny Harlin",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/lOCRZzC1UZfkObWpQtKxga5ZV8F.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 21315,
+                    "name": "Eric Roberts",
+                    "credit_id": "525749f219c29531db09ac08",
+                    "character": "",
+                    "order": 1,
+                    "gender": 2,
+                    "profile_path": "/45i6fsxBwH1UyA74tWQ6am0DntC.jpg"
+                  },
+                  {
+                    "id": 21721,
+                    "name": "Dean Cain",
+                    "credit_id": "525749f219c29531db09ac32",
+                    "character": "",
+                    "order": 2,
+                    "gender": 2,
+                    "profile_path": "/cICjOmo5KZWdfJLBvIExDE6Ma5f.jpg"
+                  },
+                  {
+                    "id": 7218,
+                    "name": "Kristanna Loken",
+                    "credit_id": "5a567d1f0e0a2607e802ccf9",
+                    "character": "Rebecca Lang",
+                    "order": 138,
+                    "gender": 1,
+                    "profile_path": "/rxeYONGXlnNYOn50KjjiwgLxiGX.jpg"
+                  }
+                ]
+            }
+          ],
+        "name": "Season 5",
+        "overview": "The fifth season of the American television spy drama Burn Notice premiered on June 23, 2011 on the cable television channel USA Network. The season concluded after its eighteenth episode on December 15, 2011.",
+        "poster_path": "/oawcZVFxD7ysM4I3GKl4hYL5NoW.jpg",
+        "season_number": 5
+      },
+      {
+        "_id": "525749cc19c29531db0988e0",
+        "air_date": "2012-06-14",
+        "episodes": [
+            {
+              "air_date": "2012-06-14",
+              "episode_number": 1,
+              "id": 224661,
+              "name": "Scorched Earth",
+              "overview": "Michael pursues Anson in Miami. Meanwhile, Fiona is taken into custody and interrogated by a former foe.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/rPr5ODaKKx6EkM7d6mA1ZlMBYNO.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 56155,
+                    "credit_id": "525749db19c29531db099443",
+                    "name": "Stephen Surjik",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/4v2Kwnc6wLRD75DsYyFiNxuxYan.jpg"
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2012-06-21",
+              "episode_number": 2,
+              "id": 974685,
+              "name": "Mixed Messages",
+              "overview": "Michael reconnects with his mentor and offers to help go after a drug cartel in exchange for visitation privileges with Fiona. Meanwhile, Fiona leans on a new friend for help fending off a gang leader in prison.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/6KhN9yB98Hs6t7AhJpHD0sR28Ns.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 171522,
+                    "name": "Anthony Ruivivar",
+                    "credit_id": "5770fcb79251412073000490",
+                    "character": "Rafael Montero",
+                    "order": 132,
+                    "profile_path": "/kyXQAe5bDYGMAhs7keT8apMmAZb.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-06-28",
+              "episode_number": 3,
+              "id": 224662,
+              "name": "Last Rites",
+              "overview": "Pearce asks Michael to help her track down her fiancee's murderer. Fiona investigates the group that tried to get her killed in prison.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/f2nAfBgMyLzECoQHCJS8sim2b8W.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233035,
+                    "credit_id": "525749da19c29531db0992aa",
+                    "name": "Ben Watkins",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 17278,
+                    "credit_id": "525749f319c29531db09acc0",
+                    "name": "Nick Gomez",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/mpV7F62c83IcRNjm4ei6ZMwRtfQ.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2012-07-12",
+              "episode_number": 4,
+              "id": 224666,
+              "name": "Under the Gun",
+              "overview": "Michael, Sam and Jesse head to the Everglades to track the guard trying to kill Fiona in prison. Fiona has to do another favor for Ayn in order to get herself out of trouble.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/jhIWyrqdzP82KPelxCLSfEJeXw8.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233038,
+                    "credit_id": "525749e419c29531db09998c",
+                    "name": "Michael Horowitz",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 66960,
+                    "credit_id": "525749e719c29531db099da6",
+                    "name": "Dennie Gordon",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/3ykd6ByuQ77EpPYVGWate1BBtVP.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 7218,
+                    "name": "Kristanna Loken",
+                    "credit_id": "5a567d1f0e0a2607e802ccf9",
+                    "character": "Rebecca Lang",
+                    "order": 138,
+                    "gender": 1,
+                    "profile_path": "/rxeYONGXlnNYOn50KjjiwgLxiGX.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-07-19",
+              "episode_number": 5,
+              "id": 224677,
+              "name": "Split Decision",
+              "overview": "Michael takes on a gangster with help from an unlikely ally. Card offers Fiona a deal to become a CIA asset, an arrangement that would prevent her from being extradited.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/yQRQsm4Hl3aVLP5IQJPnrh8slgM.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1212957,
+                    "credit_id": "525749e619c29531db099c9e",
+                    "name": "Scott Peters",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 7218,
+                    "name": "Kristanna Loken",
+                    "credit_id": "5a567d1f0e0a2607e802ccf9",
+                    "character": "Rebecca Lang",
+                    "order": 138,
+                    "gender": 1,
+                    "profile_path": "/rxeYONGXlnNYOn50KjjiwgLxiGX.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-07-26",
+              "episode_number": 6,
+              "id": 224672,
+              "name": "Shock Wave",
+              "overview": "Michael finally gets a solid lead on Anson, but the plan to get Fiona out of prison hits a snag when an MI-6 agent tries to prevent her release. Across town, Sam must protect Barry after a cold-blooded assassin traps them in a secluded beach house.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/7CJ4TN80X1b1hqKWzls83IJfykt.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 16938,
+                    "credit_id": "56237361c3a3680e1900d72d",
+                    "name": "Renny Harlin",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/lOCRZzC1UZfkObWpQtKxga5ZV8F.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2012-08-02",
+              "episode_number": 7,
+              "id": 224676,
+              "name": "Reunion",
+              "overview": "Sam agrees to help his girlfriend's son, who is in deep trouble with a loan shark. Michael and Fiona reconnect while searching for the saboteur.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/sBMyBXTaw5ftHgPOaSPJl3ayJ7I.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233037,
+                    "credit_id": "525749e219c29531db0998bb",
+                    "name": "Rashad Raisani",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 84816,
+                    "name": "Greg Pitts",
+                    "credit_id": "5a2921edc3a3680b8f1114bc",
+                    "character": "",
+                    "order": 137,
+                    "gender": 2,
+                    "profile_path": "/sG7AcaBYYKHOn886MGnvjWOSmXY.jpg"
+                  },
+                  {
+                    "id": 7218,
+                    "name": "Kristanna Loken",
+                    "credit_id": "5a567d1f0e0a2607e802ccf9",
+                    "character": "Rebecca Lang",
+                    "order": 138,
+                    "gender": 1,
+                    "profile_path": "/rxeYONGXlnNYOn50KjjiwgLxiGX.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-08-09",
+              "episode_number": 8,
+              "id": 224669,
+              "name": "Unchained",
+              "overview": "Michael intentionally gets arrested in order to help an FBI agent take down a vicious mobster. Jesse and Pearce follow up on the gun sale that put the weapon in the hands of Nate's murderer, but run into danger.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/mCO5Iv2j06yHEJdH5Su5EW7ZdHG.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 110463,
+                    "name": "Lauren Stamile",
+                    "credit_id": "5b203d8b0e0a264da2004e90",
+                    "character": "",
+                    "order": 142,
+                    "gender": 1,
+                    "profile_path": "/t4ettikjkfi0yQqnWjvIKsvRBRl.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-08-16",
+              "episode_number": 9,
+              "id": 224688,
+              "name": "Official Business",
+              "overview": "The CIA recruits Fiona to break into a guarded safe after a civilian asset winds up in over her head. Meanwhile, Sam and Jesse visit a mercenary training camp to track the sniper who killed Nate.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/mFXTLPsdZzaMV4tnjyDC8hE3WLl.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 2388,
+                    "credit_id": "525749f019c29531db09a918",
+                    "name": "Jonathan Frakes",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/51Z5EbZxtVPm6GiN0Wc9CLP4z3s.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 1654187,
+                    "name": "Brendan O'Malley",
+                    "credit_id": "579143109251416ba1001be1",
+                    "character": "Gabriel Manaro",
+                    "order": 133,
+                    "profile_path": "/kMBirKtjEZnvSgRfrI7rFLixqb6.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-08-23",
+              "episode_number": 10,
+              "id": 224692,
+              "name": "Desperate Times",
+              "overview": "The team travels to Panama to capture an assassin; Madeline tries to obtain difficult answers.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/touxZ5ENuzJ4Pzf6uYfhn5weGYv.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 16938,
+                    "credit_id": "56237361c3a3680e1900d72d",
+                    "name": "Renny Harlin",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/lOCRZzC1UZfkObWpQtKxga5ZV8F.jpg"
+                  }
+                ],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2012-11-08",
+              "episode_number": 11,
+              "id": 224700,
+              "name": "Desperate Measures",
+              "overview": "After finding themselves stranded in Panama, Michael and the team are forced to hijack a plane in order to get home. Before they can leave, however, Michael must first escape the clutches of a sadistic Panamanian drug-runner.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/aVlnUVbIiJ4Y5hkiCw1vIpxFLcg.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2012-11-08",
+              "episode_number": 12,
+              "id": 224709,
+              "name": "Means & Ends",
+              "overview": "Fiona is surprised by a visit from a smuggler she met in prison, who needs her help bringing down a corrupt Miami detective. Meanwhile, Michael teams up with a former adversary in order to turn the tables on a more treacherous foe.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/htdnoQBgTR6U60TSPTXOfRDdoID.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2012-11-15",
+              "episode_number": 13,
+              "id": 224712,
+              "name": "Over the Line",
+              "overview": "Michael is accused of a crime at a local hotel. Elsewhere, Olivia questions Sam in an attempt to get to Michael.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/yqqm5BnjWlxjXjRsloSv27iYARX.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 203683,
+                    "name": "Sonja Sohn",
+                    "credit_id": "5a8f3a42925141647500392f",
+                    "character": "Olivia Riley",
+                    "order": 139,
+                    "gender": 1,
+                    "profile_path": "/9Mzop30IpotrrzCKErKCdLEcsGR.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-11-29",
+              "episode_number": 14,
+              "id": 224701,
+              "name": "Down and Out",
+              "overview": "Michael arranges to be captured by a Syrian intelligence officer in order to rescue an inept smuggler; Riley offers Madeline a deal in hopes of tracking down Michael.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/rbGsWbgHMYBIaDgb0dRx8ezVwoX.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 203683,
+                    "name": "Sonja Sohn",
+                    "credit_id": "5a8f3a42925141647500392f",
+                    "character": "Olivia Riley",
+                    "order": 139,
+                    "gender": 1,
+                    "profile_path": "/9Mzop30IpotrrzCKErKCdLEcsGR.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-12-06",
+              "episode_number": 15,
+              "id": 224703,
+              "name": "Best Laid Plans",
+              "overview": "Michael brokers a deal selling an expensive piece of technology to a ruthless thief, but things become complicated when Sam is dragged in as part of a high stakes robbery. Meanwhile, Madeline goes to Barry to ask for a dangerous favor.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/zwaIxFgQOzgpsUs95FO6dfG2SYe.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 17278,
+                    "credit_id": "525749f319c29531db09acc0",
+                    "name": "Nick Gomez",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/mpV7F62c83IcRNjm4ei6ZMwRtfQ.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 203683,
+                    "name": "Sonja Sohn",
+                    "credit_id": "5a8f3a42925141647500392f",
+                    "character": "Olivia Riley",
+                    "order": 139,
+                    "gender": 1,
+                    "profile_path": "/9Mzop30IpotrrzCKErKCdLEcsGR.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-12-13",
+              "episode_number": 16,
+              "id": 224706,
+              "name": "Odd Man Out",
+              "overview": "Michael seeks refuge in a warehouse when he's caught in the middle of a smuggler's attempt to get revenge on his former client. Survival becomes a challenge as supplies run low and the exits are blocked.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/sve3MKXoYL8A8xYiVH4xvSbHpmp.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2012-12-20",
+              "episode_number": 17,
+              "id": 224718,
+              "name": "You Can Run",
+              "overview": "Michael is nearly killed when a powerful enemy sends a crew of cartel assassins after his entire team. Michael realizes that in order to protect the ones closest to him, he must eliminate the threat once and for all.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/foFs5JbKoknnEYBlSTtLlpfNdeS.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 17278,
+                    "credit_id": "525749f319c29531db09acc0",
+                    "name": "Nick Gomez",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": "/mpV7F62c83IcRNjm4ei6ZMwRtfQ.jpg"
+                  }
+                ],
+              "guest_stars": [
+                  {
+                    "id": 203683,
+                    "name": "Sonja Sohn",
+                    "credit_id": "5a8f3a42925141647500392f",
+                    "character": "Olivia Riley",
+                    "order": 139,
+                    "gender": 1,
+                    "profile_path": "/9Mzop30IpotrrzCKErKCdLEcsGR.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2012-12-20",
+              "episode_number": 18,
+              "id": 224715,
+              "name": "Game Change",
+              "overview": "Michael attempts to leave the country, but when the escape is ambushed, Sam and Jesse are taken captive. Racing against the clock to save Sam, Michael must also figure out how to rescue Jesse before time runs out.",
+              "production_code": null,
+              "season_number": 6,
+              "show_id": 2919,
+              "still_path": "/o2sBNbyaBJ8PZU1FHWHfv98T1Q1.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 203683,
+                    "name": "Sonja Sohn",
+                    "credit_id": "5a8f3a42925141647500392f",
+                    "character": "Olivia Riley",
+                    "order": 139,
+                    "gender": 1,
+                    "profile_path": "/9Mzop30IpotrrzCKErKCdLEcsGR.jpg"
+                  }
+                ]
+            }
+          ],
+        "name": "Season 6",
+        "overview": "The sixth season of the American television spy drama Burn Notice premiered on June 14, 2012 on the cable television channel USA Network.",
+        "poster_path": "/qEmzHDj3odrRYJLx9n9YvV0KsrC.jpg",
+        "season_number": 6
+      },
+      {
+        "_id": "525749cc19c29531db0988f4",
+        "air_date": "2013-06-06",
+        "episodes": [
+            {
+              "air_date": "2013-06-06",
+              "episode_number": 1,
+              "id": 224722,
+              "name": "New Deal",
+              "overview": "Michael's deal with the CIA sends him to the Dominican Republic to infiltrate a terrorist organization headed by an old contact. Sam, Fiona, and Jesse try to move on with their lives, but are drawn back in when someone starts asking questions about Michael's whereabouts. Maddie tries to get custody of her grandson.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/srrJSnsFvtkpRMqr9VSoupUbUa0.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-06-13",
+              "episode_number": 2,
+              "id": 224729,
+              "name": "Forget Me Not",
+              "overview": "Michael returns to Miami to track down someone who is trying to blow his cover; Michael is forbidden from contacting his crew.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/hmcwzmDcZT6pXPc42xNT5LYYQBk.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-06-20",
+              "episode_number": 3,
+              "id": 224725,
+              "name": "Down Range",
+              "overview": "Sam and Jesse travel to the Dominican Republic to help Michael with a high-stakes trade; Fiona intervenes when a bookie tries to extort Madeline.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/t4j6aCXuKV9UDo6qUULbOUtPYsA.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-06-27",
+              "episode_number": 4,
+              "id": 224732,
+              "name": "Brothers in Arms",
+              "overview": "Michael tries to learn about Burke's underground network; Fiona and Madeline must frame a corrupt Russian bureaucrat for treason.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/lNDDlFHUdCx3xxihcNLJOiWcPmw.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 136152,
+                    "name": "J. B. Blanc",
+                    "credit_id": "57fd15869251411871007d7a",
+                    "character": "Ivan",
+                    "order": 135,
+                    "profile_path": "/6P15QAzQKhaaE60LMsyepnbdrjS.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2013-07-11",
+              "episode_number": 5,
+              "id": 224735,
+              "name": "Exit Plan",
+              "overview": "Michael meets a former Russian operative who now works as part of Burke’s mysterious organization. In order to get out of Cuba, they’ll have to outwit a bloodthirsty counterintelligence expert who’s locking down the island. Strong convinces Fiona to help Michael’s mission by making her an offer she can’t refuse.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/pkjFcIp9mepZTLNKpikWbOd1E8I.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": [
+                  {
+                    "id": 159407,
+                    "name": "Marina Benedict",
+                    "credit_id": "57f52556c3a3687c83000025",
+                    "character": "Colonel OKSANA Zhirkov",
+                    "order": 134,
+                    "profile_path": "/gRqeY9vyZ2mVL3qDvSDlnZshiuY.jpg"
+                  }
+                ]
+            },
+            {
+              "air_date": "2013-07-18",
+              "episode_number": 6,
+              "id": 224738,
+              "name": "All or Nothing",
+              "overview": "Michael and Fiona pose as hackers at a malicious programming syndicate in order to steal information for Sonya. But Michael’s life gets complicated when working with Fiona again brings back painful memories. Meanwhile, Sam and Jesse help Barry track down a former girlfriend in exchange for falsified documents.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/bfniRG1iZb8KM31SmjYUht8xBye.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-07-25",
+              "episode_number": 7,
+              "id": 224741,
+              "name": "Psychological Warfare",
+              "overview": "Michael finally meets with the head of the organization he’s been assigned to dismantle, but things get dicey when the leader drugs him at gunpoint in order to learn his deepest secrets. In danger of exposing his cover, Michael soon realizes that in order to protect his future... he'll have to face his past first.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/zfHSe2edsdYiBxnbGdZCtqNVybe.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-08-01",
+              "episode_number": 8,
+              "id": 224745,
+              "name": "Nature of the Beast",
+              "overview": "Michael goes after a drug smuggler at the bidding of the organization he's trying to infiltrate. Elsewhere, Fiona, Jesse and Strong visit a mental hospital in a search for more information about James.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/64uAOtazllWWoU3brrzBOpvapCE.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-08-08",
+              "episode_number": 9,
+              "id": 224748,
+              "name": "Bitter Pill",
+              "overview": "The team look for an antidote at the manufacturer's lab in order to save a poisoned Middle Eastern diplomat. Elsewhere, Madeline takes action when she suspects she's being followed.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/ia2AHWwEFnFlDGfgDCASbtfvw1U.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-08-15",
+              "episode_number": 10,
+              "id": 224751,
+              "name": "Things Unseen",
+              "overview": "When Michael discovers an old friend digging up secrets that could expose his cover, he must decide just how far he will go to protect the mission. Meanwhile, Sam and Jesse are thrust in the middle of a street war involving a decade-old murder after Fiona’s boyfriend is targeted by a coldblooded gang member.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/czqXmgOZsvclBrH5qMEj7oL9n0D.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-08-22",
+              "episode_number": 11,
+              "id": 224754,
+              "name": "Tipping Point",
+              "overview": "As Michael becomes ever more conflicted with his mission, he travels to Mexico with Sonya in order to help James with an important job. Anxious to finish the operation, Strong hires freelance mercenaries to extract James on site... but brings along an unexpected guest.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/8I90X1afekXZZmacx8aniK2zbah.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-09-05",
+              "episode_number": 12,
+              "id": 224757,
+              "name": "Sea Change",
+              "overview": "Michael must expose his identity to James and Sonya. Meanwhile, Fiona, Sam and Jesse form a plan to retrieve Michael.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/ah6PE1zlusePwDaWo6fxvI5SL1Z.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [],
+              "guest_stars": []
+            },
+            {
+              "air_date": "2013-09-12",
+              "episode_number": 13,
+              "id": 224759,
+              "name": "Reckoning",
+              "overview": "Series Finale. Michael must regain the trust of those closest to him in order to finish what he started.",
+              "production_code": null,
+              "season_number": 7,
+              "show_id": 2919,
+              "still_path": "/lGdhFXEi29e2HeXMzgA9bvvIIJU.jpg",
+              "vote_average": 0,
+              "vote_count": 0,
+              "crew": [
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749e519c29531db099b62",
+                    "name": "Matt Nix",
+                    "department": "Directing",
+                    "job": "Director",
+                    "profile_path": null
+                  },
+                  {
+                    "id": 1233032,
+                    "credit_id": "525749d019c29531db098a46",
+                    "name": "Matt Nix",
+                    "department": "Writing",
+                    "job": "Writer",
+                    "profile_path": null
+                  }
+                ],
+              "guest_stars": []
+            }
+          ],
+        "name": "Season 7",
+        "overview": "The seventh and final season of the American television spy drama Burn Notice aired from June 6 to September 12, 2013, on the cable television channel USA Network. The 13-episode season was ordered by USA Network on November 7, 2012. In May 2013, the network announced that this season will be the show's last. Production on the series wrapped on July 31, 2013.",
+        "poster_path": "/wNGzjhaCP6yra6VoTCPIlKfDX65.jpg",
+        "season_number": 7
+      }
+    ],
+  "status": "Canceled",
+  "type": "Scripted",
+  "vote_average": 7.3,
+  "vote_count": 172
+}

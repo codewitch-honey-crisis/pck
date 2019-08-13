@@ -22,14 +22,14 @@ class Program
 	{
 		//foreach (var test in _tests)
 		//	Console.WriteLine(RegexExpression.Parse(test));
-		_RunLL(args);
-		//_RunLalr(args);	
+		//_RunLL(args);
+		_RunLalr(args);	
 	}
 	static void _RunLL(string[] args)
 	{
-		var cfg = CfgDocument.ReadFrom(@"..\..\..\expr.pck");
-		var lex = LexDocument.ReadFrom(@"..\..\..\expr.pck");
-		var tokenizer = lex.ToTokenizer("1+5*6", cfg.FillSymbols());
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\json.ll1.pck");
+		var lex = LexDocument.ReadFrom(@"..\..\..\json.ll1.pck");
+		var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\data.json"), cfg.FillSymbols());
 		var parser = cfg.ToLL1Parser(tokenizer);
 		parser.ShowHidden = true;
 		while (LLNodeType.EndDocument != parser.NodeType)
@@ -38,19 +38,20 @@ class Program
 	}
 	static void _RunLalr(string[] args)
 	{
-		var cfg = CfgDocument.ReadFrom(@"..\..\..\javascript.pck");
-		var tokenizer = new JSTokenizer(new FileReaderEnumerable(@"..\..\..\hello.js"));
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\json.pck");
+		var lex = LexDocument.ReadFrom(@"..\..\..\json.pck");
+		var tokenizer =lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\data.json"),cfg.EnumSymbols());
 		var pt = cfg.ToLalr1ParseTable( new _ConsoleProgress());
-		var parser = new DebugLalr1Parser2(cfg, tokenizer, pt);
+		var parser = new DebugLalr1Parser(cfg, tokenizer, pt);
 		parser.ShowHiddenTerminals =false;
 		while (parser.Read())
 		{
 			Console.WriteLine("{0}: {1}, {2}", parser.NodeType, parser.Symbol, parser.Value);
 		}
-		parser = new DebugLalr1Parser2(cfg, tokenizer, pt);
+		parser = new DebugLalr1Parser(cfg, tokenizer, pt);
 		parser.ShowHiddenTerminals =true;
 		while (LRNodeType.EndDocument != parser.NodeType)
-			Console.WriteLine(parser.ParseReductions(true));
+			Console.WriteLine(parser.ParseReductions(false));
 
 		return;
 	}		

@@ -120,11 +120,15 @@ namespace Pck
 					Console.Error.WriteLine("Error: Transform not found (did you forget an assembly reference?)");
 				else
 				{
-					if (typeof(Stream) == meth.GetParameters()[0].ParameterType)
+					if(typeof(XbnfToPckTransform)==meth.DeclaringType)
+					{
+						XbnfToPckTransform.Transform(new StreamReader(inp), new StreamWriter(outp));
+					} else if (typeof(Stream) == meth.GetParameters()[0].ParameterType)
 						meth.Invoke(null, new object[] { inp, outp });
 					else
 						meth.Invoke(null, new object[] { new StreamReader(inp), new StreamWriter(outp) });
 				}
+				outp.Flush();
 				Console.Error.WriteLine("Translation complete.");
 				return 0;
 			}

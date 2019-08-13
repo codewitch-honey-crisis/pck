@@ -108,6 +108,7 @@ namespace Pck
 				writer.WriteLine(string.Concat(te.Value,"= \'",_ToRegex(document,te.Key),"\'"));
 				
 			}
+			writer.Flush();
 			return;
 		}
 		static string _ToRegex(XbnfDocument d,XbnfExpression e)
