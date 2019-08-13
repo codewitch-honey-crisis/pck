@@ -17,7 +17,7 @@ namespace Pck
 			//Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Walking the LR(0) states");
 			var closure = new List<_Lrfa>();
-			var lalrclosure = new Lalr1ParseTable();
+			var result = new Lalr1ParseTable();
 
 			var itemSets = new List<ICollection<LRItem>>();
 
@@ -27,7 +27,7 @@ namespace Pck
 			{
 
 				itemSets.Add(p.AcceptSymbol);
-				lalrclosure.Add(new Dictionary<string, (int RuleOrStateId, string Left, string[] Right)>());
+				result.Add(new Dictionary<string, (int RuleOrStateId, string Left, string[] Right)>());
 				++i;
 			}
 			i = 0;
@@ -36,7 +36,7 @@ namespace Pck
 				foreach (var trn in p.Transitions)
 				{
 					var idx = closure.IndexOf(trn.Value);
-					lalrclosure[i].Add(
+					result[i].Add(
 						trn.Key,
 						(idx, null, null)
 						);
@@ -45,7 +45,7 @@ namespace Pck
 				{
 					if (Equals(item.Rule.Left, start) && item.RightIndex == item.Rule.Right.Count)
 					{
-						lalrclosure[i].Add(
+						result[i].Add(
 							"#EOS",
 							(-1, null, null));
 						break;
@@ -53,11 +53,7 @@ namespace Pck
 				}
 				++i;
 			}
-			//Console.Error.WriteLine("Done!");
-			//Console.Error.WriteLine("Computing follows...");
 			var follows = trnsCfg.FillFollows();
-			//Console.Error.WriteLine("Done!");
-			//Console.Error.WriteLine("Working on reductions");
 			// work on our reductions now
 			var map = new Dictionary<CfgRule, ICollection<string>>(_TransitionMergeRuleComparer.Default);
 			var rtbl = new List<IDictionary<object, CfgRule>>();
@@ -94,27 +90,17 @@ namespace Pck
 						var iid = _LrtSymbol.Parse(f).Id;
 						(int RuleOrStateId, string Left, string[] Right) tuple;
 						var rid = cfg.Rules.IndexOf(newRule);
-						//if (0 > rid)
-						//	System.Diagnostics.Debugger.Break(); // couldn't find our rule
-
-						// this gets rid of duplicate entries which seem to crop up in the table
-						// TODO: I think this is a shift reduce conflict if it debugger-breaks
-						if (lalrclosure[lr.To].TryGetValue(iid, out tuple))
+						
+						// this gets rid of duplicate entries which crop up in the table
+						if (!result[lr.To].TryGetValue(iid, out tuple))
 						{
-						//	if (rid != tuple.RuleOrStateId)
-						//		System.Diagnostics.Debugger.Break(); // possible shift-reduce conflice?
-						}
-						else
-						{
-							lalrclosure[lr.To].Add(_LrtSymbol.Parse(f).Id,
+							result[lr.To].Add(_LrtSymbol.Parse(f).Id,
 								(rid, newRule.Left, rr));
 						}
 					}
 				++j;
-				//Console.Error.WriteLine("Processing map entry {0} of {1}", j, map.Count);
 			}
-			//Console.Error.WriteLine("Done!");
-			return lalrclosure;
+			return result;
 		}
 		static ICollection<LRItem> _FillLRMove(this CfgDocument cfg,IEnumerable<LRItem> itemSet, object input,IProgress<Lalr1Progress> progress,ICollection<LRItem> result = null)
 		{

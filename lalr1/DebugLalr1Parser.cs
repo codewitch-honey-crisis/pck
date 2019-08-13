@@ -11,8 +11,9 @@ namespace Pck
 		Token _token;
 		Token _errorToken;
 		IEnumerator<Token> _tokenEnum;
-		HashSet<string> _hiddenTerminals;
+		HashSet<string> _hidden;
 		HashSet<string> _collapsed;
+		HashSet<string> _nonTerminals;
 		LRNodeType _nodeType;
 		Stack<int> _stack;
 		string[] _ruleDef;
@@ -126,7 +127,19 @@ namespace Pck
 			}
 		}
 		public bool IsHidden { get { return _IsHidden(Symbol); } }
-		public ParseNode ParseReductions(bool trim=false)
+		public bool IsCollapsed { get { return _IsCollapsed(Symbol); } }
+		void _AddChildren(ParseNode pc, bool transform,IList<ParseNode> result)
+		{
+			if(transform && _IsCollapsed(pc.Symbol))
+			{
+				if (null == pc.Value)
+					foreach (var c in pc.Children)
+						_AddChildren(c, transform, result); 
+			} else
+				result.Insert(0,pc);
+			
+		}
+		public ParseNode ParseReductions(bool trim = false, bool transform = true)
 		{
 			ParseNode p=null;
 			var rs = new Stack<ParseNode>();
@@ -140,6 +153,7 @@ namespace Pck
 						p.Symbol = Symbol;
 						p.Value = Value;
 						p.IsHidden = IsHidden;
+						p.IsCollapsed = IsCollapsed;
 						rs.Push(p);
 						break;
 					case LRNodeType.Reduce:
@@ -148,14 +162,13 @@ namespace Pck
 							var d = new List<ParseNode>();
 							p = new ParseNode();
 							p.Symbol = RuleDefinition[0];
-							for (var i = 1; i < RuleDefinition.Length; ++i)
+							for (var i = 1;RuleDefinition.Length>i; i++)
 							{
 								var pc = rs.Pop();
-								p.Children.Insert(0, pc);
+								_AddChildren(pc, transform, p.Children);
 								// don't count hidden terminals
 								if (_IsHidden(pc.Symbol))
 									--i;
-
 							}
 							rs.Push(p);
 						}
@@ -173,13 +186,14 @@ namespace Pck
 			}
 			var result = rs.Pop();
 			while (0 < rs.Count)
-				result.Children.Insert(0, rs.Pop());
+				_AddChildren(rs.Pop(), transform, result.Children);
 			return result;
 		}
 		void _PopulateAttrs()
 		{
-			_hiddenTerminals = new HashSet<string>();
+			_hidden = new HashSet<string>();
 			_collapsed = new HashSet<string>();
+			_nonTerminals = new HashSet<string>(_cfg.EnumNonTerminals());
 			foreach (var attrsym in _cfg.AttributeSets)
 			{
 				var i = attrsym.Value.IndexOf("hidden");
@@ -187,7 +201,7 @@ namespace Pck
 				{
 					var hidden = attrsym.Value[i].Value;
 					if ((hidden is bool) && ((bool)hidden))
-						_hiddenTerminals.Add(attrsym.Key);
+						_hidden.Add(attrsym.Key);
 				}
 				i = attrsym.Value.IndexOf("collapsed");
 				if (-1 < i)
@@ -198,12 +212,9 @@ namespace Pck
 				}
 			}
 		}
-		public bool ShowHiddenTerminals { get; set; } = false;
+		public bool ShowHidden { get; set; } = false;
+			
 		public bool Read()
-		{
-			return _ReadImpl();
-		}
-		bool _ReadImpl()
 		{ 
 			if (_nodeType == LRNodeType.Initial)
 			{
@@ -220,7 +231,7 @@ namespace Pck
 				return false;
 			if (LRNodeType.Error != _nodeType)
 			{
-				if (!ShowHiddenTerminals)
+				if (!ShowHidden)
 				{
 					while (_IsHidden(_tokenEnum.Current.Symbol))
 						_tokenEnum.MoveNext();
@@ -311,7 +322,15 @@ namespace Pck
 		}
 		bool _IsHidden(string symbol)
 		{
-			return _hiddenTerminals.Contains(symbol);
+			return _hidden.Contains(symbol);
+		}
+		bool _IsCollapsed(string symbol)
+		{
+			return _collapsed.Contains(symbol);
+		}
+		bool _IsNonTerminal(string symbol)
+		{
+			return _nonTerminals.Contains(symbol);
 		}
 	}
 }
