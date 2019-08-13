@@ -33,6 +33,12 @@ namespace Pck
 					LexNode.SkipCommentsAndWhitespace(pc);
 				}
 				var id = LexNode.ParseIdentifier(pc);
+				if(string.IsNullOrEmpty(id))
+				{
+					pc.Advance();
+					LexNode.SkipCommentsAndWhitespace(pc);
+					continue;
+				}
 				LexNode.SkipCommentsAndWhitespace(pc);
 
 				pc.Expecting(':', '-', '=');

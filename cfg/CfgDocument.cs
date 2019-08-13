@@ -713,6 +713,12 @@ namespace Pck
 					CfgNode.SkipCommentsAndWhitespace(pc);
 				}
 				var id = CfgNode.ParseIdentifier(pc);
+				if(string.IsNullOrEmpty(id))
+				{
+					pc.Advance();
+					CfgNode.SkipCommentsAndWhitespace(pc);
+					continue;
+				}
 				CfgNode.SkipCommentsAndWhitespace(pc);
 				
 				pc.Expecting(':', '-', '=');
