@@ -706,7 +706,7 @@ namespace Pck
 				var line = pc.Line;
 				var column = pc.Column;
 				var position = pc.Position;
-				CfgNode.SkipCommentsAndWhitespace(pc);
+				//CfgNode.SkipCommentsAndWhitespace(pc);
 				while ('\n' == pc.Current)
 				{
 					pc.Advance();
@@ -751,9 +751,10 @@ namespace Pck
 				{
 					pc.TrySkipUntil('\n', true);
 				}
-				CfgNode.SkipCommentsAndWhitespace(pc);
 				if ('\n' == pc.Current)
 					pc.Advance();
+				CfgNode.SkipCommentsAndWhitespace(pc);
+				
 			}
 			return result;
 		}

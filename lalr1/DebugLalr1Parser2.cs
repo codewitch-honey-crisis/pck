@@ -9,6 +9,7 @@ namespace Pck
 		CfgDocument _cfg;
 		Lalr1ParseTable _parseTable;
 		Token _token;
+		Token _errorToken;
 		IEnumerator<Token> _tokenEnum;
 		HashSet<string> _hiddenTerminals;
 		HashSet<string> _collapsed;
@@ -27,25 +28,71 @@ namespace Pck
 			_nodeType = LRNodeType.Initial;
 
 		}
-		public int Line => _token.Line;
-		public int Column => _token.Column;
-		public long Position => _token.Position;
+		public int Line {
+			get {
+				switch(_nodeType)
+				{
+				
+					case LRNodeType.Error:
+						return _errorToken.Line;
+					default:
+						return _token.Line;
+				}
+			}
+		}
+		public int Column {
+			get {
+				switch (_nodeType)
+				{
+
+					case LRNodeType.Error:
+						return _errorToken.Column;
+					default:
+						return _token.Column;
+				}
+			}
+		}
+		public long Position {
+			get {
+				switch (_nodeType)
+				{
+
+					case LRNodeType.Error:
+						return _errorToken.Position;
+					default:
+						return _token.Position;
+				}
+
+			}
+		}
 		public LRNodeType NodeType {
 			get { return _nodeType; }
 		}
 		public string Symbol {
 			get {
-				if (LRNodeType.Shift == _nodeType)
-					return _token.Symbol;
-				if (LRNodeType.Reduce == _nodeType)
-					return _ruleDef[0];
+				switch(_nodeType)
+				{
+					case LRNodeType.Shift:
+						return _token.Symbol;
+					case LRNodeType.Reduce:
+						return _ruleDef[0];
+					case LRNodeType.Error:
+						return _errorToken.Symbol;
+				}
 				return null;
 			}
 		}
 		public string Value {
 			get {
-				if(LRNodeType.Shift==_nodeType)
-					return _token.Value;
+				switch (_nodeType)
+				{
+
+					case LRNodeType.Error:
+						return _errorToken.Value;
+					case LRNodeType.Shift:
+						return _token.Value;
+				}
+
 				return null;
 			}
 		}
@@ -78,7 +125,7 @@ namespace Pck
 			}
 		}
 		public bool IsHidden { get { return _IsHidden(Symbol); } }
-		public ParseNode ParseReductions()
+		public ParseNode ParseReductions(bool trim=false)
 		{
 			ParseNode p=null;
 			var rs = new Stack<ParseNode>();
@@ -95,22 +142,32 @@ namespace Pck
 						rs.Push(p);
 						break;
 					case LRNodeType.Reduce:
-						var d = new List<ParseNode>();
-						p = new ParseNode();
-						p.Symbol = RuleDefinition[0];
-						for (var i = 1; i < RuleDefinition.Length; ++i)
+						if (!trim || 2 < RuleDefinition.Length)
 						{
-							var pc = rs.Pop();
-							p.Children.Insert(0, pc);
-							if (_IsHidden(pc.Symbol))
-								--i;
-							
+							var d = new List<ParseNode>();
+							p = new ParseNode();
+							p.Symbol = RuleDefinition[0];
+							for (var i = 1; i < RuleDefinition.Length; ++i)
+							{
+								var pc = rs.Pop();
+								p.Children.Insert(0, pc);
+								// don't count hidden terminals
+								if (_IsHidden(pc.Symbol))
+									--i;
+
+							}
+							rs.Push(p);
 						}
-						rs.Push(p);
 						break;
 					case LRNodeType.Accept:
 						break;
-
+					case LRNodeType.Error:
+						p = new ParseNode();
+						p.SetLocation(Line, Column, Position);
+						p.Symbol = Symbol;
+						p.Value = Value;
+						rs.Push(p);
+						break;
 				}
 			}
 			var result = rs.Pop();
@@ -156,16 +213,20 @@ namespace Pck
 			}
 			else if (LRNodeType.EndDocument == _nodeType)
 				return false;
-			if(!ShowHiddenTerminals)
+			if (LRNodeType.Error != _nodeType)
 			{
-				while (_IsHidden(_tokenEnum.Current.Symbol))
+				if (!ShowHiddenTerminals)
+				{
+					while (_IsHidden(_tokenEnum.Current.Symbol))
+						_tokenEnum.MoveNext();
+				}
+				else if (_IsHidden(_tokenEnum.Current.Symbol))
+				{
+					_token = _tokenEnum.Current;
+					_nodeType = LRNodeType.Shift;
 					_tokenEnum.MoveNext();
-			} else if(_IsHidden(_tokenEnum.Current.Symbol))
-			{
-				_token = _tokenEnum.Current;
-				_nodeType = LRNodeType.Shift;
-				_tokenEnum.MoveNext();
-				return true;
+					return true;
+				}
 			}
 			var entry = _parseTable[_stack.Peek()];
 			(int RuleOrStateId, string Left, string[] Right) trns;
@@ -220,7 +281,28 @@ namespace Pck
 		}
 		void _Panic()
 		{
-			throw new Exception("Parse error.");
+			// This is primitive. Should see if the Dragon Book has something better
+			_nodeType = LRNodeType.Error;
+			var state = _stack.Peek();
+			var d = _parseTable[state];
+			(int RuleOrStateId, string Left, string[] Right) e;
+			_errorToken.Symbol = "#ERROR";
+			_errorToken.SymbolId = _cfg.GetIdOfSymbol(_errorToken.Symbol);
+			_errorToken.Value = _tokenEnum.Current.Value;
+			_errorToken.Line = _tokenEnum.Current.Line;
+			_errorToken.Column = _tokenEnum.Current.Column;
+			_errorToken.Position = _tokenEnum.Current.Position;
+			var s = _tokenEnum.Current.Symbol;
+			if (!d.TryGetValue(s, out e) && "#EOS"!=s)
+			{
+				_errorToken.Value += _tokenEnum.Current.Value;
+				while (_tokenEnum.MoveNext() && "#EOS" != (s = _tokenEnum.Current.Symbol))
+					if (!d.TryGetValue(s, out e))
+						_errorToken.Value += _tokenEnum.Current.Value;
+					else
+						break;
+				
+			}
 		}
 		bool _IsHidden(string symbol)
 		{

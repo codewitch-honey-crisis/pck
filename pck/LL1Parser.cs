@@ -57,9 +57,9 @@ namespace Pck
 		/// <summary>
 		/// Parses the from the current position into a parse tree. This will read an entire sub-tree.
 		/// </summary>
-		/// <param name="trimEmpties">Remove non-terminal nodes that have no terminals</param>
+		/// <param name="trim">Remove non-terminal nodes that have no terminals and collapse nodes that have a single non-terminal child</param>
 		/// <returns>A <see cref="ParseNode"/> representing the parse tree. The reader's cursor is advanced.</returns>
-		public virtual ParseNode ParseSubtree(bool trimEmpties = false)
+		public virtual ParseNode ParseSubtree(bool trim = false)
 		{
 			if (!Read())
 				return null;
@@ -76,11 +76,32 @@ namespace Pck
 				result.SymbolId = SymbolId;
 				while (true)
 				{
-					var k = ParseSubtree(trimEmpties);
+					var k = ParseSubtree(trim);
 					if (null != k)
 					{
-						if (!trimEmpties || ((null != k.Value) || 0 < k.Children.Count))
+						if (null != k.Value)
 							result.Children.Add(k);
+						else
+						{
+							if (!trim)
+								result.Children.Add(k);
+							else
+							{
+								if (1 < k.Children.Count)
+									result.Children.Add(k);
+								else
+								{
+									if (0 < k.Children.Count) {
+										if(null == k.Children[0].Value)
+											result.Children.Add(k.Children[0]);
+										else
+											result.Children.Add(k);
+									}
+								}
+							}
+						}
+						//if (!trimEmpties || ((null != k.Value) || 0 < k.Children.Count))
+						//	result.Children.Add(k);
 					}
 					else
 						break;

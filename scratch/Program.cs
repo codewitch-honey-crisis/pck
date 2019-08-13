@@ -22,7 +22,19 @@ class Program
 	{
 		//foreach (var test in _tests)
 		//	Console.WriteLine(RegexExpression.Parse(test));
-		_RunLalr(args);	
+		_RunLL(args);
+		//_RunLalr(args);	
+	}
+	static void _RunLL(string[] args)
+	{
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\expr.pck");
+		var lex = LexDocument.ReadFrom(@"..\..\..\expr.pck");
+		var tokenizer = lex.ToTokenizer("1+5*6", cfg.FillSymbols());
+		var parser = cfg.ToLL1Parser(tokenizer);
+		parser.ShowHidden = true;
+		while (LLNodeType.EndDocument != parser.NodeType)
+			Console.WriteLine(parser.ParseSubtree(false));
+
 	}
 	static void _RunLalr(string[] args)
 	{
@@ -38,7 +50,7 @@ class Program
 		parser = new DebugLalr1Parser2(cfg, tokenizer, pt);
 		parser.ShowHiddenTerminals =true;
 		while (LRNodeType.EndDocument != parser.NodeType)
-			Console.WriteLine(parser.ParseReductions());
+			Console.WriteLine(parser.ParseReductions(true));
 
 		return;
 	}		
