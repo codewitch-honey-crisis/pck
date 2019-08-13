@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pck
 {
+	using Lrfa = FA<string, ICollection<Lalr1.LRItem>>;
 	public static class Lalr1
 	{
 		public static Lalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg, IProgress<Lalr1Progress> progress=null)
@@ -16,7 +17,7 @@ namespace Pck
 			trnsCfg.RebuildCache();
 			//Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Walking the LR(0) states");
-			var closure = new List<_Lrfa>();
+			var closure = new List<Lrfa>();
 			var result = new Lalr1ParseTable();
 
 			var itemSets = new List<ICollection<LRItem>>();
@@ -184,18 +185,18 @@ namespace Pck
 				}
 			}
 		}
-		static _Lrfa _ToLrfa(CfgDocument cfg,IProgress<Lalr1Progress> progress)
+		static Lrfa _ToLrfa(CfgDocument cfg,IProgress<Lalr1Progress> progress)
 		{
 			if(null!=progress)
 				progress.Report(new Lalr1Progress(Lalr1Status.ComputingStates, 0));
 			// TODO: this takes a long time sometimes
-			var map = new Dictionary<ICollection<LRItem>, _Lrfa>(_LRItemSetComparer.Default);
+			var map = new Dictionary<ICollection<LRItem>, Lrfa>(_LRItemSetComparer.Default);
 			// create an augmented grammar - add rule {start} -> [[StartId]] 
 			var start = new CfgRule(cfg.GetAugmentedStartId(cfg.StartSymbol), new string[] { cfg.StartSymbol });
 			var cl = new HashSet<LRItem>();
 			cl.Add(new LRItem(start, 0));
 			_FillLRClosureInPlace(cfg,progress,cl);
-			var lrfa = new _Lrfa(true,cl);
+			var lrfa = new Lrfa(true,cl);
 			var items = cl.Count;
 			map.Add(cl, lrfa);
 			var done = false;
@@ -216,7 +217,7 @@ namespace Pck
 							if (!_ContainsItemSet(map.Keys, n))
 							{
 								done = false;
-								var npda = new _Lrfa(true, n);
+								var npda = new Lrfa(true, n);
 								map.Add(n, npda);
 								items += n.Count;
 								if(null!=progress)
@@ -239,10 +240,10 @@ namespace Pck
 
 			return lrfa;
 		}
-		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,_Lrfa lrfa, IProgress<Lalr1Progress> progress)
+		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,Lrfa lrfa, IProgress<Lalr1Progress> progress)
 		{
 			var result = new CfgDocument();
-			var closure = new List<_Lrfa>();
+			var closure = new List<Lrfa>();
 			var itemSets = new List<ICollection<LRItem>>();
 			lrfa.FillClosure(closure);
 			foreach (var p in closure)
@@ -266,7 +267,7 @@ namespace Pck
 						if (item.RightIndex < item.Rule.Right.Count)
 						{
 							int dst = -1;
-							_Lrfa dsts;
+							Lrfa dsts;
 							if (p.Transitions.ContainsKey(rule.Left))
 							{
 								dsts = p.Transitions[rule.Left];
@@ -394,6 +395,7 @@ namespace Pck
 				return result;
 			}
 		}
+		/*
 		class _Lrfa
 		{
 			public _Lrfa(bool isAccepting,ICollection<LRItem> acceptSymbol)
@@ -418,6 +420,7 @@ namespace Pck
 				return result;
 			}
 		}
+		*/
 		sealed class _LrtSymbol : IEquatable<_LrtSymbol>
 		{
 			public int From;

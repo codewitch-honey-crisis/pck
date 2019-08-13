@@ -133,8 +133,10 @@ namespace Pck
 			if(transform && _IsCollapsed(pc.Symbol))
 			{
 				if (null == pc.Value)
-					foreach (var c in pc.Children)
-						_AddChildren(c, transform, result); 
+				{
+					for(int ic=pc.Children.Count,i=ic-1;0<=i;--i)
+						_AddChildren(pc.Children[i], transform, result);
+				}
 			} else
 				result.Insert(0,pc);
 			
