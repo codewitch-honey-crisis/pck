@@ -169,7 +169,7 @@ namespace Pck
 			var fc = cfg.FillLL1Conflicts();
 			foreach (var f in fc)
 				result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Format("Grammar has unresolvable first-{0} conflict between {1} and {2} on symbol {3}", f.Kind == CfgLL1ConflictKind.FirstFirst ? "first" : "follows", f.Rule1, f.Rule2, f.Symbol),f.Rule2.Line,f.Rule2.Column,f.Rule2.Position));
-			cfg.FillValidate(throwIfErrors, result);
+			cfg.FillValidateLL1(throwIfErrors, result);
 			return result;
 		}
 		public static IList<CfgMessage> EliminateLeftRecursion(this CfgDocument cfg)
@@ -331,18 +331,18 @@ namespace Pck
 			}
 			return result;
 		}
-		public static IList<CfgMessage> FillValidate(this CfgDocument cfg,bool throwIfErrors = false, IList<CfgMessage> result = null)
+		public static IList<CfgMessage> FillValidateLL1(this CfgDocument cfg,bool throwIfErrors = false, IList<CfgMessage> result = null)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();
-			_FillValidateAttributes(cfg,result);
-			_FillValidateRules(cfg,result);
+			_FillValidateAttributesLL1(cfg,result);
+			_FillValidateRulesLL1(cfg,result);
 			if (throwIfErrors)
 				CfgException.ThrowIfErrors(result);
 			return result;
 		}
 		
-		static IList<CfgMessage> _FillValidateRules(CfgDocument cfg,IList<CfgMessage> result)
+		static IList<CfgMessage> _FillValidateRulesLL1(CfgDocument cfg,IList<CfgMessage> result)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();
@@ -437,7 +437,7 @@ namespace Pck
 			}
 			return result;
 		}
-		static IList<CfgMessage> _FillValidateAttributes(CfgDocument cfg, IList<CfgMessage> result)
+		static IList<CfgMessage> _FillValidateAttributesLL1(CfgDocument cfg, IList<CfgMessage> result)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();

@@ -20,7 +20,7 @@ namespace Pck
 					if ("/?" == args[0] || "-?" == args[0] || "/help" == (lstr = args[0].ToLowerInvariant()) || "--help" == lstr)
 					{
 						Console.Error.Write("Usage: ");
-						_PrintUsageLl1();
+						_PrintUsageLL1Factor();
 						return 0;
 					}
 					inp = new StreamReader(args[0]);
@@ -32,7 +32,7 @@ namespace Pck
 					break;
 				default:
 					Console.Error.Write("Usage: ");
-					_PrintUsageLl1();
+					_PrintUsageLL1Factor();
 					return 1;
 			}
 			var buf = inp.ReadToEnd();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -7,7 +8,7 @@ namespace Pck
 {
 	partial class Program
 	{
-		static int _Ll1gen(string[] args)
+		static int _Lalr1Gen(string[] args)
 		{
 			string specFile = null;
 			string outFile = null;
@@ -20,7 +21,7 @@ namespace Pck
 				if ("--help" == args[i] || "/?" == args[i] || "/help" == args[i])
 				{
 					Console.Error.Write("Usage: ");
-					_PrintUsageLL1Gen();
+					_PrintUsageLalr1Gen();
 					return 0;
 				}
 				if (args[i].StartsWith("/"))
@@ -88,7 +89,7 @@ namespace Pck
 				var buf = inp.ReadToEnd();
 				var cfg = CfgDocument.Parse(buf);
 				var hasErrors = false;
-				foreach (var msg in cfg.FillValidateLL1(false))
+				foreach (var msg in cfg.FillValidateLalr1(false))
 				{
 					Console.Error.WriteLine(msg);
 					if (CfgErrorLevel.Error == msg.ErrorLevel)
@@ -105,7 +106,7 @@ namespace Pck
 						else
 							@class = "Parser";
 					}
-					LL1ParserCodeGenerator.WriteClassTo(cfg, @class,@namespace, language, outp);
+					Lalr1ParserCodeGenerator.WriteClassTo(cfg, @class,@namespace, language, outp);
 					return 0;
 				}
 				return 1;
@@ -126,3 +127,4 @@ namespace Pck
 		}
 	}
 }
+

@@ -8,6 +8,7 @@ namespace Pck
 	using Lrfa = FA<string, ICollection<Lalr1.LRItem>>;
 	public static class Lalr1
 	{
+
 		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null)
 		{
 			var parseTable = ToLalr1ParseTable(cfg);
@@ -341,6 +342,147 @@ namespace Pck
 				++j;
 			}
 			result.StartSymbol = start.ToString();
+			return result;
+		}
+		static IList<CfgMessage> _FillValidateRulesLalr1(CfgDocument cfg, IList<CfgMessage> result)
+		{
+			if (null == result)
+				result = new List<CfgMessage>();
+			var ic = cfg.Rules.Count;
+			if (0 == ic)
+				result.Add(new CfgMessage(CfgErrorLevel.Error, -1, "Grammar has no rules", 0, 0, 0));
+
+			var dups = new HashSet<CfgRule>();
+			for (var i = 0; i < ic; ++i)
+			{
+				var rule = cfg.Rules[i];
+				if (rule.Left.IsNullOrEmpty())
+					result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has empty left hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+				else if ("#ERROR" == rule.Left || "#EOS" == rule.Left)
+					result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on left hand side: ", rule.ToString()), rule.Line, rule.Column, rule.Position));
+				for (int jc = rule.Right.Count, j = 0; j > jc; ++j)
+					if (rule.Right[j].IsNullOrEmpty())
+						result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has empty symbols on the right hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+					else if ("#ERROR" == rule.Right[j] || "#EOS" == rule.Right[j])
+						result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on right hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+
+				for (var j = 0; j < ic; ++j)
+					if (i != j && cfg.Rules[j] == rule && dups.Add(rule))
+						result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Duplicate rule:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+
+			}
+			var closure = cfg.FillClosure(cfg.StartSymbol);
+			var syms = cfg.FillSymbols();
+			ic = syms.Count;
+			for (var i = 0; i < ic; ++i)
+			{
+				var sym = syms[i];
+				if (!closure.Contains(sym))
+				{
+					var found = false;
+					if (!cfg.IsNonTerminal(sym))
+						if ("#EOS" == sym || "#ERROR" == sym || (bool)cfg.GetAttribute(sym, "hidden", false))
+							found = true;
+					//if(!found)
+					//	result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Unreachable symbol \"", sym, "\"")));
+				}
+			}
+			// checking for conflicts here is way too time prohibitive for LALR(1) so we skip it
+			return result;
+		}
+		public static IList<CfgMessage> FillValidateLalr1(this CfgDocument cfg, bool throwIfErrors = false, IList<CfgMessage> result = null)
+		{
+			if (null == result)
+				result = new List<CfgMessage>();
+			_FillValidateAttributesLalr1(cfg, result);
+			_FillValidateRulesLalr1(cfg, result);
+			if (throwIfErrors)
+				CfgException.ThrowIfErrors(result);
+			return result;
+		}
+		static IList<CfgMessage> _FillValidateAttributesLalr1(CfgDocument cfg, IList<CfgMessage> result)
+		{
+			if (null == result)
+				result = new List<CfgMessage>();
+			string start = null;
+			foreach (var attrs in cfg.AttributeSets)
+			{
+				if (!cfg.IsSymbol(attrs.Key))
+				{
+					// hidden rules should never be in the grammar
+					// so warnings about them not being in the grammar
+					// are suppressed.
+					var i = attrs.Value.IndexOf("hidden");
+					if (!(-1 < i && attrs.Value[i].Value is bool && ((bool)attrs.Value[i].Value)))
+						result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Attributes declared on a symbol \"", attrs.Key, "\" that is not in the grammar"), attrs.Value[0].Line, attrs.Value[0].Column, attrs.Value[0].Position));
+				}
+				foreach (var attr in attrs.Value)
+				{
+					string s;
+					var p = string.Concat("On \"", attrs.Key, "\": ");
+					switch (attr.Name)
+					{
+						case "start":
+							if (!(attr.Value is bool))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "start attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							if (null != start)
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "start attribute was already specified on \"", start, "\" and this declaration will be ignored"), attr.Line, attr.Column, attr.Position));
+							else
+								start = attrs.Key;
+							continue;
+						case "hidden":
+							if (!(attr.Value is bool))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "hidden attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							continue;
+						case "terminal":
+							if (!(attr.Value is bool))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "terminal attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							continue;
+						case "collapsed":
+							if (!(attr.Value is bool))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "collapse attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							continue;
+						case "substitute":
+							s = attr.Value as string;
+							if (!(attr.Value is string))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							else if (string.IsNullOrEmpty(s))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							else if (!cfg.IsSymbol(s))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a symbol reference and will be ignored"), attr.Line, attr.Column, attr.Position));
+							continue;
+						case "blockEnd":
+							if (cfg.IsNonTerminal(attrs.Key))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute cannot be specified on a non-terminal and will be ignored"), attr.Line, attr.Column, attr.Position));
+							else
+							{
+								s = attr.Value as string;
+								if (!(attr.Value is string))
+									result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								else if (string.IsNullOrEmpty(s))
+									result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							}
+							continue;
+						case "followsConflict":
+							s = attr.Value as string;
+							switch (s)
+							{
+								case "error":
+								case "first":
+								case "last":
+									break;
+								default:
+									result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "followsError attribute expects \"error\", \"first\", or \"last\" and will revert to \"error\"."), attr.Line, attr.Column, attr.Position));
+									break;
+							}
+							continue;
+					}
+					result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "Unknown attribute \"", attr.Name, "\" will be ignored"), attr.Line, attr.Column, attr.Position));
+				}
+
+			}
+			if (null == start)
+				result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("start attribute was not specified and the first non-terminal in the grammar (\"", cfg.StartSymbol, "\") will be used"), 0, 0, 0));
 			return result;
 		}
 		public struct LRItem : IEquatable<LRItem>, ICloneable

@@ -20,6 +20,7 @@ namespace Pck
 
 		public override string ToString()
 		{
+			return string.Concat(Symbol, "(", string.Concat(SymbolId.ToString(), ") : ", Value));
 			return string.Concat(Symbol, ": ", Value);
 		}
 	}

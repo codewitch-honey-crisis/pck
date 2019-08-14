@@ -8,7 +8,7 @@ namespace Pck
 	static partial class Program
 	{
 		#region Usage
-		static void _PrintUsageFagen()
+		static void _PrintUsageFaGen()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
 			Console.Error.WriteLine("fagen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namespace>] [/language <language>]");
@@ -23,7 +23,7 @@ namespace Pck
 			Console.Error.WriteLine();
 			Console.Error.WriteLine();
 		}
-		static void _PrintUsageLl1gen()
+		static void _PrintUsageLL1Gen()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
 			Console.Error.WriteLine("ll1gen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namespace>] [/language <language>]");
@@ -37,7 +37,21 @@ namespace Pck
 			Console.Error.WriteLine("  Generates an LL(1) parser in the specified .NET language.");
 			Console.Error.WriteLine();
 		}
-		static void _PrintUsageLl1()
+		static void _PrintUsageLalr1Gen()
+		{
+			Console.Error.Write(string.Concat(_name, " "));
+			Console.Error.WriteLine("lalr1gen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namespace>] [/language <language>]");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine("  <specfile>\tThe pck specification file to use (or stdin)");
+			Console.Error.WriteLine("  <outputfile>\tThe file to write (or stdout)");
+			Console.Error.WriteLine("  <classname>\tThe name of the class to generate (or taken from the filename or from the start symbol of the grammar)");
+			Console.Error.WriteLine("  <namespace>\tThe namespace to generate the code under (or none)");
+			Console.Error.WriteLine("  <language>\tThe .NET language to generate the code for (or draw from filename or C#)");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine("  Generates an LALR(1) parser in the specified .NET language.");
+			Console.Error.WriteLine();
+		}
+		static void _PrintUsageLL1Factor()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
 			Console.Error.WriteLine("ll1factor [<specfile> [<outputfile>]]");
@@ -48,7 +62,7 @@ namespace Pck
 			Console.Error.WriteLine("  Factors a pck grammar spec so that it can be used with an LL(1) parser.");
 			Console.Error.WriteLine();
 		}
-		static void _PrintUsageTree()
+		static void _PrintUsageLL1Tree()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
 			Console.Error.WriteLine("ll1tree <specfile> [<inputfile>]");
@@ -91,10 +105,11 @@ namespace Pck
 			Console.Error.WriteLine();
 			Console.Error.WriteLine("Commands:");
 			Console.Error.WriteLine();
-			_PrintUsageFagen();
-			_PrintUsageLl1gen();
-			_PrintUsageLl1();
-			_PrintUsageTree();
+			_PrintUsageFaGen();
+			_PrintUsageLL1Gen();
+			_PrintUsageLL1Factor();
+			_PrintUsageLL1Tree();
+			_PrintUsageLalr1Gen();
 			_PrintUsageXlt();
 			
 			Console.Error.WriteLine();
@@ -128,6 +143,9 @@ namespace Pck
 					return _Xlt(sargs);
 				case "ll1tree":
 					return _LL1Tree(sargs);
+				case "lalr1gen":
+					return _Lalr1Gen(sargs);
+
 				default:
 					_PrintUsage();
 					return 1;

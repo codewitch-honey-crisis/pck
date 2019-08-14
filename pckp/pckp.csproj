@@ -19,11 +19,13 @@
     <Compile Include="..\common\ListDictionary.cs" Link="ListDictionary.cs" />
     <Compile Include="..\common\OrderedCollectionEqualityComparer.cs" Link="OrderedCollectionEqualityComparer.cs" />
     <Compile Include="..\pckw\CgtToPckTransform.cs" Link="CgtToPckTransform.cs" />
+    <Compile Include="..\pckw\Lalr1ParserCodeGenerator.cs" Link="Lalr1ParserCodeGenerator.cs" />
     <Compile Include="..\pckw\LL1ParserCodeGenerator.cs" Link="LL1ParserCodeGenerator.cs" />
     <Compile Include="..\pckw\PckToLexTransform.cs" Link="PckToLexTransform.cs" />
     <Compile Include="..\pckw\PckToYaccTransform.cs" Link="PckToYaccTransform.cs" />
     <Compile Include="..\pckw\Program.cs" Link="Program.cs" />
     <Compile Include="..\pckw\Program.fagen.cs" Link="Program.fagen.cs" />
+    <Compile Include="..\pckw\Program.Lalr1gen.cs" Link="Program.Lalr1gen.cs" />
     <Compile Include="..\pckw\Program.Ll1factor.cs" Link="Program.Ll1factor.cs" />
     <Compile Include="..\pckw\Program.Ll1gen.cs" Link="Program.Ll1gen.cs" />
     <Compile Include="..\pckw\Program.LL1Tree.cs" Link="Program.LL1Tree.cs" />
@@ -39,6 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\cfg\cfg.csproj" />
     <ProjectReference Include="..\fa\fa.csproj" />
+    <ProjectReference Include="..\lalr1\lalr1.csproj" />
     <ProjectReference Include="..\ll1\ll1.csproj" />
     <ProjectReference Include="..\pck\pck.csproj" />
     <ProjectReference Include="..\xbnf\xbnf.csproj" />

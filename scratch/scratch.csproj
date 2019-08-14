@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\common\CollectionUtility.cs" Link="CollectionUtility.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\cfg\cfg.csproj" />
     <ProjectReference Include="..\fa\fa.csproj" />
     <ProjectReference Include="..\lalr1\lalr1.csproj" />

@@ -58,12 +58,14 @@
     <Compile Include="CgtToPckTransform.cs" />
     <None Include="expr.xbnf" />
     <None Include="json.g4" />
+    <Compile Include="Lalr1ParserCodeGenerator.cs" />
     <Compile Include="LL1ParserCodeGenerator.cs" />
     <Compile Include="PckToAntlr.cs" />
     <Compile Include="PckToLexTransform.cs" />
     <Compile Include="PckToYaccTransform.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Program.Fagen.cs" />
+    <Compile Include="Program.Lalr1gen.cs" />
     <Compile Include="Program.Ll1gen.cs" />
     <Compile Include="Program.Ll1factor.cs" />
     <Compile Include="Program.LL1Tree.cs" />
@@ -94,6 +96,10 @@
     <ProjectReference Include="..\fa\fa.csproj">
       <Project>{01eb0690-e839-4c75-a20b-11af1197d1c5}</Project>
       <Name>fa</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lalr1\lalr1.csproj">
+      <Project>{1ef97f85-f298-4b08-905c-328cd4280096}</Project>
+      <Name>lalr1</Name>
     </ProjectReference>
     <ProjectReference Include="..\ll1\ll1.csproj">
       <Project>{d01ca3ee-0667-46dc-ad10-578cdaec18a6}</Project>
