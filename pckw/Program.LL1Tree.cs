@@ -11,7 +11,7 @@ namespace Pck
 		{
 			if (1> args.Length || args.Length>2)
 			{
-				_PrintUsage();
+				_PrintUsageLL1Tree();
 				return 1;
 			}
 			var pckspec = args[0];

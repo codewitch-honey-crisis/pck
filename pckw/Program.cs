@@ -73,6 +73,17 @@ namespace Pck
 			Console.Error.WriteLine("  Prints a tree from the specified input file using the specified pck specification file.");
 			Console.Error.WriteLine();
 		}
+		static void _PrintUsageLalr1Tree()
+		{
+			Console.Error.Write(string.Concat(_name, " "));
+			Console.Error.WriteLine("lalr1tree <specfile> [<inputfile>]");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine("  <specfile>\tThe pck specification file to use");
+			Console.Error.WriteLine("  <inputfile>\tThe file to parse (or stdin)");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine("  Prints a tree from the specified input file using the specified pck specification file.");
+			Console.Error.WriteLine();
+		}
 		static void _PrintUsageXlt()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
@@ -110,6 +121,7 @@ namespace Pck
 			_PrintUsageLL1Factor();
 			_PrintUsageLL1Tree();
 			_PrintUsageLalr1Gen();
+			_PrintUsageLalr1Tree();
 			_PrintUsageXlt();
 			
 			Console.Error.WriteLine();
@@ -145,7 +157,8 @@ namespace Pck
 					return _LL1Tree(sargs);
 				case "lalr1gen":
 					return _Lalr1Gen(sargs);
-
+				case "lalr1tree":
+					return _Lalr1Tree(sargs);
 				default:
 					_PrintUsage();
 					return 1;

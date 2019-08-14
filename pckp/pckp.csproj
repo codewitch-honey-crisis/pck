@@ -26,6 +26,7 @@
     <Compile Include="..\pckw\Program.cs" Link="Program.cs" />
     <Compile Include="..\pckw\Program.fagen.cs" Link="Program.fagen.cs" />
     <Compile Include="..\pckw\Program.Lalr1gen.cs" Link="Program.Lalr1gen.cs" />
+    <Compile Include="..\pckw\Program.Lalr1Tree.cs" Link="Program.Lalr1Tree.cs" />
     <Compile Include="..\pckw\Program.Ll1factor.cs" Link="Program.Ll1factor.cs" />
     <Compile Include="..\pckw\Program.Ll1gen.cs" Link="Program.Ll1gen.cs" />
     <Compile Include="..\pckw\Program.LL1Tree.cs" Link="Program.LL1Tree.cs" />

@@ -66,6 +66,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Program.Fagen.cs" />
     <Compile Include="Program.Lalr1gen.cs" />
+    <Compile Include="Program.Lalr1Tree.cs" />
     <Compile Include="Program.Ll1gen.cs" />
     <Compile Include="Program.Ll1factor.cs" />
     <Compile Include="Program.LL1Tree.cs" />

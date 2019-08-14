@@ -9,9 +9,9 @@ namespace Pck
 	public static class Lalr1
 	{
 
-		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null)
+		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null,IProgress<Lalr1Progress> progress=null)
 		{
-			var parseTable = ToLalr1ParseTable(cfg);
+			var parseTable = ToLalr1ParseTable(cfg,progress);
 			var syms = new List<string>();
 			cfg.FillSymbols(syms);
 			var nodeFlags = new int[syms.Count];
