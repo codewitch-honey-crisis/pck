@@ -8,7 +8,7 @@ namespace Pck
 	static partial class Program
 	{
 		#region Usage
-		static void _PrintUsageFaGen()
+		static void _PrintUsageFAGen()
 		{
 			Console.Error.Write(string.Concat(_name, " "));
 			Console.Error.WriteLine("fagen [<specfile> [<outputfile>]] [/class <classname>] [/namespace <namespace>] [/language <language>]");
@@ -116,7 +116,7 @@ namespace Pck
 			Console.Error.WriteLine();
 			Console.Error.WriteLine("Commands:");
 			Console.Error.WriteLine();
-			_PrintUsageFaGen();
+			_PrintUsageFAGen();
 			_PrintUsageLL1Gen();
 			_PrintUsageLL1Factor();
 			_PrintUsageLL1Tree();

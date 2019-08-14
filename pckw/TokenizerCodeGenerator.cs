@@ -15,17 +15,10 @@ namespace Pck
 	/// </summary>
 	static class TokenizerCodeGenerator
 	{
-		static void _FillPreamble(string preamble, CodeNamespace ns)
+		
+		static CodeTypeDeclaration _CreateTokenizerClass(LexDocument lex, IList<string> symbolTable, string name,IProgress<FAProgress> progress=null)
 		{
-
-			TextReader tr = new StringReader(preamble);
-			string line;
-			while (null != (line = tr.ReadLine()))
-				ns.Comments.Add(new CodeCommentStatement(string.Concat("  ", line)));
-		}
-		static CodeTypeDeclaration _CreateTokenizerClass(LexDocument lex, IList<string> symbolTable, string name)
-		{
-			var lexer = lex.ToLexer();
+			var lexer = lex.ToLexer(progress);
 			var ii = 0;
 			var syms = new List<string>(symbolTable);
 			var bes = new string[syms.Count];
@@ -100,12 +93,12 @@ namespace Pck
 			return result;
 		}
 		
-		public static void WriteClassTo(LexDocument lex, IList<string> symbolTable, string name,string @namespace, string language, TextWriter writer)
+		public static void WriteClassTo(LexDocument lex, IList<string> symbolTable, string name,string @namespace, string language, TextWriter writer,IProgress<FAProgress> progress=null)
 		{
 			if (string.IsNullOrEmpty(language))
 				language = "cs";
 			var cdp = CodeDomProvider.CreateProvider(language);
-			var tokenizer = _CreateTokenizerClass(lex, symbolTable, name);
+			var tokenizer = _CreateTokenizerClass(lex, symbolTable, name,progress);
 			var opts = new CodeGeneratorOptions();
 			opts.BlankLinesBetweenMembers = false;
 			if (string.IsNullOrEmpty(@namespace))

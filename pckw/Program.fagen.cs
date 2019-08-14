@@ -20,7 +20,7 @@ namespace Pck
 				if ("--help" == args[i] || "/?" == args[i] || "/help" == args[i])
 				{
 					Console.Error.Write("Usage: ");
-					_PrintUsageFaGen();
+					_PrintUsageFAGen();
 					return 0;
 				}
 				if (args[i].StartsWith("/"))
@@ -29,7 +29,7 @@ namespace Pck
 					if (i == args.Length - 1)
 					{
 						Console.Error.Write("Usage: ");
-						_PrintUsageFaGen();
+						_PrintUsageFAGen();
 						return 1;
 					}
 					switch (args[i])
@@ -47,7 +47,7 @@ namespace Pck
 							@class = args[i];
 							break;
 						default:
-							_PrintUsage();
+							_PrintUsageFAGen();
 							return 1;
 					}
 				}
@@ -56,7 +56,7 @@ namespace Pck
 					if (-1 != optIndex)
 					{
 						Console.Error.Write("Usage: ");
-						_PrintUsageFaGen();
+						_PrintUsageFAGen();
 						return 1;
 					}
 					if (0 == i)
@@ -66,7 +66,7 @@ namespace Pck
 					else
 					{
 						Console.Error.Write("Usage: ");
-						_PrintUsageFaGen();
+						_PrintUsageFAGen();
 
 						return 1;
 					}
@@ -108,7 +108,8 @@ namespace Pck
 							@class = string.Concat(syms[0], "Tokenizer");
 					}
 				}
-				TokenizerCodeGenerator.WriteClassTo(lex, syms, @class,@namespace, language, outp);
+				TokenizerCodeGenerator.WriteClassTo(lex, syms, @class,@namespace, language, outp,new _TokenizerConsoleProgress());
+				Console.Error.WriteLine();
 				outp.Flush();
 				return 0;
 
