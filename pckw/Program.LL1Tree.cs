@@ -25,7 +25,8 @@ namespace Pck
 			var tokenizer = lex.ToTokenizer(
 				(1<args.Length)?(TextReaderEnumerable)new FileReaderEnumerable(args[1]):
 					new ConsoleReaderEnumerable(),
-				cfg.EnumSymbols());
+				cfg.EnumSymbols(),new _TokenizerConsoleProgress());
+			Console.Error.WriteLine();
 			var parser = cfg.ToLL1Parser(tokenizer);
 			parser.ShowHidden = true;
 			while (LLNodeType.EndDocument != parser.NodeType)

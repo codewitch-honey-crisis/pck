@@ -297,7 +297,14 @@ namespace Pck
 			}
 			return sb.ToString();
 		}
-		
+		class _TokenizerConsoleProgress : IProgress<FAProgress>
+		{
+			public void Report(FAProgress progress)
+			{
+				Console.Error.Write(".");
+			}
+
+		}
 		const string _NotIdentifierChars = "()[]{}<>,:;-=|/\'\" \t\r\n\f\v";
 		static readonly IDictionary<string, KeyValuePair<TransformAttribute, MethodInfo>> _byName = new Dictionary<string, KeyValuePair<TransformAttribute, MethodInfo>>(StringComparer.InvariantCultureIgnoreCase);
 		static readonly IDictionary<KeyValuePair<string, string>, KeyValuePair<TransformAttribute, MethodInfo>> _byExts = new Dictionary<KeyValuePair<string, string>, KeyValuePair<TransformAttribute, MethodInfo>>();

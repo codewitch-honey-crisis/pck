@@ -4,13 +4,13 @@ namespace Pck
 {
 	public class CfgLalr1ParseTable : List<IDictionary<string, (int RuleOrStateId, string Left, string[] Right)>>
 	{
-		public int[][][] ToArray(IList<string> symbolTable)
+		public int[][][] ToArray(IEnumerable<string> symbolTable)
 		{
 			var nts = new List<string>();
 			var ts = new List<string>();
 			if (null==symbolTable)
 			{
-				symbolTable = new List<string>();
+				var st = new List<string>();
 				for(int ic=Count,i=0;i<ic;++i)
 				{
 					foreach(var kvp in this[i])
@@ -31,33 +31,37 @@ namespace Pck
 						}
 					}
 				}
-				symbolTable.AddRange(nts);
-				symbolTable.AddRange(ts);
-				if (!symbolTable.Contains("#EOS"))
-					symbolTable.Add("#EOS");
-				if (!symbolTable.Contains("#ERROR"))
-					symbolTable.Add("#ERROR");
+				st.AddRange(nts);
+				st.AddRange(ts);
+				if (!st.Contains("#EOS"))
+					st.Add("#EOS");
+				if (!st.Contains("#ERROR"))
+					st.Add("#ERROR");
+				symbolTable = st;
 			}
+			var stbl = symbolTable as IList<string>;
+			if (null == stbl)
+				stbl = new List<string>(symbolTable);
 			var result = new int[Count][][];
 			for(var i =0;i<result.Length;i++)
 			{
-				var r = new int[symbolTable.Count - 1][];
+				var r = new int[stbl.Count - 1][];
 				result[i] = r;
 				for (var j=0;j<r.Length;j++)
 				{
 					r[j] = null;
 					var d = this[i];
 					(int RuleOrStateId, string Left, string[] Right) e;
-					if(d.TryGetValue(symbolTable[j],out e))
+					if(d.TryGetValue(stbl[j],out e))
 					{
 						if (null != e.Left)
 						{
 							var ea = new int[2 + e.Right.Length];
 							r[j] = ea;
 							ea[0] = e.RuleOrStateId;
-							ea[1] = symbolTable.IndexOf(e.Left);
+							ea[1] = stbl.IndexOf(e.Left);
 							for (var k = 2; k < ea.Length; k++)
-								ea[k] = symbolTable.IndexOf(e.Right[k - 2]);
+								ea[k] = stbl.IndexOf(e.Right[k - 2]);
 						} else
 						{
 							var ea = new int[1];

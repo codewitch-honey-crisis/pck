@@ -595,9 +595,9 @@ namespace Pck
 		{
 			return base.Reduce() as CharFA<TAccept>;
 		}
-		public new CharFA<TAccept> ToDfa()
+		public new CharFA<TAccept> ToDfa(IProgress<FAProgress> progress=null)
 		{
-			return base.ToDfa() as CharFA<TAccept>;
+			return base.ToDfa(progress) as CharFA<TAccept>;
 		}
 		public new CharDfaEntry[] ToArray(IList<TAccept> symbolTable = null)
 		{

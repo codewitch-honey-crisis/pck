@@ -344,19 +344,22 @@ namespace Pck
 		/// <summary>
 		/// Trims duplicate states from the graph.
 		/// </summary>
-		public void TrimDuplicates() =>TrimDuplicates(FillClosure());
+		public void TrimDuplicates(IProgress<FAProgress> progress=null) =>TrimDuplicates(FillClosure(),progress);
 		/// <summary>
 		/// Trims duplicate states from the graph
 		/// </summary>
 		/// <param name="closure">The closure to alter.</param>
-		public static void TrimDuplicates(IList<FA<TInput,TAccept>> closure)
+		public static void TrimDuplicates(IList<FA<TInput,TAccept>> closure,IProgress<FAProgress> progress=null)
 		{
 			var lclosure = closure;
 			var dups = new Dictionary<FA<TInput,TAccept>, ICollection<FA<TInput,TAccept>>>();
 			int oc = 0;
 			int c = -1;
+			var k = 0;
 			while (c < oc)
 			{
+				if (null != progress)
+					progress.Report(new FAProgress(FAStatus.TrimDuplicates, k));
 				c = lclosure.Count;
 				FillDuplicatesGroupedByState(lclosure, dups);
 				if (0 < dups.Count)
@@ -379,6 +382,7 @@ namespace Pck
 								var inps = td[repl.Key];
 								td.Remove(repl.Key);
 								td.Add(repl.Value, inps);
+								
 							}
 
 							int lc = s.EpsilonTransitions.Count;
@@ -395,6 +399,7 @@ namespace Pck
 				var f = lclosure[0];
 				lclosure = f.FillClosure();
 				c = lclosure.Count;
+				++k;
 			}
 		}
 		/// <summary>
@@ -508,7 +513,7 @@ namespace Pck
 			}
 			return result;
 		}
-		public FA<TInput,TAccept> ToDfa()
+		public FA<TInput,TAccept> ToDfa(IProgress<FAProgress> progress=null)
 		{
 			// The DFA states are keyed by the set of NFA states they represent.
 			var dfaMap = new Dictionary<List<FA<TInput,TAccept>>, FA<TInput,TAccept>>(_SetComparer.Default);
@@ -543,8 +548,11 @@ namespace Pck
 			// add it to the unmarked states, signalling that we still have work to do.
 			unmarked.Add(dfa);
 			bool done = false;
+			var j = 0;
 			while (!done)
 			{
+				if (null != progress)
+					progress.Report(new FAProgress(FAStatus.DfaTransform, j));
 				done = true;
 				var mapKeys = new HashSet<List<FA<TInput,TAccept>>>(dfaMap.Keys, _SetComparer.Default);
 				foreach (var mapKey in mapKeys)
@@ -608,6 +616,7 @@ namespace Pck
 						unmarked.Remove(dfa);
 					}
 				}
+				++j;
 			}
 			return result;
 		}

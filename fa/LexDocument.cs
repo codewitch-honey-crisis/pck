@@ -120,7 +120,7 @@ namespace Pck
 				sb.AppendLine(Rules[i].ToString());
 			return sb.ToString();
 		}
-		public CharFA<string> ToLexer()
+		public CharFA<string> ToLexer(IProgress<FAProgress> progress=null)
 		{
 			var result = new CharFA<string>();
 			for(int ic=Rules.Count,i=0;i<ic;++i)
@@ -128,11 +128,11 @@ namespace Pck
 				var rule = Rules[i];
 				result.EpsilonTransitions.Add(rule.Right.ToFA(rule.Left));
 			}
-			return result.ToDfa() as CharFA<string>;
+			return result.ToDfa(progress) as CharFA<string>;
 		}
-		public IEnumerable<Token> ToTokenizer(IEnumerable<char> input, IEnumerable<string> symbols = null)
+		public IEnumerable<Token> ToTokenizer(IEnumerable<char> input, IEnumerable<string> symbols = null,IProgress<FAProgress> progress=null)
 		{
-			var lexer = ToLexer();
+			var lexer = ToLexer(progress);
 			var ii = 0;
 			List<string> syms;
 			if (null==symbols)
@@ -163,7 +163,7 @@ namespace Pck
 			for (int ic = syms.Count, i = 0; i < ic; ++i)
 				if (!tt.Contains(syms[i]))
 					syms[i] = null;
-
+			//lexer.TrimDuplicates(progress);
 			return new TableTokenizer(lexer.ToArray(syms), syms.ToArray(), bes, input);
 		}
 

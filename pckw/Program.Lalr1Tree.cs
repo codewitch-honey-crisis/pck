@@ -27,8 +27,8 @@ namespace Pck
 			var tokenizer = lex.ToTokenizer(
 				(1 < args.Length) ? (TextReaderEnumerable)new FileReaderEnumerable(args[1]) :
 					new ConsoleReaderEnumerable(),
-				cfg.EnumSymbols());
-			var parser = cfg.ToLalr1Parser(tokenizer,new _ConsoleProgress());
+				cfg.EnumSymbols(),new _TokenizerConsoleProgress());
+			var parser = cfg.ToLalr1Parser(tokenizer,new _Lalr1ConsoleProgress());
 			Console.Error.WriteLine();
 			parser.ShowHidden = true;
 			while (LRNodeType.EndDocument != parser.NodeType)
@@ -36,24 +36,26 @@ namespace Pck
 
 			return 1;
 		}
-	}
-	class _ConsoleProgress : IProgress<Lalr1Progress>
-	{
-		public void Report(Lalr1Progress progress)
+		class _Lalr1ConsoleProgress : IProgress<Lalr1Progress>
 		{
-			switch (progress.Status)
+			public void Report(Lalr1Progress progress)
 			{
-				case Lalr1Status.ComputingClosure:
-				case Lalr1Status.ComputingMove:
-				case Lalr1Status.ComputingConfigurations:
-				case Lalr1Status.CreatingLookaheadGrammar:
-					break;
-				default:
-					Console.Error.Write(".");
-					break;
+				switch (progress.Status)
+				{
+					case Lalr1Status.ComputingClosure:
+					case Lalr1Status.ComputingMove:
+					case Lalr1Status.ComputingConfigurations:
+					case Lalr1Status.CreatingLookaheadGrammar:
+						break;
+					default:
+						Console.Error.Write(".");
+						break;
+				}
+
 			}
 
 		}
-
 	}
+	
+	
 }

@@ -67,11 +67,15 @@ namespace Pck
 			}
 			return sb.ToString();
 		}
-		public int[][][] ToArray(IList<string> symbolTable = null)
+		public int[][][] ToArray(IEnumerable<string> symbolTable= null)
 		{
-			if (null == symbolTable)
+			var stbl = symbolTable as IList<string>;
+			if (null == stbl && null != symbolTable)
+				stbl = new List<string>(symbolTable);
+				
+			if (null == stbl)
 			{
-				symbolTable = new List<string>();
+				stbl = new List<string>();
 				var ntl = new List<string>();
 				var tl = new List<string>();
 				foreach (var entry in this)
@@ -81,25 +85,25 @@ namespace Pck
 						if (!tl.Contains(entry2.Key))
 							tl.Add(entry2.Key);
 				}
-				symbolTable.AddRange(ntl);
-				symbolTable.AddRange(tl);
+				stbl.AddRange(ntl);
+				stbl.AddRange(tl);
 			}
 			var result = new int[Count][][];
 			foreach (var r in this)
 			{
-				var ntid = symbolTable.IndexOf(r.Key);
+				var ntid = stbl.IndexOf(r.Key);
 				if (0 > ntid) throw new ArgumentException(string.Concat("Non-terminal \"", r.Key, "\" not present in the symbol table"), "symbolTable");
-				result[ntid] = new int[symbolTable.Count - Count][];
+				result[ntid] = new int[stbl.Count - Count][];
 				foreach (var rr in r.Value)
 				{
-					var tid = symbolTable.IndexOf(rr.Key);
+					var tid = stbl.IndexOf(rr.Key);
 					if (0 > tid) throw new ArgumentException(string.Concat("Terminal \"", rr.Key, "\" not present in the symbol table"), "symbolTable");
 					tid -= Count;
 					result[ntid][tid] = new int[rr.Value.Rule.Right.Count];
 					var i = 0;
 					foreach (var sym in rr.Value.Rule.Right)
 					{
-						var sid = symbolTable.IndexOf(sym);
+						var sid = stbl.IndexOf(sym);
 						if (0 > sid) throw new ArgumentException(string.Concat("Symbol \"", sym, "\" not present in the symbol table"), "symbolTable");
 						result[ntid][tid][i] = sid;
 						++i;
