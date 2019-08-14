@@ -18,9 +18,12 @@ namespace Pck
 		Stack<string> _stack;
 		HashSet<string> _hidden;
 		HashSet<string> _collapsed;
+		Dictionary<string,string> _substitute;
 		IDictionary<string, int> _symbolIds;
 		public override bool IsHidden => _IsHidden(Symbol);
 		public override bool IsCollapsed => _IsCollapsed(Symbol);
+		public override string Substitute => _Substitute(Symbol);
+		public override int SubstituteId => _symbolIds[_Substitute(Symbol)];
 		/// <summary>
 		/// Indicates the <see cref="LLNodeType"/> at the current position.
 		/// </summary>
@@ -82,7 +85,7 @@ namespace Pck
 			if (null == s) return @default;
 			return _cfg.GetAttribute(s, name, @default);
 		}
-		public override int SymbolId => _symbolIds[Symbol];
+		public override int SymbolId => (null==Symbol)?-1:_symbolIds[Symbol];
 		/// <summary>
 		/// Indicates the current line
 		/// </summary>
@@ -135,16 +138,21 @@ namespace Pck
 
 			_hidden = new HashSet<string>();
 			_collapsed = new HashSet<string>();
+			_substitute = new Dictionary<string, string>();
 			foreach (var sattr in _cfg.AttributeSets)
 			{
 				// make sure "hidden" is only applied to terminals.
 				var i = sattr.Value.IndexOf("hidden");
-
 				if (!_cfg.IsNonTerminal(sattr.Key) && -1 < i && sattr.Value[i].Value is bool && (bool)sattr.Value[i].Value)
 					_hidden.Add(sattr.Key);
 				i = sattr.Value.IndexOf("collapsed");
 				if (-1 < i && sattr.Value[i].Value is bool && (bool)sattr.Value[i].Value)
 					_collapsed.Add(sattr.Key);
+				i = sattr.Value.IndexOf("substitute");
+				string s;
+				if (-1 < i && !string.IsNullOrEmpty(s=sattr.Value[i].Value as string) && _cfg.IsSymbol(s))
+					_substitute.Add(sattr.Key,s);
+
 			}
 
 		}
@@ -172,6 +180,15 @@ namespace Pck
 		bool _IsCollapsed(string symbol)
 		{
 			return _collapsed.Contains(symbol);
+		}
+	
+		string _Substitute(string symbol)
+		{
+			if (null == symbol) return null;
+			string result;
+			if (_substitute.TryGetValue(symbol, out result))
+				return result;
+			return null;
 		}
 		bool _ReadImpl()
 		{

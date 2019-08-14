@@ -793,7 +793,7 @@ namespace Pck {
                 null,
                 null};
         public XbnfParser(System.Collections.Generic.IEnumerable<Pck.Token> tokenizer) : 
-                base(XbnfParser._ParseTable, XbnfParser._InitCfg, XbnfParser._Symbols, XbnfParser._NodeFlags, XbnfParser._AttributeSets, tokenizer) {
+                base(XbnfParser._ParseTable, XbnfParser._InitCfg, XbnfParser._Symbols, XbnfParser._NodeFlags,null, XbnfParser._AttributeSets, tokenizer) {
         }
         public XbnfParser() : 
                 this(null) {

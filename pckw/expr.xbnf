@@ -1,0 +1,8 @@
+﻿expr = expr "+" term | term;
+term= term "*" factor | factor;
+factor= "(" expr ")" | int;
+add="+";
+mul="*";
+lparen="(";
+rparen=")";
+int= '[0-9]+';

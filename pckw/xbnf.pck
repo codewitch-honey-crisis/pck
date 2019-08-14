@@ -4,7 +4,7 @@ expressions:collapsed
 attributes:collapsed
 attribute:color= "red"
 attrvalue:color= "orange"
-whitespace:hidden, terminal
+whitespace:hidden
 lineComment:hidden, color= "green"
 blockComment:hidden, blockEnd= "*/", color= "green"
 expressionlisttail:collapsed
@@ -60,3 +60,4 @@ rbracket= '\]'
 lbrace= '\{'
 rbrace= '\}'
 rbracePlus= '\}\+'
+= '\}\+'

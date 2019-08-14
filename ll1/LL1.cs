@@ -21,6 +21,15 @@ namespace Pck
 				if (o is bool && (bool)o)
 					nodeFlags[i] |= 1;
 			}
+			var substitutions = new int[syms.Count];
+			for(var i = 0;i<substitutions.Length;i++)
+			{
+				var s = cfg.GetAttribute(syms[i], "substitute", null) as string;
+				if (!string.IsNullOrEmpty(s) && cfg.IsSymbol(s) && s != syms[i])
+					substitutions[i] = cfg.GetIdOfSymbol(s);
+				else
+					substitutions[i] = -1;
+			}
 			var attrSets = new KeyValuePair<string, object>[syms.Count][];
 			for (var i = 0; i < attrSets.Length; i++)
 			{
@@ -41,7 +50,7 @@ namespace Pck
 			var ss = cfg.GetIdOfSymbol(cfg.StartSymbol);
 			var ntc = cfg.FillNonTerminals().Count;
 			var initCfg = new int[] { ss, ntc};
-			return new LL1TableParser(parseTable.ToArray(syms), initCfg, syms.ToArray(), nodeFlags, attrSets, tokenizer);
+			return new LL1TableParser(parseTable.ToArray(syms), initCfg, syms.ToArray(), nodeFlags, substitutions,attrSets, tokenizer);
 
 		}
 		public static CfgLL1ParseTable ToLL1ParseTable(this CfgDocument cfg)
@@ -187,7 +196,12 @@ namespace Pck
 						for (var j = 1; j < c; ++j)
 							col.Add(rule.Right[j]);
 						col.Add(newId);
-						_SetAttribute(cfg,newId, "collapsed", true);
+						var o = cfg.GetAttribute(rule.Left, "collapsed", false);
+						if (o is bool && (bool)o)
+							_SetAttribute(cfg, newId, "collapsed", true);
+						else
+							_SetAttribute(cfg, newId, "substitute", rule.Left);
+						
 						var newRule = new CfgRule(newId);
 						for(int jc=col.Count,j=0;j<jc;++j)
 							newRule.Right.Add(col[j]);
@@ -464,6 +478,15 @@ namespace Pck
 						case "collapsed":
 							if (!(attr.Value is bool))
 								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "collapse attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position));
+							continue;
+						case "substitute":
+							s = attr.Value as string;
+							if (!(attr.Value is string))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							else if (string.IsNullOrEmpty(s))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+							else if(!cfg.IsSymbol(s))
+								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a symbol reference and will be ignored"), attr.Line, attr.Column, attr.Position));
 							continue;
 						case "blockEnd":
 							if (cfg.IsNonTerminal(attrs.Key))

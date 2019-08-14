@@ -95,11 +95,14 @@ namespace Pck
 		}
 		public bool IsHidden { get; set; }
 		public bool IsCollapsed { get; set; }
+		public string SubstituteFor { get; set; }
+		public int SubstituteForId { get; set; }
+
 		public string Symbol { get; set; }
 		public int SymbolId { get; set; }
 		public string Value { get; set; }
 		
-		public IList<ParseNode> Children { get; } = new List<ParseNode>();
+		public List<ParseNode> Children { get; } = new List<ParseNode>();
 
 		public override string ToString()
 		{

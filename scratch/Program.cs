@@ -22,27 +22,28 @@ class Program
 	{
 		//foreach (var test in _tests)
 		//	Console.WriteLine(RegexExpression.Parse(test));
-		//_RunLL(args);
+		_RunLL(args);
 		_RunLalr(args);	
 	}
 	static void _RunLL(string[] args)
 	{
-		var cfg = CfgDocument.ReadFrom(@"..\..\..\json.ll1.pck");
-		var lex = LexDocument.ReadFrom(@"..\..\..\json.ll1.pck");
-		var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\data.json"), cfg.FillSymbols());
-		var parser = cfg.ToLL1Parser(tokenizer);
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\expr.ll1.pck");
+		var lex = LexDocument.ReadFrom(@"..\..\..\expr.ll1.pck");
+		var tokenizer = lex.ToTokenizer("3+4*(2+1+1)"/*new FileReaderEnumerable(@"..\..\..\xbnf.xbnf")*/, cfg.FillSymbols());
+		var parser = cfg.ToLL1Parser(tokenizer); //new LL1DebugParser(cfg,tokenizer);
 		parser.ShowHidden = true;
 		while (LLNodeType.EndDocument != parser.NodeType)
-			Console.WriteLine(parser.ParseSubtree(false));
+			Console.WriteLine(parser.ParseSubtree(true));
 
 	}
 	static void _RunLalr(string[] args)
 	{
-		var cfg = CfgDocument.ReadFrom(@"..\..\..\json.pck");
-		var lex = LexDocument.ReadFrom(@"..\..\..\json.pck");
-		var tokenizer =lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\data.json"),cfg.EnumSymbols());
-		var pt = cfg.ToLalr1ParseTable();// new _ConsoleProgress());
-		var parser = new DebugLalr1Parser(cfg, tokenizer, pt);
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\expr.pck");
+		var lex = LexDocument.ReadFrom(@"..\..\..\expr.pck");
+		var tokenizer =lex.ToTokenizer("3+4*(2+1+1)"/*new FileReaderEnumerable(@"..\..\..\data.json")*/, cfg.EnumSymbols());
+		//var pt = cfg.ToLalr1ParseTable();// new _ConsoleProgress());
+		var parser = cfg.ToLalr1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
+		
 		/*parser.ShowHidden =false;
 		while (parser.Read())
 		{
@@ -52,7 +53,7 @@ class Program
 		*/
 		parser.ShowHidden =true;
 		while (LRNodeType.EndDocument != parser.NodeType)
-			Console.WriteLine(parser.ParseReductions(false));
+			Console.WriteLine(parser.ParseReductions(true));
 
 		return;
 	}		

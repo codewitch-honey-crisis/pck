@@ -37,6 +37,15 @@ namespace Pck
 				if (o is bool && (bool)o)
 					nodeFlags[i] |= 1;
 			}
+			var substitutions = new int[syms.Count];
+			for (var i = 0; i < substitutions.Length; i++)
+			{
+				var s = cfg.GetAttribute(syms[i], "substitute", null) as string;
+				if (!string.IsNullOrEmpty(s) && cfg.IsSymbol(s) && s != syms[i])
+					substitutions[i] = cfg.GetIdOfSymbol(s);
+				else
+					substitutions[i] = -1;
+			}
 			var attrSets = new KeyValuePair<string, object>[syms.Count][];
 			for (ii = 0; ii < attrSets.Length; ii++)
 			{
@@ -103,6 +112,13 @@ namespace Pck
 
 			f = new CodeMemberField();
 			f.Attributes = MemberAttributes.Static;
+			f.Name = "_Substitutions";
+			f.Type = new CodeTypeReference(typeof(int[]));
+			f.InitExpression = CodeDomUtility.Serialize(substitutions);
+			result.Members.Add(f);
+
+			f = new CodeMemberField();
+			f.Attributes = MemberAttributes.Static;
 			f.Name = "_AttributeSets";
 			f.Type = new CodeTypeReference(attrSets.GetType());
 			f.InitExpression = CodeDomUtility.Serialize(attrSets);
@@ -115,6 +131,7 @@ namespace Pck
 				new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(result.Name), "_InitCfg"),
 				new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(result.Name), "_Symbols"),
 				new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(result.Name), "_NodeFlags"),
+				new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(result.Name), "_Substitutions"),
 				new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(result.Name), "_AttributeSets"),
 				new CodeArgumentReferenceExpression("tokenizer")
 			});

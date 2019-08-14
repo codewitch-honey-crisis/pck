@@ -4,37 +4,41 @@ using System.Text;
 
 namespace Pck
 {
-	public class DebugLalr1Parser
+	public class Lalr1DebugParser : Lalr1Parser
 	{
 		CfgDocument _cfg;
-		Lalr1ParseTable _parseTable;
+		CfgLalr1ParseTable _parseTable;
 		Token _token;
 		Token _errorToken;
 		IEnumerator<Token> _tokenEnum;
 		HashSet<string> _hidden;
 		HashSet<string> _collapsed;
-		HashSet<string> _nonTerminals;
+		Dictionary<string, string> _substitute;
+		Dictionary<string, int> _symbolIds;
 		LRNodeType _nodeType;
 		Stack<int> _stack;
 		string[] _ruleDef;
-		List<string> _collapsedRight;
-
-		public DebugLalr1Parser(CfgDocument cfg, IEnumerable<Token> tokenizer, Lalr1ParseTable parseTable = null)
+		public Lalr1DebugParser(CfgDocument cfg, IEnumerable<Token> tokenizer, CfgLalr1ParseTable parseTable = null)
 		{
 			_cfg = cfg;
 			_PopulateAttrs();
-			//Restart(tokenizer);
 			_stack = new Stack<int>();
 			_tokenEnum = tokenizer.GetEnumerator();
 			_parseTable = parseTable ?? cfg.ToLalr1ParseTable();
 			_nodeType = LRNodeType.Initial;
-			_collapsedRight = new List<string>();
 		}
-		public int Line {
+		public override object GetAttribute(string name, object @default = null)
+		{
+			var s = Symbol;
+			if (null != s)
+				return _cfg.GetAttribute(s, name, @default);
+			return @default;
+		}
+		public override int Line {
 			get {
-				switch(_nodeType)
+				switch (_nodeType)
 				{
-				
+
 					case LRNodeType.Error:
 						return _errorToken.Line;
 					default:
@@ -42,7 +46,7 @@ namespace Pck
 				}
 			}
 		}
-		public int Column {
+		public override int Column {
 			get {
 				switch (_nodeType)
 				{
@@ -54,7 +58,7 @@ namespace Pck
 				}
 			}
 		}
-		public long Position {
+		public override long Position {
 			get {
 				switch (_nodeType)
 				{
@@ -67,12 +71,12 @@ namespace Pck
 
 			}
 		}
-		public LRNodeType NodeType {
+		public override LRNodeType NodeType {
 			get { return _nodeType; }
 		}
-		public string Symbol {
+		public override string Symbol {
 			get {
-				switch(_nodeType)
+				switch (_nodeType)
 				{
 					case LRNodeType.Shift:
 						return _token.Symbol;
@@ -84,7 +88,8 @@ namespace Pck
 				return null;
 			}
 		}
-		public string Value {
+		public override int SymbolId => (null == Symbol) ? -1 : _symbolIds[Symbol];
+		public override string Value {
 			get {
 				switch (_nodeType)
 				{
@@ -98,104 +103,48 @@ namespace Pck
 				return null;
 			}
 		}
-		public string[] RuleDefinition {
+		public override string[] RuleDefinition {
 			get {
 				if(LRNodeType.Reduce==_nodeType)
 					return _ruleDef;
 				return null;
 			}
 		}
-		string _ToRuleString(string[] rule)
-		{
-			var sb = new StringBuilder();
-			sb.Append(rule[0]);
-			sb.Append(" ->");
-			for (var i = 1; i < rule.Length; ++i)
-			{
-				sb.Append(' ');
-				sb.Append(rule[i]);
-			}
-			return sb.ToString();
-		}
-		public string Rule {
+		public override int[] RuleDefinitionIds {
 			get {
 				if (LRNodeType.Reduce == _nodeType)
 				{
-					return _ToRuleString(_ruleDef);
+					var result = new int[_ruleDef.Length];
+					for (var i = 0; i < _ruleDef.Length; i++)
+						result[i] = _symbolIds[_ruleDef[i]];
+					return result;
 				}
 				return null;
 			}
 		}
-		public bool IsHidden { get { return _IsHidden(Symbol); } }
-		public bool IsCollapsed { get { return _IsCollapsed(Symbol); } }
-		void _AddChildren(ParseNode pc, bool transform,IList<ParseNode> result)
-		{
-			if(transform && _IsCollapsed(pc.Symbol))
-			{
-				if (null == pc.Value)
-				{
-					for(int ic=pc.Children.Count,i=ic-1;0<=i;--i)
-						_AddChildren(pc.Children[i], transform, result);
-				}
-			} else
-				result.Insert(0,pc);
-			
-		}
-		public ParseNode ParseReductions(bool trim = false, bool transform = true)
-		{
-			ParseNode p=null;
-			var rs = new Stack<ParseNode>();
-			while (Read())
-			{
-				switch (NodeType)
-				{
-					case LRNodeType.Shift:
-						p = new ParseNode();
-						p.SetLocation(Line, Column, Position);
-						p.Symbol = Symbol;
-						p.Value = Value;
-						p.IsHidden = IsHidden;
-						p.IsCollapsed = IsCollapsed;
-						rs.Push(p);
-						break;
-					case LRNodeType.Reduce:
-						if (!trim || 2 < RuleDefinition.Length)
-						{
-							var d = new List<ParseNode>();
-							p = new ParseNode();
-							p.Symbol = RuleDefinition[0];
-							for (var i = 1;RuleDefinition.Length>i; i++)
-							{
-								var pc = rs.Pop();
-								_AddChildren(pc, transform, p.Children);
-								// don't count hidden terminals
-								if (_IsHidden(pc.Symbol))
-									--i;
-							}
-							rs.Push(p);
-						}
-						break;
-					case LRNodeType.Accept:
-						break;
-					case LRNodeType.Error:
-						p = new ParseNode();
-						p.SetLocation(Line, Column, Position);
-						p.Symbol = Symbol;
-						p.Value = Value;
-						rs.Push(p);
-						break;
-				}
+		public override bool IsHidden { get { return _IsHidden(Symbol); } }
+		public override bool IsCollapsed { get { return _IsCollapsed(Symbol); } }
+		public override string Substitute {
+			get {
+				var result = "";
+				if(_substitute.TryGetValue(Symbol, out result))
+					return result;
+				return null;
 			}
-			var result = rs.Pop();
-			while (0 < rs.Count)
-				_AddChildren(rs.Pop(), transform, result.Children);
-			return result;
 		}
+		public override int SubstituteId => (null == Substitute) ? -1 : _symbolIds[Substitute];
+		
+		
 		void _PopulateAttrs()
 		{
+			var syms = _cfg.FillSymbols();
+			_symbolIds = new Dictionary<string, int>();
+			for (int ic = syms.Count, i = 0; i < ic; ++i)
+				_symbolIds.Add(syms[i], i);
+
 			_hidden = new HashSet<string>();
 			_collapsed = new HashSet<string>();
-			_nonTerminals = new HashSet<string>(_cfg.EnumNonTerminals());
+			_substitute = new Dictionary<string, string>();
 			foreach (var attrsym in _cfg.AttributeSets)
 			{
 				var i = attrsym.Value.IndexOf("hidden");
@@ -212,11 +161,17 @@ namespace Pck
 					if ((collapsed is bool) && ((bool)collapsed))
 						_collapsed.Add(attrsym.Key);
 				}
+				i = attrsym.Value.IndexOf("substitute");
+				if (-1 < i)
+				{
+					var substitute= attrsym.Value[i].Value as string;
+					if(!string.IsNullOrEmpty(substitute) && _cfg.IsSymbol(substitute) && substitute!=attrsym.Key)
+						_substitute.Add(attrsym.Key,substitute);
+				}
 			}
 		}
-		public bool ShowHidden { get; set; } = false;
 			
-		public bool Read()
+		public override bool Read()
 		{ 
 			if (_nodeType == LRNodeType.Initial)
 			{
@@ -297,6 +252,27 @@ namespace Pck
 			}
 
 		}
+		public override void Close()
+		{
+			if (null != _tokenEnum)
+			{
+				_tokenEnum.Dispose();
+				_tokenEnum = null;
+			}
+			_stack.Clear();
+		}
+		public override void Restart()
+		{
+			if (null == _tokenEnum) throw new ObjectDisposedException(GetType().Name);
+			_tokenEnum.Reset();
+			_stack.Clear();
+		}
+		public override void Restart(IEnumerable<Token> tokenizer)
+		{
+			Close();
+			if (null != tokenizer)
+				_tokenEnum = tokenizer.GetEnumerator();
+		}
 		void _Panic()
 		{
 			// This is primitive. Should see if the Dragon Book has something better
@@ -305,7 +281,7 @@ namespace Pck
 			var d = _parseTable[state];
 			(int RuleOrStateId, string Left, string[] Right) e;
 			_errorToken.Symbol = "#ERROR";
-			_errorToken.SymbolId = _cfg.GetIdOfSymbol(_errorToken.Symbol);
+			_errorToken.SymbolId = _symbolIds[_errorToken.Symbol];
 			_errorToken.Value = _tokenEnum.Current.Value;
 			_errorToken.Line = _tokenEnum.Current.Line;
 			_errorToken.Column = _tokenEnum.Current.Column;
@@ -322,6 +298,7 @@ namespace Pck
 				
 			}
 		}
+		
 		bool _IsHidden(string symbol)
 		{
 			return _hidden.Contains(symbol);
@@ -329,10 +306,6 @@ namespace Pck
 		bool _IsCollapsed(string symbol)
 		{
 			return _collapsed.Contains(symbol);
-		}
-		bool _IsNonTerminal(string symbol)
-		{
-			return _nonTerminals.Contains(symbol);
 		}
 	}
 }

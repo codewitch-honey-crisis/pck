@@ -4,36 +4,7 @@ using System.Text;
 
 namespace Pck
 {
-	/// <summary>
-	/// An enumeration indicating the node types of the parser
-	/// </summary>
-	public enum LLNodeType
-	{
-		/// <summary>
-		/// Indicates the initial state.
-		/// </summary>
-		Initial = 0,
-		/// <summary>
-		/// Parser is on a non-terminal
-		/// </summary>
-		NonTerminal = 1,
-		/// <summary>
-		/// Parser is ending a non-terminal node
-		/// </summary>
-		EndNonTerminal = 2,
-		/// <summary>
-		/// Parser is on a terminal node
-		/// </summary>
-		Terminal = 3,
-		/// <summary>
-		/// Parser is on an error node
-		/// </summary>
-		Error = 4,
-		/// <summary>
-		/// The parser is at the end of the document
-		/// </summary>
-		EndDocument = 5
-	}
+
 	public abstract class LL1Parser : IDisposable
 	{
 		public bool ShowHidden { get; set; } = false;
@@ -51,6 +22,8 @@ namespace Pck
 		public abstract void Close();
 		public abstract bool IsHidden { get; }
 		public abstract bool IsCollapsed { get; }
+		public abstract string Substitute { get; }
+		public abstract int SubstituteId { get; }
 		public abstract object GetAttribute(string name, object @default = null);
 		void IDisposable.Dispose() { Close(); }
 
@@ -63,7 +36,7 @@ namespace Pck
 		public virtual ParseNode ParseSubtree(bool trim = false,bool transform=true)
 		{
 			var res = false;
-			while ((res = Read()) && transform && IsCollapsed) ;
+			while ((res = Read()) && transform && IsCollapsed);
 			if (!res) return null;
 			var nn = NodeType;
 			if (LLNodeType.EndNonTerminal == nn)
@@ -72,11 +45,24 @@ namespace Pck
 			var result = new ParseNode();
 			result.IsHidden = IsHidden;
 			result.IsCollapsed = IsCollapsed;
-			
-			if (LLNodeType.NonTerminal == nn)
+			var s = Substitute;
+			if (null != s)
 			{
+				result.Symbol = s;
+				result.SymbolId = SubstituteId;
+				result.SubstituteFor = Symbol;
+				result.SubstituteForId = SymbolId;
+			}
+			else
+			{
+				result.SubstituteForId = -1;
 				result.Symbol = Symbol;
 				result.SymbolId = SymbolId;
+			}
+			//if ("expressionlisttail" == result.Symbol) System.Diagnostics.Debugger.Break();
+
+			if (LLNodeType.NonTerminal == nn)
+			{
 				while (true)
 				{
 					var k = ParseSubtree(trim,transform);
@@ -111,22 +97,17 @@ namespace Pck
 					else
 						break;
 				}
-
 				return result;
 			}
 			else if (LLNodeType.Terminal == nn)
 			{
 				result.SetLocation(Line, Column, Position);
-				result.Symbol = Symbol;
-				result.SymbolId = SymbolId;
 				result.Value = Value;
 				return result;
 			}
 			else if (LLNodeType.Error == nn)
 			{
 				result.SetLocation(Line, Column, Position);
-				result.Symbol = Symbol;
-				result.SymbolId = SymbolId;
 				result.Value = Value;
 				return result;
 			}

@@ -15,14 +15,24 @@ namespace Pck
 		IEnumerator<Token> _tokenEnum;
 		Token _errorToken;
 		Stack<int> _stack;
-		int[] _nodeFlags; // for hidden and collapsed
+		int[] _nodeFlags; // for hidden, collapsed
 		string[] _symbolTable;
+		int[] _substitutions;
 		KeyValuePair<string, object>[][] _attributeSets;
 		int[] _initCfg;
 		int _eosSymbolId;
 		int _errorSymbolId;
 		public override bool IsHidden => _IsHidden(SymbolId);
 		public override bool IsCollapsed => _IsCollapsed(SymbolId);
+		public override string Substitute => (0 > SubstituteId) ? null : _symbolTable[SubstituteId];
+		public override int SubstituteId {
+			get {
+				var s = SymbolId;
+				if (0 > s)
+					return -1;
+				return _substitutions[s];
+			}
+		}
 		public override object GetAttribute(string name, object @default = null)
 		{
 			var s = SymbolId;
@@ -143,6 +153,7 @@ namespace Pck
 			int[] initCfg,
 			string[] symbolTable,
 			int[] nodeFlags,
+			int[] substitutions,
 			KeyValuePair<string,object>[][] attributeSets,
 			IEnumerable<Token> tokenizer)
 		{
@@ -150,6 +161,7 @@ namespace Pck
 			_initCfg = initCfg;
 			_symbolTable = symbolTable;
 			_nodeFlags = nodeFlags;
+			_substitutions = substitutions;
 			_attributeSets = attributeSets;
 			_stack = new Stack<int>();
 			_errorToken.Symbol = null;

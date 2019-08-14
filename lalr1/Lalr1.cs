@@ -8,7 +8,53 @@ namespace Pck
 	using Lrfa = FA<string, ICollection<Lalr1.LRItem>>;
 	public static class Lalr1
 	{
-		public static Lalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg, IProgress<Lalr1Progress> progress=null)
+		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null)
+		{
+			var parseTable = ToLalr1ParseTable(cfg);
+			var syms = new List<string>();
+			cfg.FillSymbols(syms);
+			var nodeFlags = new int[syms.Count];
+			for (var i = 0; i < nodeFlags.Length; ++i)
+			{
+				var o = cfg.GetAttribute(syms[i], "hidden", false);
+				if (o is bool && (bool)o)
+					nodeFlags[i] |= 2;
+				o = cfg.GetAttribute(syms[i], "collapsed", false);
+				if (o is bool && (bool)o)
+					nodeFlags[i] |= 1;
+			}
+			var substitutions = new int[syms.Count];
+			for (var i = 0; i < substitutions.Length; i++)
+			{
+				var s = cfg.GetAttribute(syms[i], "substitute", null) as string;
+				if (!string.IsNullOrEmpty(s) && cfg.IsSymbol(s) && s != syms[i])
+					substitutions[i] = cfg.GetIdOfSymbol(s);
+				else
+					substitutions[i] = -1;
+			}
+			var attrSets = new KeyValuePair<string, object>[syms.Count][];
+			for (var i = 0; i < attrSets.Length; i++)
+			{
+				CfgAttributeList attrs;
+				if (cfg.AttributeSets.TryGetValue(syms[i], out attrs))
+				{
+					attrSets[i] = new KeyValuePair<string, object>[attrs.Count];
+					var j = 0;
+					foreach (var attr in attrs)
+					{
+						attrSets[i][j] = new KeyValuePair<string, object>(attr.Name, attr.Value);
+						++j;
+					}
+				}
+				else
+					attrSets[i] = null;// new KeyValuePair<string, object>[0];
+			}
+			var ss = cfg.GetIdOfSymbol(cfg.StartSymbol);
+			var ntc = cfg.FillNonTerminals().Count;
+			return new Lalr1TableParser(parseTable.ToArray(syms), syms.ToArray(), nodeFlags, substitutions, attrSets, tokenizer);
+
+		}
+		public static CfgLalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg, IProgress<Lalr1Progress> progress=null)
 		{
 			var start = cfg.GetAugmentedStartId(cfg.StartSymbol);
 			var lrfa = _ToLrfa(cfg,progress);
@@ -18,7 +64,7 @@ namespace Pck
 			//Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Walking the LR(0) states");
 			var closure = new List<Lrfa>();
-			var result = new Lalr1ParseTable();
+			var result = new CfgLalr1ParseTable();
 
 			var itemSets = new List<ICollection<LRItem>>();
 
