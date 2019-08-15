@@ -78,7 +78,7 @@ namespace Pck
 						{
 							exmsgs.Add(new CfgMessage(CfgErrorLevel.Error, 1,
 										string.Format(
-											"FIRST FIRST conflict between {0} and {1} on {2}",
+											"first first conflict between {0} and {1} on {2}",
 											or.Rule,
 											f.Rule,
 											f.Symbol),f.Rule.Line,f.Rule.Column,f.Rule.Position));
@@ -356,7 +356,7 @@ namespace Pck
 				var rule = cfg.Rules[i];
 				// LL specific
 				if (rule.IsDirectlyLeftRecursive)
-					result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule is directly left recursive: ", rule.ToString()),rule.Line,rule.Column,rule.Position));
+					result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Rule is directly left recursive: ", rule.ToString()),rule.Line,rule.Column,rule.Position));
 				if (rule.Left.IsNullOrEmpty())
 					result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has empty left hand side:",rule.ToString()),rule.Line,rule.Column,rule.Position));
 				else if ("#ERROR" == rule.Left || "#EOS" == rule.Left)
@@ -402,9 +402,9 @@ namespace Pck
 						CfgRule r;
 						if (d.TryGetValue(f.Symbol, out r) && r != f.Rule)
 						{
-							result.Add(new CfgMessage(CfgErrorLevel.Warning, -1,
+							result.Add(new CfgMessage(CfgErrorLevel.Message, -1,
 								string.Format(
-									"Rule {0} has a FIRST FIRST conflict with rule {1} on symbol {2} and will require additional lookahead",
+									"Rule {0} has a first first conflict with rule {1} on symbol {2} and will require additional lookahead",
 									f.Rule,
 									r,
 									f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position));
@@ -421,9 +421,9 @@ namespace Pck
 							if (d.TryGetValue(ff, out r) && r != f.Rule)
 							{
 
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1,
+								result.Add(new CfgMessage(CfgErrorLevel.Message, -1,
 								string.Format(
-									"Rule {0} has a FIRST FOLLOW conflict with rule {1} on symbol {2} and will require additional lookahead",
+									"Rule {0} has a first follow conflict with rule {1} on symbol {2} and will require additional lookahead",
 									f.Rule,
 									r,
 									ff),f.Rule.Line,f.Rule.Column,f.Rule.Position));
@@ -514,7 +514,7 @@ namespace Pck
 							}
 							continue;
 					}
-					result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "Unknown attribute \"", attr.Name, "\" will be ignored"),attr.Line,attr.Column,attr.Position));
+					result.Add(new CfgMessage(CfgErrorLevel.Message, -1, string.Concat(p, "Unknown attribute \"", attr.Name, "\" will be ignored"),attr.Line,attr.Column,attr.Position));
 				}
 
 			}

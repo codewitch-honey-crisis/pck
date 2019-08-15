@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+PCK syntax highlighting
+Written by codewitch honey crisis
+Version 1.0
+-->
+
+<SyntaxDefinition name="PCK" extensions=".pck">
+
+  <Environment>
+    <Default color="Black" bgcolor="#FFFFFF"/>
+    <Selection color="Black" bgcolor="#C3C3FF"/>
+    <LineNumbers color="Gray" bgcolor="#FFFFFF"/>
+    <CaretMarker color="#F0F0F1"/>
+    <VRuler color="#E0E0E5"/>
+
+    <FoldLine color="#A0A0A0" bgcolor="#FFFFFF"/>
+    <FoldMarker color="Black" bgcolor="#FFFFFF"/>
+    <SelectedFoldLine color="Black" bgcolor="#FFFFFF"/>
+
+    <EOLMarkers color="#CACAD2"/>
+    <SpaceMarkers color="#B6B6C0"/>
+    <TabMarkers color="#B6B6C0"/>
+    <InvalidLines color="#B6B6C0"/>
+  </Environment>
+
+  <Properties>
+    <Property name="LineComment" value="//"/>
+    <Property name="BlockCommentBegin" value="/*"/>
+    <Property name="BlockCommentEnd" value="*/"/>
+  </Properties>
+
+  <Digits name="Digits" color="Red"/>
+
+  <RuleSets>
+    <RuleSet ignorecase="false">
+
+      <Delimiters>()[]{},:;-=|/"'&lt;&gt;,</Delimiters>
+
+      <Span name="LineComment" stopateol="true" color="Green" bold="false" italic="false">
+        <Begin>//</Begin>
+      </Span>
+      <Span name="Literal" stopateol="true" color="#000080" bold="false" italic="false" escapecharacter="\">
+        <Begin>"</Begin>
+        <End>"</End>
+      </Span>
+      <Span name="Regex" stopateol="true" color="#A06020" bold="false" italic="false" escapecharacter="\">
+        <Begin>'</Begin>
+        <End>'</End>
+      </Span>
+      <KeyWords color="#500050">
+        <Key word="start"/>
+        <Key word="true" />
+        <Key word="false" />
+        <Key word="blockEnd" />
+        <Key word="terminal" />
+        <Key word="followsConflict" />
+        <Key word="hidden" />
+        <Key word="collapsed" />
+      </KeyWords>
+
+    </RuleSet>
+  </RuleSets>
+</SyntaxDefinition>

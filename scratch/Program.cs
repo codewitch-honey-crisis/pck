@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using CharFA = Pck.CharFA<string>;
 class Program
 {
 	static string[] _tests = new string[] {
@@ -41,9 +40,9 @@ class Program
 		var t2 = new List<Token>(tokenizer2);
 		if (t1.Count != t2.Count)
 			Console.Error.WriteLine("Counts are different.");
-		for(int ic=t1.Count,i=0;i<ic;++i)
+		for (int ic = t1.Count, i = 0; i < ic; ++i)
 		{
-			if(!Equals(t1[i],t2[i]))
+			if (!Equals(t1[i], t2[i]))
 			{
 				Console.Error.WriteLine("at index {0}", i);
 				Console.Error.WriteLine(t1[i]);
@@ -51,7 +50,7 @@ class Program
 				break;
 			}
 		}
-		
+
 	}
 	static void _RunXbnfGenerated(string[] args)
 	{
@@ -90,12 +89,15 @@ class Program
 	}
 	static void _RunLalr(string[] args)
 	{
+		// we need both a lexer and a CfgDocument. 
+		// we read them from the same file.
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\expr.pck");
 		var lex = LexDocument.ReadFrom(@"..\..\..\expr.pck");
-		var tokenizer =lex.ToTokenizer("3+4*(2+1+1)"/*new FileReaderEnumerable(@"..\..\..\data.json")*/, cfg.EnumSymbols());
-		//var pt = cfg.ToLalr1ParseTable();// new _ConsoleProgress());
-		var parser = cfg.ToLalr1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
-		
+		// create a runtime tokenizer
+		var tokenizer = lex.ToTokenizer("3*(4+7)", cfg.EnumSymbols());
+		// create a parser
+		var parser = cfg.ToLalr1Parser(tokenizer);
+
 		/*parser.ShowHidden =false;
 		while (parser.Read())
 		{
@@ -103,18 +105,18 @@ class Program
 		}
 		parser = new DebugLalr1Parser(cfg, tokenizer, pt);
 		*/
-		parser.ShowHidden =true;
+		parser.ShowHidden = true;
 		while (LRNodeType.EndDocument != parser.NodeType)
 			Console.WriteLine(parser.ParseReductions(true));
 
 		return;
 	}
-	
+
 	class _ConsoleProgress : IProgress<Lalr1Progress>
 	{
 		public void Report(Lalr1Progress progress)
 		{
-			switch(progress.Status)
+			switch (progress.Status)
 			{
 				case Lalr1Status.ComputingClosure:
 				case Lalr1Status.ComputingMove:
@@ -125,9 +127,9 @@ class Program
 					Console.Error.WriteLine("{0}: {1}", progress.Status, progress.Count);
 					break;
 			}
-			
+
 		}
-		
+
 	}
 }
 

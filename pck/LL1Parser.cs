@@ -59,8 +59,6 @@ namespace Pck
 				result.Symbol = Symbol;
 				result.SymbolId = SymbolId;
 			}
-			//if ("expressionlisttail" == result.Symbol) System.Diagnostics.Debugger.Break();
-
 			if (LLNodeType.NonTerminal == nn)
 			{
 				while (true)

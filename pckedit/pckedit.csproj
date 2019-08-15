@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3A9C7873-AA90-4BED-A95B-2AA06DC2C9D9}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Pck</RootNamespace>
+    <AssemblyName>pckedit</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RegistryEditor_5838.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.TextEditor">
+      <HintPath>.\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\common\CodeDomUtility.cs">
+      <Link>CodeDomUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CollectionUtility.cs">
+      <Link>CollectionUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ListDictionary.cs">
+      <Link>ListDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\common\OrderedCollectionEqualityComparer.cs">
+      <Link>OrderedCollectionEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\pckw\Lalr1ParserCodeGenerator.cs">
+      <Link>Lalr1ParserCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\pckw\LL1ParserCodeGenerator.cs">
+      <Link>LL1ParserCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\pckw\TokenizerCodeGenerator.cs">
+      <Link>TokenizerCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\pckw\XbnfToPckTransform.cs">
+      <Link>XbnfToPckTransform.cs</Link>
+    </Compile>
+    <Compile Include="FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindAndReplaceForm.Designer.cs">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Globals.cs" />
+    <Compile Include="InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FindAndReplaceForm.resx">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InputBox.resx">
+      <DependentUpon>InputBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Key.snk" />
+    <None Include="pck.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="xbnf.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cfg\cfg.csproj">
+      <Project>{dd197b16-7507-4f33-a5e5-1ad439f056ed}</Project>
+      <Name>cfg</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\fa\fa.csproj">
+      <Project>{01eb0690-e839-4c75-a20b-11af1197d1c5}</Project>
+      <Name>fa</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lalr1\lalr1.csproj">
+      <Project>{1ef97f85-f298-4b08-905c-328cd4280096}</Project>
+      <Name>lalr1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ll1\ll1.csproj">
+      <Project>{d01ca3ee-0667-46dc-ad10-578cdaec18a6}</Project>
+      <Name>ll1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\pck\pck.csproj">
+      <Project>{f89b9af2-d7b1-48bd-9a54-6ad4c1b07511}</Project>
+      <Name>pck</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\xbnf\xbnf.csproj">
+      <Project>{55f898f9-ca82-493d-89c1-fe2e32467857}</Project>
+      <Name>xbnf</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RegistryEditor_5838.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

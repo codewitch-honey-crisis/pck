@@ -113,7 +113,6 @@ namespace Pck
 		}
 		static string _ToRegex(XbnfDocument d,XbnfExpression e)
 		{
-			System.Diagnostics.Debugger.Break();
 			var le = e as XbnfLiteralExpression;
 			if(null!=le)
 				return _EscapeLiteral(XbnfNode.Escape(le.Value));
@@ -144,7 +143,6 @@ namespace Pck
 		}
 		static string _EscapeLiteral(string v)
 		{
-			System.Diagnostics.Debug.WriteLine(v);
 			var sb = new StringBuilder();
 			for(var i = 0;i<v.Length;++i)
 			{
