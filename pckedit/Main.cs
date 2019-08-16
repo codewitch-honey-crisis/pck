@@ -24,7 +24,7 @@ namespace Pck
 			InitializeComponent();
 			var smp = new FileSyntaxModeProvider(".");
 			HighlightingManager.Manager.AddSyntaxModeFileProvider(smp);
-			
+			_UpdateMenuContext();
 		}
 
 		#region Code related to File menu
@@ -64,6 +64,7 @@ namespace Pck
 			} else
 				editor.TextEditorProperties = _editorSettings;
 			fileTabs.SelectedTab = tab;
+			_UpdateMenuContext();
 			return editor;
 		}
 
@@ -106,6 +107,7 @@ namespace Pck
 		private void menuFileClose_Click(object sender, EventArgs e)
 		{
 			var editor = ActiveEditor;
+			
 			if (null!=editor)
 			{
 				
@@ -220,11 +222,12 @@ namespace Pck
 
 		private bool DoSave(TextEditorControl editor)
 		{
-			if (string.IsNullOrEmpty(editor.FileName))
+			var n = editor.FileName;
+			if (string.IsNullOrEmpty(n))
 				return DoSaveAs(editor);
 			else {
 				try {
-					editor.SaveFile(editor.FileName);
+					editor.SaveFile(n);
 					SetModifiedFlag(editor, false);
 					return true;
 				} catch (Exception ex) {
@@ -240,10 +243,54 @@ namespace Pck
 			if (editor != null)
 				DoSaveAs(editor);
 		}
-
+		string _GetFilename(TextEditorControl editor)
+		{
+			if (null == editor || null==editor.Parent) return null;
+			var p = editor.Parent.Text;
+			if (string.IsNullOrEmpty(p))
+				return p;
+			if (p.EndsWith("*"))
+				p = p.Substring(0, p.Length - 1);
+			return p;
+		}
+		string _GetFilename(TabPage page)
+		{
+			if (null == page) return null;
+			var p = page.Text;
+			if (string.IsNullOrEmpty(p))
+				return p;
+			if (p.EndsWith("*"))
+				p = p.Substring(0, p.Length - 1);
+			return p;
+		}
 		private bool DoSaveAs(TextEditorControl editor)
 		{
-			saveFileDialog.FileName = editor.FileName;
+			var n = _GetFilename(editor);
+			saveFileDialog.FileName = n;
+			var ext = Path.GetExtension(n).ToLowerInvariant();
+			var f = "";
+			switch (ext)
+			{
+				case ".pck":
+					f="Pck Spec Files (*.pck)|*.pck|";
+					break;
+				case ".xbnf":
+					f = "XBNF Files (*.xbnf)|*.xbnf|";
+					break;
+				case ".cs":
+					f = "C# Files (*.cs)|*.cs|";
+					break;
+				case ".vb":
+					f = "Visual Basic Files (*.vb)|*.vb|";
+					break;
+				default:
+					f = string.Concat(ext.Substring(1).ToUpperInvariant()," (*",ext);
+					f = string.Concat(f, "|*", ext);
+					f = string.Concat(f, "|");
+					break;
+			}
+			f = string.Concat(f, "All Files (*.*)|*.*");
+			saveFileDialog.Filter = f;
 			if (saveFileDialog.ShowDialog() == DialogResult.OK) {
 				try {
 					editor.SaveFile(saveFileDialog.FileName);
@@ -564,17 +611,23 @@ namespace Pck
 			var editor = AddNewTextEditor("Untitled.xbnf");
 			editor.Document.HighlightingStrategy =
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile("Untitled.xbnf");
-			_UpdateBuildMenu();
+			_UpdateMenuContext();
 		}
 		
 		private void fileTabs_Selected(object sender, TabControlEventArgs e)
 		{
-			_UpdateBuildMenu();
+			_UpdateMenuContext();
 		}
-		void _UpdateBuildMenu()
+		void _UpdateMenuContext()
 		{
+			
 			if (null == ActiveEditor)
 			{
+				menuFileSave.Enabled = false;
+				menuFileSaveAs.Enabled = false;
+				buildToolStripMenuItem.Enabled = false;
+				menuFileClose.Enabled = false;
+				editToolStripMenuItem.Enabled = false;
 				foreach (var item in buildToolStripMenuItem.DropDownItems)
 				{
 					var tsi = item as ToolStripMenuItem;
@@ -582,10 +635,15 @@ namespace Pck
 						tsi.Enabled	= false;
 				}
 				return;
+			} else
+			{
+				menuFileSave.Enabled = true;
+				menuFileSaveAs.Enabled = true;
+				buildToolStripMenuItem.Enabled = true;
+				menuFileClose.Enabled = true;
+				editToolStripMenuItem.Enabled = true;
 			}
-			var title = ActiveEditor.Parent.Text;
-			if (title.EndsWith("*"))
-				title = title.Substring(0, title.Length - 1);
+			var title = _GetFilename(ActiveEditor);
 			switch (Path.GetExtension(title).ToLowerInvariant())
 			{
 				case ".pck":
@@ -622,14 +680,12 @@ namespace Pck
 			var editor = AddNewTextEditor("Untitled.pck");
 			editor.Document.HighlightingStrategy =
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile("Untitled.pck");
-			_UpdateBuildMenu();
+			_UpdateMenuContext();
 		}
 
 		private void createPCKSpecToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var fname = fileTabs.SelectedTab.Text;
-			if (fname.EndsWith("*"))
-				fname = fname.Substring(0, fname.Length - 1);
+			var fname = _GetFilename(fileTabs.SelectedTab);
 			XbnfDocument xbnf = null;
 			try
 			{
@@ -656,41 +712,51 @@ namespace Pck
 			editor.Text = sb.ToString();
 			SetModifiedFlag(editor, true);	
 		}
+		string _LoadXbnf(string input,string fname=null, ProgressForm form=null)
+		{
+			if (string.IsNullOrEmpty(input))
+				return input;
+			XbnfDocument xbnf = null;
+			try
+			{
+				xbnf = XbnfDocument.Parse(input);
+			}
+			catch (ExpectingException expex)
+			{
+				_AddMessage(expex, fname);
+				return null;
+			}
+			catch (Exception ex)
+			{
+				_AddMessage(ex, fname);
+				return null;
+			}
+			var sb = new StringBuilder();
+			if(null!=form)
+				form.WriteLog("Transforming XBNF to PCK...");
+			using (var sw = new StringWriter(sb))
+				XbnfToPckTransform.Transform(xbnf, sw);
+			if (null != form)
+				form.WriteLog(Environment.NewLine);
 
+			return sb.ToString();
+
+		}
 		private void createFactoredPCKSpecToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var name = fileTabs.SelectedTab.Text;
-			if (name.EndsWith("*"))
-				name = name.Substring(0, name.Length - 1);
+			var prog = new ProgressForm();
+			var name = _GetFilename(fileTabs.SelectedTab);
 			var ext = Path.GetExtension(name).ToLowerInvariant();
 			name = Path.GetFileNameWithoutExtension(name);
 			messages.Items.Clear();
 			var hasErrors = false;
+			prog.Show(this);
 			var input = ActiveEditor.Text;
+
 			switch (ext)
 			{
 				case ".xbnf":
-					var fname = fileTabs.SelectedTab.Text;
-					if (fname.EndsWith("*"))
-						fname = fname.Substring(0, fname.Length - 1);
-					XbnfDocument xbnf = null;
-					try
-					{
-						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
-					}
-					catch (ExpectingException expex)
-					{
-						_AddMessage(expex, fname);
-						return;
-					}
-					catch (Exception ex)
-					{
-						_AddMessage(ex, fname);
-						return;
-					}
-					var sb = new StringBuilder();
-					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
-					input = sb.ToString();
+					input = _LoadXbnf(input,_GetFilename(fileTabs.SelectedTab),prog);
 					goto case ".pck";
 				case ".pck":
 					name = string.Concat(name , ".ll1");
@@ -701,21 +767,16 @@ namespace Pck
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
-						var n = fileTabs.SelectedTab.Text;
-						if (n.EndsWith("*"))
-							n = n.Substring(0, n.Length - 1);
+						var n = _GetFilename(fileTabs.SelectedTab);
 						_AddMessage(msg, (".pck" == ext) ? n : "");
-
 					}
 					if (!hasErrors)
 					{
-						foreach (var msg in cfg.TryPrepareLL1())
+						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 						{
 							if (CfgErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
-							var n = fileTabs.SelectedTab.Text;
-							if (n.EndsWith("*"))
-								n = n.Substring(0, n.Length - 1);
+							var n = _GetFilename(fileTabs.SelectedTab);
 							_AddMessage(msg, (".pck" == ext) ? n : "");
 
 						}
@@ -733,6 +794,7 @@ namespace Pck
 					}
 					break;
 			}
+			prog.Close();
 
 		}
 		string _GetUniqueFilename(string filename)
@@ -762,9 +824,7 @@ namespace Pck
 		}
 		private void createLL1ParserToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var name = fileTabs.SelectedTab.Text;
-			if (name.EndsWith("*"))
-				name = name.Substring(0, name.Length - 1);
+			var name = _GetFilename(fileTabs.SelectedTab);
 			var ext = Path.GetExtension(name).ToLowerInvariant();
 			name = Path.GetFileNameWithoutExtension(name);
 			var input = ActiveEditor.Text;
@@ -776,30 +836,7 @@ namespace Pck
 			switch (ext)
 			{
 				case ".xbnf":
-					var fname = fileTabs.SelectedTab.Text;
-					if (fname.EndsWith("*"))
-						fname = fname.Substring(0, fname.Length - 1);
-					XbnfDocument xbnf = null;
-					try
-					{
-						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
-					}
-					catch (ExpectingException expex)
-					{
-						_AddMessage(expex, fname);
-						prog.Close();
-						return;
-					}
-					catch (Exception ex)
-					{
-						_AddMessage(ex, fname);
-						prog.Close();
-						return;
-					}
-					prog.WriteLog("Transforming XBNF to PCK...");
-					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
-					prog.WriteLog(Environment.NewLine);
-					input = sb.ToString();
+					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
 					goto case ".pck";
 				case ".pck":
 					var cfg = CfgDocument.Parse(input);
@@ -807,11 +844,8 @@ namespace Pck
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
-						var n = fileTabs.SelectedTab.Text;
-						if (n.EndsWith("*"))
-							n = n.Substring(0, n.Length - 1);
+						var n = _GetFilename(fileTabs.SelectedTab);
 						_AddMessage(msg, (".pck" == ext) ? n : "");
-
 					}
 					if (!hasErrors)
 					{
@@ -819,11 +853,8 @@ namespace Pck
 						{
 							if (CfgErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
-							var n = fileTabs.SelectedTab.Text;
-							if (n.EndsWith("*"))
-								n = n.Substring(0, n.Length - 1);
+							var n = _GetFilename(fileTabs.SelectedTab);
 							_AddMessage(msg, (".pck" == ext) ? n : "");
-
 						}
 					}
 					if (!hasErrors)
@@ -858,9 +889,7 @@ namespace Pck
 
 		private void createLalr1ParserToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var name = fileTabs.SelectedTab.Text;
-			if (name.EndsWith("*"))
-				name = name.Substring(0, name.Length - 1);
+			var name = _GetFilename(fileTabs.SelectedTab);
 			var ext = Path.GetExtension(name).ToLowerInvariant();
 			name = Path.GetFileNameWithoutExtension(name);
 			var input = ActiveEditor.Text;
@@ -872,30 +901,8 @@ namespace Pck
 			switch (ext)
 			{
 				case ".xbnf":
-					var fname = fileTabs.SelectedTab.Text;
-					if (fname.EndsWith("*"))
-						fname = fname.Substring(0, fname.Length - 1);
-					XbnfDocument xbnf = null;
-					try
-					{
-						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
-					}
-					catch (ExpectingException expex)
-					{
-						_AddMessage(expex, fname);
-						prog.Close();
-						return;
-					}
-					catch (Exception ex)
-					{
-						_AddMessage(ex, fname);
-						prog.Close();
-						return;
-					}
-					prog.WriteLog("Transforming XBNF to PCK...");
-					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
-					prog.WriteLog(Environment.NewLine);
-					input = sb.ToString();
+					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
+
 					goto case ".pck";
 				case ".pck":
 					var cfg = CfgDocument.Parse(input);
@@ -903,9 +910,7 @@ namespace Pck
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
-						var n = fileTabs.SelectedTab.Text;
-						if (n.EndsWith("*"))
-							n = n.Substring(0, n.Length - 1);
+						var n = _GetFilename(fileTabs.SelectedTab);
 						_AddMessage(msg, (".pck" == ext) ? n : "");
 
 					}
@@ -929,9 +934,7 @@ namespace Pck
 							{
 								if (CfgErrorLevel.Error == msg.ErrorLevel)
 									hasErrors = true;
-								var n = fileTabs.SelectedTab.Text;
-								if (n.EndsWith("*"))
-									n = n.Substring(0, n.Length - 1);
+								var n = _GetFilename(fileTabs.SelectedTab);
 								_AddMessage(msg, (".pck" == ext) ? n : "");
 							}
 						}
@@ -965,30 +968,7 @@ namespace Pck
 			switch (ext)
 			{
 				case ".xbnf":
-					var fname = fileTabs.SelectedTab.Text;
-					if (fname.EndsWith("*"))
-						fname = fname.Substring(0, fname.Length - 1);
-					XbnfDocument xbnf = null;
-					try
-					{
-						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
-					}
-					catch (ExpectingException expex)
-					{
-						_AddMessage(expex, fname);
-						prog.Close();
-						return;
-					}
-					catch (Exception ex)
-					{
-						_AddMessage(ex, fname);
-						prog.Close();
-						return;
-					}
-					prog.WriteLog("Transforming XBNF to PCK...");
-					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
-					prog.WriteLog(Environment.NewLine);
-					input = sb.ToString();
+					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
 					goto case ".pck";
 				case ".pck":
 					var cfg = CfgDocument.Parse(input);
@@ -1008,6 +988,8 @@ namespace Pck
 					using (var sw = new StringWriter(sb)) 
 						TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(),Path.GetFileNameWithoutExtension(name), null, lang, new _FAProgress(prog),sw);
 					input = sb.ToString();
+					name = _GetUniqueFilename(name);
+
 					var editor = AddNewTextEditor(name);
 					editor.Document.HighlightingStrategy =
 								HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
@@ -1020,53 +1002,34 @@ namespace Pck
 
 		private void fATokenizerLL1ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var name = fileTabs.SelectedTab.Text;
-			if (name.EndsWith("*"))
-				name = name.Substring(0, name.Length - 1);
+			var name = _GetFilename(fileTabs.SelectedTab);
+			var prog = new ProgressForm();
 			var ext = Path.GetExtension(name).ToLowerInvariant();
 			name = Path.GetFileNameWithoutExtension(name);
 			var input = ActiveEditor.Text;
 			var sb = new StringBuilder();
 			var hasErrors = false;
 			messages.Items.Clear();
+			prog.Show(this);
 			switch (ext)
 			{
 				case ".xbnf":
-					var fname = fileTabs.SelectedTab.Text;
-					if (fname.EndsWith("*"))
-						fname = fname.Substring(0, fname.Length - 1);
-					XbnfDocument xbnf = null;
-					try
-					{
-						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
-					}
-					catch (ExpectingException expex)
-					{
-						_AddMessage(expex, fname);
-						return;
-					}
-					catch (Exception ex)
-					{
-						_AddMessage(ex, fname);
-						return;
-					}
-					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
-					input = sb.ToString();
+					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
+
 					goto case ".pck";
 				case ".pck":
 					//if(".pck"==ext)
 					var cfg = CfgDocument.Parse(input);
 					var lex = LexDocument.Parse(input);
-					foreach (var msg in cfg.TryPrepareLL1())
+					foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
-						var n = fileTabs.SelectedTab.Text;
-						if (n.EndsWith("*"))
-							n = n.Substring(0, n.Length - 1);
+						var n = _GetFilename(fileTabs.SelectedTab);
 						_AddMessage(msg, (".pck" == ext) ? n : "");
 
 					}
+					prog.WriteLog(Environment.NewLine);
 					if (!hasErrors)
 					{
 						string lang = null;
@@ -1082,7 +1045,8 @@ namespace Pck
 						}
 						sb.Clear();
 						using (var sw = new StringWriter(sb))
-							TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(), Path.GetFileNameWithoutExtension(name), null, lang, sw);
+							TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(), Path.GetFileNameWithoutExtension(name), null, lang,new _FAProgress(prog),  sw);
+						name = _GetUniqueFilename(name);
 						input = sb.ToString();
 						var editor = AddNewTextEditor(name);
 						editor.Document.HighlightingStrategy =
@@ -1092,6 +1056,7 @@ namespace Pck
 					}
 					break;
 			}
+			prog.Close();
 		}
 
 		private void messages_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -1103,9 +1068,7 @@ namespace Pck
 				foreach(var item in fileTabs.TabPages)
 				{
 					var tab = item as TabPage;
-					var fn = tab.Text;
-					if (fn.EndsWith("*"))
-						fn = fn.Substring(0, fn.Length - 1);
+					var fn = _GetFilename(tab);
 					if(fn==f)
 					{
 						int line;
