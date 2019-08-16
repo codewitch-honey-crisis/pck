@@ -69,11 +69,8 @@ namespace Pck
 			var result = new List<CfgMessage>();
 			var start = cfg.GetAugmentedStartId(cfg.StartSymbol);
 			var lrfa = _ToLrfa(cfg,progress);
-			//Console.Error.WriteLine("Creating lookahead grammar");
 			var trnsCfg = _ToLRTransitionGrammar(cfg,lrfa,progress);
 			trnsCfg.RebuildCache();
-			//Console.Error.WriteLine("Done!");
-			//Console.Error.WriteLine("Walking the LR(0) states");
 			var closure = new List<Lrfa>();
 			parseTable = new CfgLalr1ParseTable();
 
@@ -114,7 +111,6 @@ namespace Pck
 			var follows = trnsCfg.FillFollows();
 			// work on our reductions now
 			var map = new Dictionary<CfgRule, ICollection<string>>(_TransitionMergeRuleComparer.Default);
-			var rtbl = new List<IDictionary<object, CfgRule>>();
 			foreach (var rule in trnsCfg.Rules)
 			{
 				ICollection<string> f;
@@ -126,11 +122,11 @@ namespace Pck
 							f.Add(o);
 			}
 			var j = 0;
-			foreach (var me in map)
+			foreach (var mapEntry in map)
 			{
 				if (null != progress)
 					progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingReductions, j));
-				var rule = me.Key;
+				var rule = mapEntry.Key;
 				var lr = _LrtSymbol.Parse(rule.Right[rule.Right.Count - 1]);
 				var left = _LrtSymbol.Parse(rule.Left).Id;
 				var right = new List<string>();
@@ -138,7 +134,7 @@ namespace Pck
 					right.Add(_LrtSymbol.Parse(s).Id);
 				var newRule = new CfgRule(left, right);
 				if (!Equals(left, start))
-					foreach (var f in me.Value)
+					foreach (var f in mapEntry.Value)
 					{
 						// build the rule data
 						var rr = new string[newRule.Right.Count];
@@ -148,18 +144,32 @@ namespace Pck
 						var iid = _LrtSymbol.Parse(f).Id;
 						(int RuleOrStateId, string Left, string[] Right) tuple;
 						var rid = cfg.Rules.IndexOf(newRule);
-						
+
+						var newTuple = (RuleOrStateId: rid, Left: newRule.Left, Right: rr);
 						// this gets rid of duplicate entries which crop up in the table
 						if (!parseTable[lr.To].TryGetValue(iid, out tuple))
 						{
 							parseTable[lr.To].Add(_LrtSymbol.Parse(f).Id,
-								(rid, newRule.Left, rr));
+								newTuple);
 						} else
 						{
-							// TODO: Figure out what this conflict means. Is it just a merge?
-							//var ll = _LrtSymbol.Parse(f).Id;
-							//var nr = cfg.Rules[rid];
-							//result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Format("Shift-Reduce conflict on rule {0}, token {1}", nr, ll), nr.Line, nr.Column, nr.Position));
+							// TODO: Verify this - may need the dragon book
+							if(null==tuple.Right)
+							{
+								var nr = cfg.Rules[rid];
+								var msg = new CfgMessage(CfgErrorLevel.Warning, -1, string.Format("Shift-Reduce conflict on rule {0}, token {1}", nr, iid), nr.Line, nr.Column, nr.Position);
+								if(!result.Contains(msg))
+									result.Add(msg);
+							} else
+							{
+								if (rid != newTuple.RuleOrStateId)
+								{
+									var nr = cfg.Rules[rid];
+									var msg = new CfgMessage(CfgErrorLevel.Error, -1, string.Format("Reduce-Reduce conflict on rule {0}, token {1}", nr, iid), nr.Line, nr.Column, nr.Position);
+									if (!result.Contains(msg))
+										result.Add(msg);
+								}
+							}
 						}
 					}
 				++j;
@@ -181,8 +191,7 @@ namespace Pck
 					if (Equals(next, input))
 					{
 						var lri = new LRItem(item.Rule, item.RightIndex + 1);
-						//if (!result.Contains(lri))
-							result.Add(lri);
+						result.Add(lri);
 					}
 				}
 				++i;
@@ -286,11 +295,9 @@ namespace Pck
 								if(null!=progress)
 									progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingConfigurations, items));
 							}
-							map[itemSet].Transitions[next] = map[n];
-							
+							map[itemSet].Transitions[next] = map[n];	
 						}
 					}
-				
 				}
 				if(!done)
 				{
@@ -299,8 +306,6 @@ namespace Pck
 						progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingStates, oc));
 				}
 			}
-
-
 			return lrfa;
 		}
 		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,Lrfa lrfa, IProgress<CfgLalr1Progress> progress)

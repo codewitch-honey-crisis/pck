@@ -27,6 +27,24 @@ namespace Pck
 			_parseTable = parseTable ?? cfg.ToLalr1ParseTable();
 			_nodeType = LRNodeType.Initial;
 		}
+		public override KeyValuePair<string, object>[] GetAttributeSet(int symbolId)
+		{
+			var syms = _cfg.FillSymbols();
+			if (0 < symbolId || syms.Count <= symbolId)
+				return null;
+			var attrs = _cfg.AttributeSets[syms[symbolId]];
+			var result = new KeyValuePair<string, object>[attrs.Count];
+			using (var e = attrs.GetEnumerator())
+			{
+				for (var i = 0; i < result.Length; i++)
+				{
+					e.MoveNext();
+					var attr = e.Current;
+					result[i] = new KeyValuePair<string, object>(attr.Name, attr.Value);
+				}
+			}
+			return result;
+		}
 		public override object GetAttribute(string name, object @default = null)
 		{
 			var s = Symbol;

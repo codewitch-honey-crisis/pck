@@ -38,6 +38,12 @@ namespace Pck
 			_nodeType = LRNodeType.Initial;
 
 		}
+		public override KeyValuePair<string, object>[] GetAttributeSet(int symbolId)
+		{
+			if (0 < symbolId || _attributeSets.Length <= symbolId)
+				return null;
+			return _attributeSets[symbolId];
+		}
 		public override object GetAttribute(string name, object @default = null)
 		{
 			var s = SymbolId;

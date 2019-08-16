@@ -11,7 +11,7 @@ namespace Pck
 		Error = 2
 	}
 
-	public sealed class CfgMessage
+	public sealed class CfgMessage : IEquatable<CfgMessage>, ICloneable
 	{
 		public CfgMessage(CfgErrorLevel errorLevel, int errorCode, string message, int line, int column, long position)
 		{
@@ -48,5 +48,52 @@ namespace Pck
 						ErrorLevel, Message, Line, Column, Position);
 			}
 		}
+		public CfgMessage Clone()
+		{
+			return new CfgMessage(ErrorLevel, ErrorCode, Message, Line, Column, Position);
+		}
+		object ICloneable.Clone()
+			=> Clone();
+
+		#region Value semantics
+		public bool Equals(CfgMessage rhs)
+		{
+			if (ReferenceEquals(rhs, this)) return true;
+			if (ReferenceEquals(rhs, null)) return false;
+			return ErrorLevel == rhs.ErrorLevel &&
+				ErrorCode == rhs.ErrorCode &&
+				Message == rhs.Message &&
+				Line == rhs.Line &&
+				Column == rhs.Column &&
+				Position == rhs.Position;
+		}
+		public override bool Equals(object rhs)
+			=> Equals(rhs as CfgMessage);
+
+		public override int GetHashCode()
+		{
+			var result = ErrorLevel.GetHashCode();
+			result ^= ErrorCode;
+			if (null != Message)
+				result ^= Message.GetHashCode();
+			result ^= Line;
+			result ^= Column;
+			result ^= Position.GetHashCode();
+			return result;
+		}
+		public static bool operator ==(CfgMessage lhs, CfgMessage rhs)
+		{
+			if (ReferenceEquals(lhs, rhs)) return true;
+			if (ReferenceEquals(lhs, null)) return false;
+			return lhs.Equals(rhs);
+		}
+		public static bool operator !=(CfgMessage lhs, CfgMessage rhs)
+		{
+			if (ReferenceEquals(lhs, rhs)) return false;
+			if (ReferenceEquals(lhs, null)) return true;
+			return !lhs.Equals(rhs);
+		}
+		#endregion
+
 	}
 }
