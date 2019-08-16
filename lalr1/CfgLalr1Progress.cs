@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pck
 {
-	public enum Lalr1Status
+	public enum CfgLalr1Status
 	{
 		Unknown = 0,
 		ComputingStates,
@@ -14,14 +14,14 @@ namespace Pck
 		CreatingLookaheadGrammar,
 		ComputingReductions
 	}
-	public struct Lalr1Progress
+	public struct CfgLalr1Progress
 	{
-		public Lalr1Progress(Lalr1Status status,int count)
+		public CfgLalr1Progress(CfgLalr1Status status,int count)
 		{
 			Status = status;
 			Count = count;
 		}
-		public Lalr1Status Status { get; }
+		public CfgLalr1Status Status { get; }
 		public int Count { get; }
 	}
 }

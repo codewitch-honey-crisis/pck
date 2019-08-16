@@ -128,7 +128,7 @@ namespace Pck
 				var rule = Rules[i];
 				result.EpsilonTransitions.Add(rule.Right.ToFA(rule.Left));
 			}
-			return result.ToDfa(progress) as CharFA<string>;
+			return result as CharFA<string>;
 		}
 		public IEnumerable<Token> ToTokenizer(IEnumerable<char> input, IEnumerable<string> symbols = null,IProgress<FAProgress> progress=null)
 		{

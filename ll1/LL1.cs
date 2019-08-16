@@ -53,7 +53,16 @@ namespace Pck
 			return new LL1TableParser(parseTable.ToArray(syms), initCfg, syms.ToArray(), nodeFlags, substitutions,attrSets, tokenizer);
 
 		}
-		public static CfgLL1ParseTable ToLL1ParseTable(this CfgDocument cfg)
+		public static CfgLL1ParseTable ToLL1ParseTable(this CfgDocument cfg, IProgress<CfgLL1Progress> progress=null)
+		{
+			CfgLL1ParseTable result = null;
+			var msgs = TryToLL1ParseTable(cfg, progress, out result);
+			CfgException.ThrowIfErrors(msgs);
+			return result;
+		}
+		public static IList<CfgMessage> TryToLL1ParseTable(this CfgDocument cfg, out CfgLL1ParseTable parseTable)
+			=> TryToLL1ParseTable(cfg, null, out parseTable);
+		public static IList<CfgMessage> TryToLL1ParseTable(this CfgDocument cfg,IProgress<CfgLL1Progress> progress,out CfgLL1ParseTable parseTable)
 		{
 			// Here we populate the outer dictionary with one non-terminal for each key
 			// we populate each inner dictionary with the result terminals and associated 
@@ -61,14 +70,20 @@ namespace Pck
 			// contains null. In that case, we use the follows to get the terminals and 
 			// the rule associated with the null predict in order to compute the inner 
 			// dictionary. The conflict resolution tables are always empty for LL(1)
+			if (null != progress)
+				progress.Report(new CfgLL1Progress(CfgLL1Status.ComputingPredicts, 0));
 			var predict = cfg.FillPredict();
+			if (null != progress)
+				progress.Report(new CfgLL1Progress(CfgLL1Status.ComputingFollows, 0));
 			var follows = cfg.FillFollows();
-			var exmsgs = new List<CfgMessage>();
-			var result = new CfgLL1ParseTable();
+			var result = new List<CfgMessage>();
+			parseTable = new CfgLL1ParseTable();
+			var j = 0;
 			foreach (var nt in cfg.EnumNonTerminals())
 			{
 				var d = new Dictionary<string, CfgLL1ParseTableEntry>();
 				foreach (var f in predict[nt])
+				{
 					if (null != f.Symbol)
 					{
 						CfgLL1ParseTableEntry re;
@@ -76,15 +91,18 @@ namespace Pck
 						CfgLL1ParseTableEntry or;
 						if (d.TryGetValue(f.Symbol, out or))
 						{
-							exmsgs.Add(new CfgMessage(CfgErrorLevel.Error, 1,
+							result.Add(new CfgMessage(CfgErrorLevel.Error, 1,
 										string.Format(
 											"first first conflict between {0} and {1} on {2}",
 											or.Rule,
 											f.Rule,
-											f.Symbol),f.Rule.Line,f.Rule.Column,f.Rule.Position));
+											f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position));
 						}
 						else
 							d.Add(f.Symbol, re);
+						if (null != progress)
+							progress.Report(new CfgLL1Progress(CfgLL1Status.CreatingParseTable, j));
+						++j;
 					}
 					else
 					{
@@ -99,12 +117,12 @@ namespace Pck
 								// the first or last rule respectively.
 								var fc = cfg.GetAttribute(nt, "followsConflict", "error") as string;
 								if ("error" == fc)
-									exmsgs.Add(new CfgMessage(CfgErrorLevel.Error, 2,
+									result.Add(new CfgMessage(CfgErrorLevel.Error, -1,
 										string.Format(
 											"first follows conflict between {0} and {1} on {2}",
 											or.Rule,
 											f.Rule,
-											fe),f.Rule.Line,f.Rule.Column,f.Rule.Position));
+											fe), f.Rule.Line, f.Rule.Column, f.Rule.Position));
 								else if ("last" == fc)
 									d[fe] = new CfgLL1ParseTableEntry(f.Rule);
 							}
@@ -112,21 +130,30 @@ namespace Pck
 							{
 								d.Add(fe, new CfgLL1ParseTableEntry(f.Rule));
 							}
+							if (null != progress)
+								progress.Report(new CfgLL1Progress(CfgLL1Status.CreatingParseTable, j));
+							++j;
 						}
 					}
-
-				result.Add(nt, d);
+				}
+				parseTable.Add(nt, d);
 			}
-			CfgException.ThrowIfErrors(exmsgs);
 			return result;
 		}
-		public static IList<CfgMessage> PrepareLL1(this CfgDocument cfg,bool throwIfErrors = true, int repeat = 2)
+		public static void PrepareLL1(this CfgDocument cfg,IProgress<CfgLL1Progress> progress=null)
 		{
-			if (1 > repeat) repeat = 1;
+			var msgs = TryPrepareLL1(cfg, progress);
+			CfgException.ThrowIfErrors(msgs);
+		}
+		public static IList<CfgMessage> TryPrepareLL1(this CfgDocument cfg,IProgress<CfgLL1Progress> progress=null)
+		{
+			const int repeat = 2;
 			var result = new List<CfgMessage>();
 			CfgDocument old = cfg;
 			for (int j = 0; j < repeat; ++j)
 			{
+				if (null != progress)
+					progress.Report(new CfgLL1Progress(CfgLL1Status.Factoring, j));
 				// if 20 times doesn't sort out this grammar it's not LL(1)
 				// the math is such that we don't know unless we try
 				// and the tries can go on forever.
@@ -164,12 +191,10 @@ namespace Pck
 				}
 				result.Add(new CfgMessage(CfgErrorLevel.Error, -1, "Grammar is unresolvably and directly left recursive and cannot be parsed with an LL parser.", r.Line, r.Column, r.Position));
 			}
-			//else if (IsLeftRecursive())
-			//	result.Add(new CfgMessage(CfgErrorLevel.Error, -1, "Grammar is unresolvably and indirectly left recursive and cannot be parsed with an LL parser."));
 			var fc = cfg.FillLL1Conflicts();
 			foreach (var f in fc)
 				result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Format("Grammar has unresolvable first-{0} conflict between {1} and {2} on symbol {3}", f.Kind == CfgLL1ConflictKind.FirstFirst ? "first" : "follows", f.Rule1, f.Rule2, f.Symbol),f.Rule2.Line,f.Rule2.Column,f.Rule2.Position));
-			cfg.FillValidateLL1(throwIfErrors, result);
+			cfg.TryValidateLL1(result);
 			return result;
 		}
 		public static IList<CfgMessage> EliminateLeftRecursion(this CfgDocument cfg)
@@ -331,18 +356,16 @@ namespace Pck
 			}
 			return result;
 		}
-		public static IList<CfgMessage> FillValidateLL1(this CfgDocument cfg,bool throwIfErrors = false, IList<CfgMessage> result = null)
+		public static IList<CfgMessage> TryValidateLL1(this CfgDocument cfg,IList<CfgMessage> result = null)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();
-			_FillValidateAttributesLL1(cfg,result);
-			_FillValidateRulesLL1(cfg,result);
-			if (throwIfErrors)
-				CfgException.ThrowIfErrors(result);
+			_TryValidateAttributesLL1(cfg,result);
+			_TryValidateRulesLL1(cfg,result);
 			return result;
 		}
 		
-		static IList<CfgMessage> _FillValidateRulesLL1(CfgDocument cfg,IList<CfgMessage> result)
+		static IList<CfgMessage> _TryValidateRulesLL1(CfgDocument cfg,IList<CfgMessage> result)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();
@@ -384,8 +407,11 @@ namespace Pck
 					if (!cfg.IsNonTerminal(sym))
 						if ("#EOS" == sym || "#ERROR" == sym || (bool)cfg.GetAttribute(sym, "hidden", false))
 							found = true;
-					//if(!found)
-					//	result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Unreachable symbol \"", sym, "\"")));
+					if (!found)
+					{
+						var r = cfg.FillNonTerminalRules(sym)[0];
+						result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""),r.Line,r.Column,r.Position));
+					}
 				}
 			}
 			// build a temporary parse table to check for conflicts
@@ -437,7 +463,7 @@ namespace Pck
 			}
 			return result;
 		}
-		static IList<CfgMessage> _FillValidateAttributesLL1(CfgDocument cfg, IList<CfgMessage> result)
+		static IList<CfgMessage> _TryValidateAttributesLL1(CfgDocument cfg, IList<CfgMessage> result)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();

@@ -16,7 +16,7 @@ namespace Pck
 	static class TokenizerCodeGenerator
 	{
 		
-		static CodeTypeDeclaration _CreateTokenizerClass(LexDocument lex, IList<string> symbolTable, string name,IProgress<FAProgress> progress=null)
+		static CodeTypeDeclaration _CreateTokenizerClass(LexDocument lex, IList<string> symbolTable, string name,IProgress<FAProgress> progress)
 		{
 			var lexer = lex.ToLexer(progress);
 			var ii = 0;
@@ -24,6 +24,8 @@ namespace Pck
 			var bes = new string[syms.Count];
 			for (ii = 0; ii < bes.Length; ii++)
 				bes[ii] = lex.GetAttribute(syms[ii], "blockEnd", null) as string;
+			lexer = lexer.ToDfa(progress);
+			//lexer.TrimDuplicates(progress);
 			var dfaTable = lexer.ToArray(syms);
 			var result = new CodeTypeDeclaration();
 			var tt = new List<string>();
@@ -92,8 +94,9 @@ namespace Pck
 			result.Members.Add(ctor);
 			return result;
 		}
-		
-		public static void WriteClassTo(LexDocument lex, IList<string> symbolTable, string name,string @namespace, string language, TextWriter writer,IProgress<FAProgress> progress=null)
+		public static void WriteClassTo(LexDocument lex, IList<string> symbolTable, string name, string @namespace, string language, TextWriter writer)
+			=> WriteClassTo(lex, symbolTable, name, @namespace, language, null, writer);
+		public static void WriteClassTo(LexDocument lex, IList<string> symbolTable, string name,string @namespace, string language, IProgress<FAProgress> progress,TextWriter writer)
 		{
 			if (string.IsNullOrEmpty(language))
 				language = "cs";

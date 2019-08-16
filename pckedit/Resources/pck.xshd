@@ -33,6 +33,7 @@ Version 1.0
   <Digits name="Digits" color="Red"/>
 
   <RuleSets>
+    
     <RuleSet ignorecase="false">
 
       <Delimiters>()[]{},:;-=|/"'&lt;&gt;,</Delimiters>
@@ -48,7 +49,11 @@ Version 1.0
         <Begin>'</Begin>
         <End>'</End>
       </Span>
-      <KeyWords color="#500050">
+
+      <MarkPrevious bold = "true" italic = "false" color = "#000060" markmarker="false">-</MarkPrevious>
+      <MarkPrevious bold = "true" italic = "false" color = "#000040" markmarker="false">=</MarkPrevious>
+      <MarkPrevious bold = "true" italic = "false" color = "#803080" markmarker="false">:</MarkPrevious>
+      <KeyWords color="#000040">
         <Key word="start"/>
         <Key word="true" />
         <Key word="false" />

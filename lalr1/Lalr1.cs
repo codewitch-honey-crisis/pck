@@ -9,7 +9,7 @@ namespace Pck
 	public static class Lalr1
 	{
 
-		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null,IProgress<Lalr1Progress> progress=null)
+		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null,IProgress<CfgLalr1Progress> progress=null)
 		{
 			var parseTable = ToLalr1ParseTable(cfg,progress);
 			var syms = new List<string>();
@@ -55,8 +55,18 @@ namespace Pck
 			return new Lalr1TableParser(parseTable.ToArray(syms), syms.ToArray(), nodeFlags, substitutions, attrSets, tokenizer);
 
 		}
-		public static CfgLalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg, IProgress<Lalr1Progress> progress=null)
+		public static CfgLalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg,IProgress<CfgLalr1Progress> progress=null)
 		{
+			CfgLalr1ParseTable result = null;
+			var msgs = TryToLalr1ParseTable(cfg, progress, out result);
+			CfgException.ThrowIfErrors(msgs);
+			return result;
+		}
+		public static IList<CfgMessage> TryToLalr1ParseTable(this CfgDocument cfg, out CfgLalr1ParseTable parseTable)
+			=> TryToLalr1ParseTable(cfg, null, out parseTable);
+		public static IList<CfgMessage> TryToLalr1ParseTable(this CfgDocument cfg, IProgress<CfgLalr1Progress> progress,out CfgLalr1ParseTable parseTable)
+		{
+			var result = new List<CfgMessage>();
 			var start = cfg.GetAugmentedStartId(cfg.StartSymbol);
 			var lrfa = _ToLrfa(cfg,progress);
 			//Console.Error.WriteLine("Creating lookahead grammar");
@@ -65,7 +75,7 @@ namespace Pck
 			//Console.Error.WriteLine("Done!");
 			//Console.Error.WriteLine("Walking the LR(0) states");
 			var closure = new List<Lrfa>();
-			var result = new CfgLalr1ParseTable();
+			parseTable = new CfgLalr1ParseTable();
 
 			var itemSets = new List<ICollection<LRItem>>();
 
@@ -75,7 +85,7 @@ namespace Pck
 			{
 
 				itemSets.Add(p.AcceptSymbol);
-				result.Add(new Dictionary<string, (int RuleOrStateId, string Left, string[] Right)>());
+				parseTable.Add(new Dictionary<string, (int RuleOrStateId, string Left, string[] Right)>());
 				++i;
 			}
 			i = 0;
@@ -84,7 +94,7 @@ namespace Pck
 				foreach (var trn in p.Transitions)
 				{
 					var idx = closure.IndexOf(trn.Value);
-					result[i].Add(
+					parseTable[i].Add(
 						trn.Key,
 						(idx, null, null)
 						);
@@ -93,7 +103,7 @@ namespace Pck
 				{
 					if (Equals(item.Rule.Left, start) && item.RightIndex == item.Rule.Right.Count)
 					{
-						result[i].Add(
+						parseTable[i].Add(
 							"#EOS",
 							(-1, null, null));
 						break;
@@ -119,7 +129,7 @@ namespace Pck
 			foreach (var me in map)
 			{
 				if (null != progress)
-					progress.Report(new Lalr1Progress(Lalr1Status.ComputingReductions, j));
+					progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingReductions, j));
 				var rule = me.Key;
 				var lr = _LrtSymbol.Parse(rule.Right[rule.Right.Count - 1]);
 				var left = _LrtSymbol.Parse(rule.Left).Id;
@@ -140,17 +150,23 @@ namespace Pck
 						var rid = cfg.Rules.IndexOf(newRule);
 						
 						// this gets rid of duplicate entries which crop up in the table
-						if (!result[lr.To].TryGetValue(iid, out tuple))
+						if (!parseTable[lr.To].TryGetValue(iid, out tuple))
 						{
-							result[lr.To].Add(_LrtSymbol.Parse(f).Id,
+							parseTable[lr.To].Add(_LrtSymbol.Parse(f).Id,
 								(rid, newRule.Left, rr));
+						} else
+						{
+							// TODO: Figure out what this conflict means. Is it just a merge?
+							//var ll = _LrtSymbol.Parse(f).Id;
+							//var nr = cfg.Rules[rid];
+							//result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Format("Shift-Reduce conflict on rule {0}, token {1}", nr, ll), nr.Line, nr.Column, nr.Position));
 						}
 					}
 				++j;
 			}
 			return result;
 		}
-		static ICollection<LRItem> _FillLRMove(this CfgDocument cfg,IEnumerable<LRItem> itemSet, object input,IProgress<Lalr1Progress> progress,ICollection<LRItem> result = null)
+		static ICollection<LRItem> _FillLRMove(this CfgDocument cfg,IEnumerable<LRItem> itemSet, object input,IProgress<CfgLalr1Progress> progress,ICollection<LRItem> result = null)
 		{
 			if (null == result)
 				result = new HashSet<LRItem>();
@@ -158,7 +174,7 @@ namespace Pck
 			foreach (var item in itemSet)
 			{
 				if (null != progress)
-					progress.Report(new Lalr1Progress(Lalr1Status.ComputingMove, i));
+					progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingMove, i));
 				var next = item.RightIndex < item.Rule.Right.Count ? item.Rule.Right[item.RightIndex] : null;
 				if (item.RightIndex < item.Rule.Right.Count)
 				{
@@ -197,7 +213,7 @@ namespace Pck
 			}
 			return false;
 		}
-		static void _FillLRClosureInPlace(CfgDocument cfg,IProgress<Lalr1Progress> progress, ICollection<LRItem> result=null)
+		static void _FillLRClosureInPlace(CfgDocument cfg,IProgress<CfgLalr1Progress> progress, ICollection<LRItem> result=null)
 		{
 			var done = false;
 			while (!done)
@@ -207,7 +223,7 @@ namespace Pck
 				for (var i = 0; i < l.Length; ++i)
 				{
 					if(null!=progress)
-						progress.Report(new Lalr1Progress(Lalr1Status.ComputingClosure, i));
+						progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingClosure, i));
 					var item = l[i];
 					var next = item.RightIndex < item.Rule.Right.Count ? item.Rule.Right[item.RightIndex] : null;
 					if (item.RightIndex < item.Rule.Right.Count)
@@ -232,10 +248,10 @@ namespace Pck
 				}
 			}
 		}
-		static Lrfa _ToLrfa(CfgDocument cfg,IProgress<Lalr1Progress> progress)
+		static Lrfa _ToLrfa(CfgDocument cfg,IProgress<CfgLalr1Progress> progress)
 		{
 			if(null!=progress)
-				progress.Report(new Lalr1Progress(Lalr1Status.ComputingStates, 0));
+				progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingStates, 0));
 			// TODO: this takes a long time sometimes
 			var map = new Dictionary<ICollection<LRItem>, Lrfa>(_LRItemSetComparer.Default);
 			// create an augmented grammar - add rule {start} -> [[StartId]] 
@@ -268,7 +284,7 @@ namespace Pck
 								map.Add(n, npda);
 								items += n.Count;
 								if(null!=progress)
-									progress.Report(new Lalr1Progress(Lalr1Status.ComputingConfigurations, items));
+									progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingConfigurations, items));
 							}
 							map[itemSet].Transitions[next] = map[n];
 							
@@ -280,14 +296,14 @@ namespace Pck
 				{
 					oc = map.Count;
 					if(null!=progress)
-						progress.Report(new Lalr1Progress(Lalr1Status.ComputingStates, oc));
+						progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingStates, oc));
 				}
 			}
 
 
 			return lrfa;
 		}
-		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,Lrfa lrfa, IProgress<Lalr1Progress> progress)
+		static CfgDocument _ToLRTransitionGrammar(CfgDocument cfg,Lrfa lrfa, IProgress<CfgLalr1Progress> progress)
 		{
 			var result = new CfgDocument();
 			var closure = new List<Lrfa>();
@@ -301,7 +317,7 @@ namespace Pck
 			foreach (var p in closure)
 			{
 				if (null != progress)
-					progress.Report(new Lalr1Progress(Lalr1Status.CreatingLookaheadGrammar, j));
+					progress.Report(new CfgLalr1Progress(CfgLalr1Status.CreatingLookaheadGrammar, j));
 
 				int si = itemSets.IndexOf(p.AcceptSymbol, _LRItemSetComparer.Default);
 
@@ -344,7 +360,7 @@ namespace Pck
 			result.StartSymbol = start.ToString();
 			return result;
 		}
-		static IList<CfgMessage> _FillValidateRulesLalr1(CfgDocument cfg, IList<CfgMessage> result)
+		static IList<CfgMessage> _TryValidateRulesLalr1(CfgDocument cfg, IList<CfgMessage> result)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();
@@ -383,24 +399,24 @@ namespace Pck
 					if (!cfg.IsNonTerminal(sym))
 						if ("#EOS" == sym || "#ERROR" == sym || (bool)cfg.GetAttribute(sym, "hidden", false))
 							found = true;
-					//if(!found)
-					//	result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Unreachable symbol \"", sym, "\"")));
+					if (!found) {
+						var r = cfg.FillNonTerminalRules(sym)[0];
+						result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""),r.Line, r.Column,r.Position));
+					}
 				}
 			}
 			// checking for conflicts here is way too time prohibitive for LALR(1) so we skip it
 			return result;
 		}
-		public static IList<CfgMessage> FillValidateLalr1(this CfgDocument cfg, bool throwIfErrors = false, IList<CfgMessage> result = null)
+		public static IList<CfgMessage> TryValidateLalr1(this CfgDocument cfg, IList<CfgMessage> result = null)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();
-			_FillValidateAttributesLalr1(cfg, result);
-			_FillValidateRulesLalr1(cfg, result);
-			if (throwIfErrors)
-				CfgException.ThrowIfErrors(result);
+			_TryValidateAttributesLalr1(cfg, result);
+			_TryValidateRulesLalr1(cfg, result);
 			return result;
 		}
-		static IList<CfgMessage> _FillValidateAttributesLalr1(CfgDocument cfg, IList<CfgMessage> result)
+		static IList<CfgMessage> _TryValidateAttributesLalr1(CfgDocument cfg, IList<CfgMessage> result)
 		{
 			if (null == result)
 				result = new List<CfgMessage>();
@@ -557,20 +573,6 @@ namespace Pck
 					if (!y.Contains(xx))
 						return false;
 				
-				/*foreach (var xx in x)
-				{
-					var found = false;
-					foreach (var yy in y)
-					{
-						if (xx.Equals(yy))
-						{
-							found = true;
-							break;
-						}
-					}
-					if (!found)
-						return false;
-				}*/
 				return true;
 			}
 
@@ -583,32 +585,7 @@ namespace Pck
 				return result;
 			}
 		}
-		/*
-		class _Lrfa
-		{
-			public _Lrfa(bool isAccepting,ICollection<LRItem> acceptSymbol)
-			{
-				IsAccepting = isAccepting;
-				AcceptSymbol = acceptSymbol;
-			}
-			public _Lrfa() { }
-			public Dictionary<string, _Lrfa> Transitions { get; } = new Dictionary<string, _Lrfa>();
-			public ICollection<LRItem> AcceptSymbol { get; set; }
-			public bool IsAccepting { get; set; }
-
-			public ICollection<_Lrfa> FillClosure(ICollection<_Lrfa> result = null)
-			{
-				if (null == result)
-					result = new List<_Lrfa>();
-				else if (result.Contains(this))
-					return result;
-				result.Add(this);
-				foreach(var trns in Transitions)
-					trns.Value.FillClosure(result);
-				return result;
-			}
-		}
-		*/
+	
 		sealed class _LrtSymbol : IEquatable<_LrtSymbol>
 		{
 			public int From;

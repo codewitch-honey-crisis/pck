@@ -57,12 +57,13 @@ namespace Pck
 				});
 			tab.Controls.Add(editor);
 			fileTabs.Controls.Add(tab);
-
+			
 			if (_editorSettings == null) {
 				_editorSettings = editor.TextEditorProperties;
 				OnSettingsChanged();
 			} else
 				editor.TextEditorProperties = _editorSettings;
+			fileTabs.SelectedTab = tab;
 			return editor;
 		}
 
@@ -145,6 +146,64 @@ namespace Pck
 					lvi.ImageIndex = 2;
 					break;
 			}
+			messages.Items.Add(lvi);
+		}
+		void _AddMessage(XbnfMessage msg, string filename)
+		{
+			var lvi = new ListViewItem(
+				new string[] {
+					"",
+					(-1 < msg.ErrorCode) ? msg.ErrorCode.ToString() : "",
+					msg.Message,
+					filename ?? "", (!string.IsNullOrEmpty(filename) && 0<msg.Line)? msg.Line.ToString() : "" }
+				);
+			lvi.Tag = msg.Column;
+
+
+			switch (msg.ErrorLevel)
+			{
+				case XbnfErrorLevel.Message:
+					lvi.ImageIndex = 0;
+					break;
+				case XbnfErrorLevel.Warning:
+					lvi.ImageIndex = 1;
+					break;
+				case XbnfErrorLevel.Error:
+					lvi.ImageIndex = 2;
+					break;
+			}
+			messages.Items.Add(lvi);
+		}
+		void _AddMessage(ExpectingException ex, string filename)
+		{
+			var lvi = new ListViewItem(
+				new string[] {
+					"",
+					"",
+					ex.Message,
+					filename ?? "", (!string.IsNullOrEmpty(filename) && 0<ex.Line)? ex.Line.ToString() : "" }
+				);
+			lvi.Tag = ex.Column;
+
+
+			lvi.ImageIndex = 2;
+			
+			messages.Items.Add(lvi);
+		}
+		void _AddMessage(Exception ex, string filename)
+		{
+			var lvi = new ListViewItem(
+				new string[] {
+					"",
+					"",
+					ex.Message,
+					filename ?? "",
+					"" }
+				);
+			
+
+			lvi.ImageIndex = 2;
+
 			messages.Items.Add(lvi);
 		}
 		private void RemoveTextEditor(TextEditorControl editor)
@@ -568,12 +627,26 @@ namespace Pck
 
 		private void createPCKSpecToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var name = fileTabs.SelectedTab.Text;
-			if (name.EndsWith("*"))
-				name = name.Substring(0, name.Length - 1);
-			name = Path.GetFileNameWithoutExtension(name);
+			var fname = fileTabs.SelectedTab.Text;
+			if (fname.EndsWith("*"))
+				fname = fname.Substring(0, fname.Length - 1);
+			XbnfDocument xbnf = null;
+			try
+			{
+				xbnf=XbnfDocument.Parse(ActiveEditor.Text);
+			}
+			catch(ExpectingException expex)
+			{
+				_AddMessage(expex,fname);
+				return;
+			}
+			catch(Exception ex)
+			{
+				_AddMessage(ex, fname);
+				return;
+			}
+			var name = Path.GetFileNameWithoutExtension(fname);
 			var sb = new StringBuilder();
-			XbnfDocument xbnf = XbnfDocument.Parse(ActiveEditor.Text);
 
 			XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
 			var editor = AddNewTextEditor(string.Concat(name,".pck"));
@@ -597,8 +670,26 @@ namespace Pck
 			switch (ext)
 			{
 				case ".xbnf":
+					var fname = fileTabs.SelectedTab.Text;
+					if (fname.EndsWith("*"))
+						fname = fname.Substring(0, fname.Length - 1);
+					XbnfDocument xbnf = null;
+					try
+					{
+						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
+					}
+					catch (ExpectingException expex)
+					{
+						_AddMessage(expex, fname);
+						return;
+					}
+					catch (Exception ex)
+					{
+						_AddMessage(ex, fname);
+						return;
+					}
 					var sb = new StringBuilder();
-					XbnfToPckTransform.Transform(new StringReader(ActiveEditor.Text), new StringWriter(sb));
+					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
 					input = sb.ToString();
 					goto case ".pck";
 				case ".pck":
@@ -606,7 +697,7 @@ namespace Pck
 					var cfg = CfgDocument.Parse(input);
 					var lex = LexDocument.Parse(input);
 					lex.AttributeSets.Clear(); // prevent attributes from being written twice
-					foreach (var msg in cfg.FillValidateLL1())
+					foreach (var msg in cfg.TryValidateLL1())
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
@@ -618,7 +709,7 @@ namespace Pck
 					}
 					if (!hasErrors)
 					{
-						foreach (var msg in cfg.PrepareLL1(false))
+						foreach (var msg in cfg.TryPrepareLL1())
 						{
 							if (CfgErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
@@ -677,18 +768,42 @@ namespace Pck
 			var ext = Path.GetExtension(name).ToLowerInvariant();
 			name = Path.GetFileNameWithoutExtension(name);
 			var input = ActiveEditor.Text;
+			var prog = new ProgressForm();
+			prog.Show(this);
 			var sb = new StringBuilder();
 			var hasErrors = false;
 			messages.Items.Clear();
 			switch (ext)
 			{
 				case ".xbnf":
-					XbnfToPckTransform.Transform(new StringReader(ActiveEditor.Text), new StringWriter(sb));
+					var fname = fileTabs.SelectedTab.Text;
+					if (fname.EndsWith("*"))
+						fname = fname.Substring(0, fname.Length - 1);
+					XbnfDocument xbnf = null;
+					try
+					{
+						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
+					}
+					catch (ExpectingException expex)
+					{
+						_AddMessage(expex, fname);
+						prog.Close();
+						return;
+					}
+					catch (Exception ex)
+					{
+						_AddMessage(ex, fname);
+						prog.Close();
+						return;
+					}
+					prog.WriteLog("Transforming XBNF to PCK...");
+					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
+					prog.WriteLog(Environment.NewLine);
 					input = sb.ToString();
 					goto case ".pck";
 				case ".pck":
 					var cfg = CfgDocument.Parse(input);
-					foreach (var msg in cfg.FillValidateLL1())
+					foreach (var msg in cfg.TryValidateLL1())
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
@@ -700,7 +815,7 @@ namespace Pck
 					}
 					if (!hasErrors)
 					{
-						foreach (var msg in cfg.PrepareLL1(false))
+						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 						{
 							if (CfgErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
@@ -726,7 +841,7 @@ namespace Pck
 						}
 						sb.Clear();
 						using (var sw = new StringWriter(sb))
-							LL1ParserCodeGenerator.WriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang, sw);
+							LL1ParserCodeGenerator.WriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang,new _LL1Progress(prog), sw);
 						input = sb.ToString();
 						name = _GetUniqueFilename(name);
 						var editor = AddNewTextEditor(name);
@@ -734,9 +849,11 @@ namespace Pck
 									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
 						editor.Text = input;
 						SetModifiedFlag(editor, true);
+						
 					}
 					break;
 			}
+			prog.Close();
 		}
 
 		private void createLalr1ParserToolStripMenuItem_Click(object sender, EventArgs e)
@@ -748,18 +865,41 @@ namespace Pck
 			name = Path.GetFileNameWithoutExtension(name);
 			var input = ActiveEditor.Text;
 			var sb = new StringBuilder();
+			var prog = new ProgressForm();
+			prog.Show(this);
 			messages.Items.Clear();
 			var hasErrors = false;
 			switch (ext)
 			{
 				case ".xbnf":
-					XbnfToPckTransform.Transform(new StringReader(ActiveEditor.Text), new StringWriter(sb));
+					var fname = fileTabs.SelectedTab.Text;
+					if (fname.EndsWith("*"))
+						fname = fname.Substring(0, fname.Length - 1);
+					XbnfDocument xbnf = null;
+					try
+					{
+						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
+					}
+					catch (ExpectingException expex)
+					{
+						_AddMessage(expex, fname);
+						prog.Close();
+						return;
+					}
+					catch (Exception ex)
+					{
+						_AddMessage(ex, fname);
+						prog.Close();
+						return;
+					}
+					prog.WriteLog("Transforming XBNF to PCK...");
+					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
+					prog.WriteLog(Environment.NewLine);
 					input = sb.ToString();
 					goto case ".pck";
 				case ".pck":
-					//if(".pck"==ext)
 					var cfg = CfgDocument.Parse(input);
-					foreach (var msg in cfg.FillValidateLalr1())
+					foreach (var msg in cfg.TryValidateLalr1())
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
@@ -784,21 +924,37 @@ namespace Pck
 						}
 						sb.Clear();
 						using (var sw = new StringWriter(sb))
-							Lalr1ParserCodeGenerator.WriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang, sw);
-						input = sb.ToString();
-						name = _GetUniqueFilename(name);
-						var editor = AddNewTextEditor(name);
-						editor.Document.HighlightingStrategy =
-									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
-						editor.Text = input;
-						SetModifiedFlag(editor, true);
+						{
+							foreach(var msg in Lalr1ParserCodeGenerator.TryWriteClassTo(cfg, Path.GetFileNameWithoutExtension(name),null, lang,new _Lalr1Progress(prog), sw))
+							{
+								if (CfgErrorLevel.Error == msg.ErrorLevel)
+									hasErrors = true;
+								var n = fileTabs.SelectedTab.Text;
+								if (n.EndsWith("*"))
+									n = n.Substring(0, n.Length - 1);
+								_AddMessage(msg, (".pck" == ext) ? n : "");
+							}
+						}
+						if (!hasErrors)
+						{
+							input = sb.ToString();
+							name = _GetUniqueFilename(name);
+							var editor = AddNewTextEditor(name);
+							editor.Document.HighlightingStrategy =
+										HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
+							editor.Text = input;
+							SetModifiedFlag(editor, true);
+						}
 					}
 					break;
 			}
+			prog.Close();
 		}
 
 		private void createFATokenizerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			var prog = new ProgressForm();
+			prog.Show(this);
 			var name = fileTabs.SelectedTab.Text;
 			if (name.EndsWith("*"))
 				name = name.Substring(0, name.Length - 1);
@@ -809,11 +965,32 @@ namespace Pck
 			switch (ext)
 			{
 				case ".xbnf":
-					XbnfToPckTransform.Transform(new StringReader(ActiveEditor.Text), new StringWriter(sb));
+					var fname = fileTabs.SelectedTab.Text;
+					if (fname.EndsWith("*"))
+						fname = fname.Substring(0, fname.Length - 1);
+					XbnfDocument xbnf = null;
+					try
+					{
+						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
+					}
+					catch (ExpectingException expex)
+					{
+						_AddMessage(expex, fname);
+						prog.Close();
+						return;
+					}
+					catch (Exception ex)
+					{
+						_AddMessage(ex, fname);
+						prog.Close();
+						return;
+					}
+					prog.WriteLog("Transforming XBNF to PCK...");
+					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
+					prog.WriteLog(Environment.NewLine);
 					input = sb.ToString();
 					goto case ".pck";
 				case ".pck":
-					//if(".pck"==ext)
 					var cfg = CfgDocument.Parse(input);
 					var lex = LexDocument.Parse(input);
 					string lang = null;
@@ -828,8 +1005,8 @@ namespace Pck
 						name = string.Concat(name, "Tokenizer.vb");
 					}
 					sb.Clear();
-					using (var sw = new StringWriter(sb))
-						TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(),Path.GetFileNameWithoutExtension(name), null, lang, sw);
+					using (var sw = new StringWriter(sb)) 
+						TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(),Path.GetFileNameWithoutExtension(name), null, lang, new _FAProgress(prog),sw);
 					input = sb.ToString();
 					var editor = AddNewTextEditor(name);
 					editor.Document.HighlightingStrategy =
@@ -838,6 +1015,7 @@ namespace Pck
 					SetModifiedFlag(editor, true);
 					break;
 			}
+			prog.Close();
 		}
 
 		private void fATokenizerLL1ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -854,14 +1032,32 @@ namespace Pck
 			switch (ext)
 			{
 				case ".xbnf":
-					XbnfToPckTransform.Transform(new StringReader(ActiveEditor.Text), new StringWriter(sb));
+					var fname = fileTabs.SelectedTab.Text;
+					if (fname.EndsWith("*"))
+						fname = fname.Substring(0, fname.Length - 1);
+					XbnfDocument xbnf = null;
+					try
+					{
+						xbnf = XbnfDocument.Parse(ActiveEditor.Text);
+					}
+					catch (ExpectingException expex)
+					{
+						_AddMessage(expex, fname);
+						return;
+					}
+					catch (Exception ex)
+					{
+						_AddMessage(ex, fname);
+						return;
+					}
+					XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
 					input = sb.ToString();
 					goto case ".pck";
 				case ".pck":
 					//if(".pck"==ext)
 					var cfg = CfgDocument.Parse(input);
 					var lex = LexDocument.Parse(input);
-					foreach (var msg in cfg.PrepareLL1(false))
+					foreach (var msg in cfg.TryPrepareLL1())
 					{
 						if (CfgErrorLevel.Error == msg.ErrorLevel)
 							hasErrors = true;
@@ -931,10 +1127,7 @@ namespace Pck
 						break;
 					}
 				}
-				if(!string.IsNullOrEmpty(l))
-				{
-					// int.Parse(l)
-				}
+				
 			}
 		}
 
@@ -951,4 +1144,126 @@ namespace Pck
 			vBToolStripMenuItem.Checked = true;
 		}
 	}
+	#region _FAProgress
+	class _FAProgress : IProgress<FAProgress>
+	{
+		ProgressForm _form;
+		FAStatus _oldStatus;
+		public _FAProgress(ProgressForm form)
+		{
+			_form = form;
+		}
+		public void Report(FAProgress value)
+		{
+			if(_oldStatus==value.Status)
+			{
+				_form.WriteLog(".");
+			} else
+			{
+				if (FAStatus.Unknown != _oldStatus)
+					_form.WriteLog(Environment.NewLine);
+				switch(value.Status)
+				{
+					case FAStatus.DfaTransform:
+						_form.WriteLog("Transforming NFA to DFA");
+						break;
+					case FAStatus.TrimDuplicates:
+						_form.WriteLog("Trimming duplicate states");
+						break;
+				}
+			}
+			_oldStatus = value.Status;
+		}
+	}
+	#endregion
+
+	#region _Lalr1Progress
+	class _Lalr1Progress : IProgress<CfgLalr1Progress>
+	{
+		ProgressForm _form;
+		CfgLalr1Status _oldStatus;
+		public _Lalr1Progress(ProgressForm form)
+		{
+			_form = form;
+		}
+		public void Report(CfgLalr1Progress value)
+		{
+			switch(value.Status)
+			{
+				case CfgLalr1Status.ComputingStates:
+				case CfgLalr1Status.ComputingReductions:
+				case CfgLalr1Status.CreatingLookaheadGrammar:
+					if (_oldStatus==value.Status)
+						_form.WriteLog(".");
+					else
+					{
+						if (_oldStatus != CfgLalr1Status.Unknown)
+						{
+							_form.WriteLog(Environment.NewLine);
+
+						}
+						switch(value.Status)
+						{
+							case CfgLalr1Status.ComputingStates:
+								_form.WriteLog("Computing LR states");
+								break;
+							case CfgLalr1Status.ComputingReductions:
+								_form.WriteLog("Computing reductions");
+								break;
+							case CfgLalr1Status.CreatingLookaheadGrammar:
+								_form.WriteLog("Creating lookahead grammar");
+								break;
+						}
+						
+					}
+					_oldStatus = value.Status;
+					break;
+					
+				
+			}
+		}
+	}
+	#endregion
+
+	#region _LL1Progress
+	class _LL1Progress : IProgress<CfgLL1Progress>
+	{
+		ProgressForm _form;
+		CfgLL1Status _oldStatus;
+		public _LL1Progress(ProgressForm form)
+		{
+			_form = form;
+		}
+		public void Report(CfgLL1Progress value)
+		{
+			if (_oldStatus == value.Status)
+				_form.WriteLog(".");
+			else
+			{
+				if (_oldStatus != CfgLL1Status.Unknown)
+				{
+					_form.WriteLog(Environment.NewLine);
+
+				}
+				switch (value.Status)
+				{
+					case CfgLL1Status.ComputingFollows:
+						_form.WriteLog("Computing follows");
+						break;
+					case CfgLL1Status.ComputingPredicts:
+						_form.WriteLog("Computing predicts");
+						break;
+					case CfgLL1Status.Factoring:
+						_form.WriteLog("Factoring");
+						break;
+					case CfgLL1Status.CreatingParseTable:
+						_form.WriteLog("Creating parse table");
+						break;
+				}
+
+			}
+			_oldStatus = value.Status;
+		}
+	}
+	#endregion
 }

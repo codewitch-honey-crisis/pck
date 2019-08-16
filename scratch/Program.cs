@@ -112,16 +112,16 @@ class Program
 		return;
 	}
 
-	class _ConsoleProgress : IProgress<Lalr1Progress>
+	class _ConsoleProgress : IProgress<CfgLalr1Progress>
 	{
-		public void Report(Lalr1Progress progress)
+		public void Report(CfgLalr1Progress progress)
 		{
 			switch (progress.Status)
 			{
-				case Lalr1Status.ComputingClosure:
-				case Lalr1Status.ComputingMove:
-				case Lalr1Status.ComputingConfigurations:
-				case Lalr1Status.CreatingLookaheadGrammar:
+				case CfgLalr1Status.ComputingClosure:
+				case CfgLalr1Status.ComputingMove:
+				case CfgLalr1Status.ComputingConfigurations:
+				case CfgLalr1Status.CreatingLookaheadGrammar:
 					break;
 				default:
 					Console.Error.WriteLine("{0}: {1}", progress.Status, progress.Count);

@@ -23,9 +23,7 @@ namespace ICSharpCode.TextEditor
 	{
 		Cursor cursor = Cursors.Default;
 		
-		[CLSCompliant(false)]
 		protected Rectangle drawingPosition = new Rectangle(0, 0, 0, 0);
-		[CLSCompliant(false)]
 		protected TextArea textArea;
 		
 		public Rectangle DrawingPosition {

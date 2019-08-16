@@ -493,6 +493,7 @@ namespace Pck
 			// 
 			// openFileDialog
 			// 
+			this.openFileDialog.Filter = "XBNF Files (*.xbnf)|*.xbnf|PCK Files (*.pck)|*.pck|All Files (*.*)|*.*";
 			this.openFileDialog.Multiselect = true;
 			// 
 			// fileTabs

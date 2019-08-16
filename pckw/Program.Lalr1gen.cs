@@ -89,7 +89,7 @@ namespace Pck
 				var buf = inp.ReadToEnd();
 				var cfg = CfgDocument.Parse(buf);
 				var hasErrors = false;
-				foreach (var msg in cfg.FillValidateLalr1(false))
+				foreach (var msg in cfg.TryValidateLalr1())
 				{
 					Console.Error.WriteLine(msg);
 					if (CfgErrorLevel.Error == msg.ErrorLevel)

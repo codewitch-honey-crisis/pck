@@ -108,7 +108,7 @@ namespace Pck
 							@class = string.Concat(syms[0], "Tokenizer");
 					}
 				}
-				TokenizerCodeGenerator.WriteClassTo(lex, syms, @class,@namespace, language, outp,new _TokenizerConsoleProgress());
+				TokenizerCodeGenerator.WriteClassTo(lex, syms, @class,@namespace, language, new _TokenizerConsoleProgress(),outp);
 				Console.Error.WriteLine();
 				outp.Flush();
 				return 0;
