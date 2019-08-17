@@ -12,6 +12,8 @@ using ICSharpCode.TextEditor.Document;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Pck
 {
@@ -74,8 +76,16 @@ namespace Pck
 				// Try to open chosen file
 				OpenFiles(openFileDialog.FileNames);
 		}
+		static void _AddToRecentlyUsedDocs(string path)
+		{
+			SHAddToRecentDocs(2, path);
+		}
 
-		private void OpenFiles(string[] fns)
+		[DllImport("shell32.dll", CharSet = CharSet.Ansi)]
+		private static extern void
+			SHAddToRecentDocs(int flag, string path);
+
+		public void OpenFiles(string[] fns)
 		{
 			// Close default untitled document if it is still empty
 			if (fileTabs.TabPages.Count == 1 
@@ -92,6 +102,7 @@ namespace Pck
 					// Modified flag is set during loading because the document 
 					// "changes" (from nothing to something). So, clear it again.
 					SetModifiedFlag(editor, false);
+					_AddToRecentlyUsedDocs(fn);
 				}
 				catch (Exception ex)
 				{
@@ -229,6 +240,7 @@ namespace Pck
 				try {
 					editor.SaveFile(n);
 					SetModifiedFlag(editor, false);
+					_AddToRecentlyUsedDocs(n);
 					return true;
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, ex.GetType().Name);
@@ -301,6 +313,7 @@ namespace Pck
 					// automatically, so do it manually.
 					editor.Document.HighlightingStrategy =
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile(editor.FileName);
+					_AddToRecentlyUsedDocs(editor.FileName);
 					return true;
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, ex.GetType().Name);
@@ -665,12 +678,7 @@ namespace Pck
 					}
 					break;
 				default:
-					foreach (var item in buildToolStripMenuItem.DropDownItems)
-					{
-						var tsi = item as ToolStripMenuItem;
-						if(null!=tsi)
-							tsi.Enabled = false;
-					}
+					buildToolStripMenuItem.Enabled = false;
 					break;
 
 			}
@@ -1105,6 +1113,15 @@ namespace Pck
 
 			cToolStripMenuItem.Checked = false;
 			vBToolStripMenuItem.Checked = true;
+		}
+
+		private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+		{
+			var files = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Recent));
+			foreach (var file in files)
+			{
+				Debug.WriteLine(Path.GetFileNameWithoutExtension(file));
+			}
 		}
 	}
 	#region _FAProgress

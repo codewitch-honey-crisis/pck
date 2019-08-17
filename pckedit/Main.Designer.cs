@@ -88,8 +88,8 @@ namespace Pck
 			this.descriptionColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.fileColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.lineColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -121,6 +121,7 @@ namespace Pck
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
 			this.fileToolStripMenuItem.Text = "&File";
+			this.fileToolStripMenuItem.DropDownOpening += new System.EventHandler(this.fileToolStripMenuItem_DropDownOpening);
 			// 
 			// menuFileNew
 			// 
@@ -324,47 +325,47 @@ namespace Pck
 			// createLL1ParserToolStripMenuItem
 			// 
 			this.createLL1ParserToolStripMenuItem.Name = "createLL1ParserToolStripMenuItem";
-			this.createLL1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.createLL1ParserToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
 			this.createLL1ParserToolStripMenuItem.Text = "&LL(1) Parser";
 			this.createLL1ParserToolStripMenuItem.Click += new System.EventHandler(this.createLL1ParserToolStripMenuItem_Click);
 			// 
 			// createLalr1ParserToolStripMenuItem
 			// 
 			this.createLalr1ParserToolStripMenuItem.Name = "createLalr1ParserToolStripMenuItem";
-			this.createLalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.createLalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
 			this.createLalr1ParserToolStripMenuItem.Text = "Lal&r(1) Parser";
 			this.createLalr1ParserToolStripMenuItem.Click += new System.EventHandler(this.createLalr1ParserToolStripMenuItem_Click);
 			// 
 			// createFATokenizerToolStripMenuItem
 			// 
 			this.createFATokenizerToolStripMenuItem.Name = "createFATokenizerToolStripMenuItem";
-			this.createFATokenizerToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.createFATokenizerToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
 			this.createFATokenizerToolStripMenuItem.Text = "FA &Tokenizer";
 			this.createFATokenizerToolStripMenuItem.Click += new System.EventHandler(this.createFATokenizerToolStripMenuItem_Click);
 			// 
 			// fATokenizerLL1ToolStripMenuItem
 			// 
 			this.fATokenizerLL1ToolStripMenuItem.Name = "fATokenizerLL1ToolStripMenuItem";
-			this.fATokenizerLL1ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.fATokenizerLL1ToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
 			this.fATokenizerLL1ToolStripMenuItem.Text = "FA Tokeni&zer / LL(1)";
 			this.fATokenizerLL1ToolStripMenuItem.Click += new System.EventHandler(this.fATokenizerLL1ToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(213, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(210, 6);
 			// 
 			// createPCKSpecToolStripMenuItem
 			// 
 			this.createPCKSpecToolStripMenuItem.Name = "createPCKSpecToolStripMenuItem";
-			this.createPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.createPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
 			this.createPCKSpecToolStripMenuItem.Text = "&PCK spec";
 			this.createPCKSpecToolStripMenuItem.Click += new System.EventHandler(this.createPCKSpecToolStripMenuItem_Click);
 			// 
 			// createFactoredPCKSpecToolStripMenuItem
 			// 
 			this.createFactoredPCKSpecToolStripMenuItem.Name = "createFactoredPCKSpecToolStripMenuItem";
-			this.createFactoredPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.createFactoredPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
 			this.createFactoredPCKSpecToolStripMenuItem.Text = "&Factored PCK spec";
 			this.createFactoredPCKSpecToolStripMenuItem.Click += new System.EventHandler(this.createFactoredPCKSpecToolStripMenuItem_Click);
 			// 
@@ -480,14 +481,14 @@ namespace Pck
 			this.cToolStripMenuItem.Checked = true;
 			this.cToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.cToolStripMenuItem.Name = "cToolStripMenuItem";
-			this.cToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.cToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
 			this.cToolStripMenuItem.Text = "C#";
 			this.cToolStripMenuItem.Click += new System.EventHandler(this.cToolStripMenuItem_Click);
 			// 
 			// vBToolStripMenuItem
 			// 
 			this.vBToolStripMenuItem.Name = "vBToolStripMenuItem";
-			this.vBToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.vBToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
 			this.vBToolStripMenuItem.Text = "Visual Basic";
 			this.vBToolStripMenuItem.Click += new System.EventHandler(this.vBToolStripMenuItem_Click);
 			// 
@@ -557,6 +558,14 @@ namespace Pck
 			// 
 			this.lineColumnHeader.Text = "Line";
 			// 
+			// imageList1
+			// 
+			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageList1.Images.SetKeyName(0, "StatusAnnotations_Information_16xLG_color.png");
+			this.imageList1.Images.SetKeyName(1, "StatusAnnotations_Warning_16xLG_color.png");
+			this.imageList1.Images.SetKeyName(2, "StatusAnnotations_Critical_16xLG_color.png");
+			// 
 			// splitter1
 			// 
 			this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -565,14 +574,6 @@ namespace Pck
 			this.splitter1.Size = new System.Drawing.Size(485, 3);
 			this.splitter1.TabIndex = 5;
 			this.splitter1.TabStop = false;
-			// 
-			// imageList1
-			// 
-			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-			this.imageList1.Images.SetKeyName(0, "StatusAnnotations_Information_16xLG_color.png");
-			this.imageList1.Images.SetKeyName(1, "StatusAnnotations_Warning_16xLG_color.png");
-			this.imageList1.Images.SetKeyName(2, "StatusAnnotations_Critical_16xLG_color.png");
 			// 
 			// Main
 			// 

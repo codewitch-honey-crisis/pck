@@ -222,14 +222,14 @@ namespace Pck
 			}
 			return false;
 		}
-		static void _FillLRClosureInPlace(CfgDocument cfg,IProgress<CfgLalr1Progress> progress, ICollection<LRItem> result=null)
+		static void _FillLRClosureInPlace(CfgDocument cfg,IProgress<CfgLalr1Progress> progress, ICollection<LRItem> result)
 		{
 			var done = false;
 			while (!done)
 			{
 				done = true;
 				var l = result.ToArray();
-				for (var i = 0; i < l.Length; ++i)
+				for (var i = 0; i < l.Length; i++)
 				{
 					if(null!=progress)
 						progress.Report(new CfgLalr1Progress(CfgLalr1Status.ComputingClosure, i));
