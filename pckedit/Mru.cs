@@ -35,7 +35,7 @@
 		}
 		public void Save()
 		{
-			var s = string.Concat(@"Software\", _ExeName, @"\MRU");
+			var s = string.Concat(@"Software\", Path.GetFileNameWithoutExtension(_ExeName), @"\MRU");
 			RegistryKey key = null;
 			try
 			{
@@ -60,7 +60,7 @@
 		public void Load()
 		{
 			_paths.Clear();
-			using (var key = Registry.CurrentUser.OpenSubKey(string.Concat(@"Software\", _ExeName, @"\MRU"), false))
+			using (var key = Registry.CurrentUser.OpenSubKey(string.Concat(@"Software\", Path.GetFileNameWithoutExtension(_ExeName), @"\MRU"), false))
 			{
 				if (null == key)
 					return;

@@ -405,8 +405,12 @@ namespace Pck
 						if ("#EOS" == sym || "#ERROR" == sym || (bool)cfg.GetAttribute(sym, "hidden", false))
 							found = true;
 					if (!found) {
-						var r = cfg.FillNonTerminalRules(sym)[0];
-						result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""),r.Line, r.Column,r.Position));
+						var rl = cfg.FillNonTerminalRules(sym);
+						if (0 < rl.Count)
+						{
+							var r = rl[0];
+							result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""), r.Line, r.Column, r.Position));
+						}
 					}
 				}
 			}

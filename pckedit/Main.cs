@@ -14,6 +14,8 @@ using Microsoft.CSharp;
 using Microsoft.VisualBasic;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Microsoft.Win32;
+using System.Reflection;
 
 namespace Pck
 {
@@ -65,8 +67,11 @@ namespace Pck
 			fileTabs.Controls.Add(tab);
 			
 			if (_editorSettings == null) {
-				_editorSettings = editor.TextEditorProperties;
-				OnSettingsChanged();
+				{
+					_editorSettings = editor.TextEditorProperties;
+					_GetSettings();
+					OnSettingsChanged();
+				}
 			} else
 				editor.TextEditorProperties = _editorSettings;
 			fileTabs.SelectedTab = tab;
@@ -456,6 +461,7 @@ namespace Pck
 			if (editor == null) return;
 			editor.Split();
 		}
+		static readonly string _ExeName = Path.GetFileName(Assembly.GetExecutingAssembly().GetModules()[0].Name);
 
 		/// <summary>Show current settings on the Options menu</summary>
 		/// <remarks>We don't have to sync settings between the editors because 
@@ -468,8 +474,59 @@ namespace Pck
 			menuBracketMatchingStyle.Checked = _editorSettings.BracketMatchingStyle == BracketMatchingStyle.After;
 			menuEnableVirtualSpace.Checked = _editorSettings.AllowCaretBeyondEOL;
 			menuShowLineNumbers.Checked = _editorSettings.ShowLineNumbers;
-		}
 
+			RegistryKey key = null;
+			try
+			{
+				key = Registry.CurrentUser.OpenSubKey(string.Concat(@"Software\", Path.GetFileNameWithoutExtension(_ExeName)), true);
+				if(null!=key)
+				{
+					key.SetValue("ShowSpacesAndTabs", _editorSettings.ShowSpaces?1:0);
+					key.SetValue("ShowNewlines", _editorSettings.ShowEOLMarker? 1 : 0);
+					key.SetValue("HighlightCurrentRow", _editorSettings.LineViewerStyle==LineViewerStyle.FullRow? 1 : 0);
+					key.SetValue("HighlightMatchingBracketsAfter", _editorSettings.BracketMatchingStyle == BracketMatchingStyle.After ? 1 : 0);
+					key.SetValue("EnableVirtualSpace", _editorSettings.AllowCaretBeyondEOL? 1 : 0);
+					key.SetValue("ShowLineNumbers", _editorSettings.ShowLineNumbers? 1 : 0);
+					key.SetValue("TabSize", _editorSettings.TabIndent);
+					key.SetValue("Font", _editorSettings.Font.Name);
+					key.SetValue("FontSize", _editorSettings.Font.Size.ToString());
+
+				}
+			}
+			finally
+			{
+				if (null != key)
+					key.Close();
+				key = null;
+			}
+		}
+		void _GetSettings()
+		{
+			RegistryKey key = null;
+			try
+			{
+				key = Registry.CurrentUser.OpenSubKey(string.Concat(@"Software\", Path.GetFileNameWithoutExtension(_ExeName)), false);
+				if (null != key)
+				{
+					_editorSettings.ShowSpaces = 1 == (int)key.GetValue("ShowSpacesAndTabs", 0);
+					_editorSettings.ShowEOLMarker = 1 == (int)key.GetValue("ShowNewlines", 0);
+					_editorSettings.LineViewerStyle = 1 == (int)key.GetValue("HighlightCurrentRow", 0) ? LineViewerStyle.FullRow : LineViewerStyle.None;
+					_editorSettings.BracketMatchingStyle = 1 == (int)key.GetValue("HighlightMatchingBracketsAfter", 1) ? BracketMatchingStyle.After : BracketMatchingStyle.Before;
+					_editorSettings.AllowCaretBeyondEOL = 1 == (int)key.GetValue("EnableVirtualSpace", 0);
+					_editorSettings.ShowLineNumbers = 1 == (int)key.GetValue("ShowLineNumbers", 1);
+					_editorSettings.TabIndent = (int)key.GetValue("TabSize", 4);
+					var f = (string)key.GetValue("Font", "Lucida Console");
+					var fs = (string)key.GetValue("FontSize", "10");
+					_editorSettings.Font = new Font(f, float.Parse(fs));
+				}
+			}
+			finally
+			{
+				if (null != key)
+					key.Close();
+				key = null;
+			}
+		}
 		private void menuShowSpaces_Click(object sender, EventArgs e)
 		{
 			TextEditorControl editor = ActiveEditor;
@@ -1161,9 +1218,9 @@ namespace Pck
 		{
 
 			cToolStripMenuItem.Checked = false;
-			vBToolStripMenuItem.Checked = true;
+			vBToolStripMenuItem.Checked = true;	
 		}
-
+		
 		private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
 		{
 			var files = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Recent));

@@ -60,6 +60,13 @@ namespace Pck
 			using (var key = root.CreateSubKey(path))
 				key.SetValue(null, "xbnffile");
 
+			path = @"Software\Classes\pckfile\shell\command\open";
+			using (var key = root.CreateSubKey(path))
+				key.SetValue(null, string.Concat("\"", _path, "\" \"%1\""));
+			path = @"Software\Classes\.pck";
+			using (var key = root.CreateSubKey(path))
+				key.SetValue(null, "pckfile");
+
 
 		}
 		public static void Uninstall(bool currentUserOnly=true) {
@@ -70,6 +77,10 @@ namespace Pck
 			root.DeleteSubKeyTree(path,false);
 			path = @"Software\Classes\.xbnf";
 			root.DeleteSubKeyTree(path,false);
+			path = @"Software\Classes\pckfile";
+			root.DeleteSubKeyTree(path, false);
+			path = @"Software\Classes\.pck";
+			root.DeleteSubKeyTree(path, false);
 		}
 		public static bool IsInstalled {
 			get {
