@@ -13,7 +13,7 @@
 		static readonly string _ExeName = Path.GetFileName(Assembly.GetExecutingAssembly().GetModules()[0].Name);
 		const int _MaxMRU = 10;
 		List<string> _paths;
-		[DllImport("shell32.dll", CharSet = CharSet.Ansi)]
+		[DllImport("shell32.dll", CharSet = CharSet.Auto)]
 		private static extern void
 			SHAddToRecentDocs(int flag, string path);
 		public Mru()

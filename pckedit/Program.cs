@@ -36,6 +36,7 @@ namespace Pck
 						return;
 				}
 			}
+			
 			if (!IsInstalled)
 				Install();
 			Application.EnableVisualStyles();
