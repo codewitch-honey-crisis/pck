@@ -21,12 +21,16 @@ namespace Pck
 	/// ICSharpCode.TextEditor.TextEditorControl.</summary>
 	public partial class Main : Form
 	{
+		Mru _mru;
 		public Main()
 		{
 			InitializeComponent();
 			var smp = new FileSyntaxModeProvider(".");
 			HighlightingManager.Manager.AddSyntaxModeFileProvider(smp);
 			_UpdateMenuContext();
+			_mru = new Mru();
+			_mru.Load();
+			_UpdateMenuMru();
 		}
 
 		#region Code related to File menu
@@ -76,15 +80,9 @@ namespace Pck
 				// Try to open chosen file
 				OpenFiles(openFileDialog.FileNames);
 		}
-		static void _AddToRecentlyUsedDocs(string path)
-		{
-			SHAddToRecentDocs(2, path);
-		}
+		
 
-		[DllImport("shell32.dll", CharSet = CharSet.Ansi)]
-		private static extern void
-			SHAddToRecentDocs(int flag, string path);
-
+		
 		public void OpenFiles(string[] fns)
 		{
 			// Close default untitled document if it is still empty
@@ -102,7 +100,8 @@ namespace Pck
 					// Modified flag is set during loading because the document 
 					// "changes" (from nothing to something). So, clear it again.
 					SetModifiedFlag(editor, false);
-					_AddToRecentlyUsedDocs(fn);
+					_mru.Add(fn);
+					_UpdateMenuMru();
 				}
 				catch (Exception ex)
 				{
@@ -240,7 +239,8 @@ namespace Pck
 				try {
 					editor.SaveFile(n);
 					SetModifiedFlag(editor, false);
-					_AddToRecentlyUsedDocs(n);
+					_mru.Add(n);
+					_UpdateMenuMru();
 					return true;
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, ex.GetType().Name);
@@ -313,7 +313,8 @@ namespace Pck
 					// automatically, so do it manually.
 					editor.Document.HighlightingStrategy =
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile(editor.FileName);
-					_AddToRecentlyUsedDocs(editor.FileName);
+					_mru.Add(editor.FileName);
+					_UpdateMenuMru();
 					return true;
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, ex.GetType().Name);
@@ -561,6 +562,8 @@ namespace Pck
 							e.Cancel = true;
 				}
 			}
+			if(!e.Cancel)
+				_mru.Save();
 		}
 
 		/// <summary>Returns a list of all editor controls</summary>
@@ -631,6 +634,52 @@ namespace Pck
 		{
 			_UpdateMenuContext();
 		}
+		void _UpdateMenuMru()
+		{
+			if (null == _mru)
+				return;
+			foreach(var f in fileToolStripMenuItem.DropDownItems.ToArray())
+			{
+				var ts = f as ToolStripMenuItem;
+				if(null!=ts)
+				{
+					var s = ts.Tag as string;
+					if(!string.IsNullOrEmpty(s) && s.StartsWith("MRU:"))
+						fileToolStripMenuItem.DropDownItems.Remove(ts);
+				} else
+				{
+					var tsp = f as ToolStripSeparator;
+					if (null != tsp && Equals("MRU", tsp.Tag))
+						fileToolStripMenuItem.DropDownItems.Remove(tsp);
+				}
+			}
+			if(0<_mru.Count)
+			{
+				var sep = new ToolStripSeparator();
+				sep.Tag = "MRU";
+				fileToolStripMenuItem.DropDownItems.Add(sep);
+				foreach(var filepath in _mru)
+				{
+					var item = new ToolStripMenuItem();
+					item.Tag = string.Concat("MRU:",filepath);
+					item.Text = _ShortenPath(filepath,30);
+					item.Click += new EventHandler(delegate {
+						OpenFiles(new string[] { (item.Tag as string).Substring(4) });
+					});
+					fileToolStripMenuItem.DropDownItems.Add(item);
+				}
+			}
+		}
+		[DllImport("shlwapi.dll", CharSet = CharSet.Auto)]
+		static extern bool PathCompactPathEx([Out] StringBuilder pszOut, string szPath, int cchMax, int dwFlags);
+
+		static string _ShortenPath(string path, int length)
+		{
+			StringBuilder sb = new StringBuilder(521);
+			PathCompactPathEx(sb, path, length, 0);
+			return sb.ToString();
+		}
+
 		void _UpdateMenuContext()
 		{
 			
