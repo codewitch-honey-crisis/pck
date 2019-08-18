@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -9,11 +7,7 @@ using System.IO;
 using System.Linq;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
-using System.CodeDom.Compiler;
-using Microsoft.CSharp;
-using Microsoft.VisualBasic;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
 using Microsoft.Win32;
 using System.Reflection;
 
@@ -50,7 +44,7 @@ namespace Pck
 		{
 			var tab = new TabPage(title);
 			var editor = new TextEditorControl();
-			editor.Dock = System.Windows.Forms.DockStyle.Fill;
+			editor.Dock = DockStyle.Fill;
 			editor.IsReadOnly = false;
 			editor.Document.DocumentChanged += 
 				new DocumentEventHandler((sender, e) => { SetModifiedFlag(editor, true); });
@@ -60,7 +54,7 @@ namespace Pck
 			// work.
 			tab.Enter +=
 				new EventHandler((sender, e) => { 
-					var page = ((TabPage)sender);
+					var page = (TabPage)sender;
 					page.BeginInvoke(new Action<TabPage>(p => p.Controls[0].Focus()), page);
 				});
 			tab.Controls.Add(editor);
@@ -745,6 +739,7 @@ namespace Pck
 				menuFileSave.Enabled = false;
 				menuFileSaveAs.Enabled = false;
 				buildToolStripMenuItem.Enabled = false;
+				testToolStripMenuItem.Enabled = false;
 				menuFileClose.Enabled = false;
 				editToolStripMenuItem.Enabled = false;
 				foreach (var item in buildToolStripMenuItem.DropDownItems)
@@ -753,12 +748,19 @@ namespace Pck
 					if(null!=tsi)
 						tsi.Enabled	= false;
 				}
+				foreach (var item in testToolStripMenuItem.DropDownItems)
+				{
+					var tsi = item as ToolStripMenuItem;
+					if (null != tsi)
+						tsi.Enabled = false;
+				}
 				return;
 			} else
 			{
 				menuFileSave.Enabled = true;
 				menuFileSaveAs.Enabled = true;
 				buildToolStripMenuItem.Enabled = true;
+				testToolStripMenuItem.Enabled = true;
 				menuFileClose.Enabled = true;
 				editToolStripMenuItem.Enabled = true;
 			}
@@ -773,6 +775,12 @@ namespace Pck
 							tsi.Enabled = true;
 					}
 					createPCKSpecToolStripMenuItem.Enabled = false;
+					foreach (var item in testToolStripMenuItem.DropDownItems)
+					{
+						var tsi = item as ToolStripMenuItem;
+						if (null != tsi)
+							tsi.Enabled = true;
+					}
 					break;
 
 				case ".xbnf":
@@ -782,7 +790,14 @@ namespace Pck
 						if(null!=tsi)
 							tsi.Enabled = true;
 					}
+					foreach (var item in testToolStripMenuItem.DropDownItems)
+					{
+						var tsi = item as ToolStripMenuItem;
+						if (null != tsi)
+							tsi.Enabled = true;
+					}
 					break;
+
 				default:
 					buildToolStripMenuItem.Enabled = false;
 					break;
@@ -1223,11 +1238,121 @@ namespace Pck
 		
 		private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
 		{
-			var files = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Recent));
-			foreach (var file in files)
+			
+		}
+
+		private void lL1ParserToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var name = _GetFilename(fileTabs.SelectedTab);
+			var ext = Path.GetExtension(name).ToLowerInvariant();
+			name = Path.GetFileNameWithoutExtension(name);
+			var input = ActiveEditor.Text;
+			var prog = new ProgressForm();
+			prog.Show(this);
+			var sb = new StringBuilder();
+			var hasErrors = false;
+			messages.Items.Clear();
+			switch (ext)
 			{
-				Debug.WriteLine(Path.GetFileNameWithoutExtension(file));
+				case ".xbnf":
+					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
+					goto case ".pck";
+				case ".pck":
+					var cfg = CfgDocument.Parse(input);
+					var lex = LexDocument.Parse(input);
+					foreach (var msg in cfg.TryValidateLL1())
+					{
+						if (CfgErrorLevel.Error == msg.ErrorLevel)
+							hasErrors = true;
+						var n = _GetFilename(fileTabs.SelectedTab);
+						_AddMessage(msg, (".pck" == ext) ? n : "");
+					}
+					if (!hasErrors)
+					{
+						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+						{
+							if (CfgErrorLevel.Error == msg.ErrorLevel)
+								hasErrors = true;
+							var n = _GetFilename(fileTabs.SelectedTab);
+							_AddMessage(msg, (".pck" == ext) ? n : "");
+						}
+					}
+					if (!hasErrors)
+					{
+						var test = new Test();
+						test.Text = string.Concat(test.Text, " - ", _GetFilename(fileTabs.SelectedTab));
+						var tokenizer = lex.ToTokenizer(test.Input, cfg.EnumSymbols(), new _FAProgress(prog));
+						LL1Parser parser;
+						foreach (var msg in cfg.TryToLL1Parser(out parser, tokenizer, new _LL1Progress(prog)))
+						{
+							if (CfgErrorLevel.Error == msg.ErrorLevel)
+								hasErrors = true;
+							var n = _GetFilename(fileTabs.SelectedTab);
+							_AddMessage(msg, (".pck" == ext) ? n : "");
+						}
+						if (!hasErrors)
+						{
+							test.SetParser(parser);
+							test.Show(this);
+						}
+						else test.Close();
+					}
+
+					break;
 			}
+			prog.Close();
+		}
+
+		private void lalr1ParserToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var name = _GetFilename(fileTabs.SelectedTab);
+			var ext = Path.GetExtension(name).ToLowerInvariant();
+			name = Path.GetFileNameWithoutExtension(name);
+			var input = ActiveEditor.Text;
+			var prog = new ProgressForm();
+			prog.Show(this);
+			var sb = new StringBuilder();
+			var hasErrors = false;
+			messages.Items.Clear();
+			switch (ext)
+			{
+				case ".xbnf":
+					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
+					goto case ".pck";
+				case ".pck":
+					var cfg = CfgDocument.Parse(input);
+					var lex = LexDocument.Parse(input);
+					foreach (var msg in cfg.TryValidateLalr1())
+					{
+						if (CfgErrorLevel.Error == msg.ErrorLevel)
+							hasErrors = true;
+						var n = _GetFilename(fileTabs.SelectedTab);
+						_AddMessage(msg, (".pck" == ext) ? n : "");
+					}
+					if (!hasErrors)
+					{
+						var test = new Test();
+						test.Text = string.Concat(test.Text, " - ", _GetFilename(fileTabs.SelectedTab));
+						var tokenizer = lex.ToTokenizer(test.Input, cfg.EnumSymbols(), new _FAProgress(prog));
+						Lalr1Parser parser;
+						foreach (var msg in cfg.TryToLalr1Parser(out parser, tokenizer, new _Lalr1Progress(prog)))
+						{
+							if (CfgErrorLevel.Error == msg.ErrorLevel)
+								hasErrors = true;
+							var n = _GetFilename(fileTabs.SelectedTab);
+							_AddMessage(msg, (".pck" == ext) ? n : "");
+						}
+						if (!hasErrors)
+						{
+							test.SetParser(parser);
+							test.Show(this);
+						}
+						else test.Close();
+					}
+
+					break;
+			}
+			prog.Close();
 		}
 	}
 	#region _FAProgress

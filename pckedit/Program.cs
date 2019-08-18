@@ -24,13 +24,13 @@ namespace Pck
 				{
 					case "/install":
 						var currentUser = true;
-						if (1 < args.Length && args[1].ToLowerInvariant() == "all")
+						if (1 < args.Length && "all"==args[1].ToLowerInvariant())
 							currentUser = false;
 						Install(currentUser);
 						return;
 					case "/uninstall":
 						currentUser = true;
-						if (1 < args.Length && args[1].ToLowerInvariant() == "all")
+						if (1 < args.Length && "all"==args[1].ToLowerInvariant() )
 							currentUser = false;
 						Uninstall(currentUser);
 						return;

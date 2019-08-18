@@ -204,6 +204,8 @@ namespace Pck
 			}
 			else if (LRNodeType.EndDocument == _nodeType)
 				return false;
+			else if ("#EOS" == _tokenEnum.Current.Symbol && LRNodeType.Error == _nodeType)
+				return false;
 			if (LRNodeType.Error != _nodeType)
 			{
 				if (!ShowHidden)
@@ -284,6 +286,7 @@ namespace Pck
 			if (null == _tokenEnum) throw new ObjectDisposedException(GetType().Name);
 			_tokenEnum.Reset();
 			_stack.Clear();
+			_nodeType = LRNodeType.Initial;
 		}
 		public override void Restart(IEnumerable<Token> tokenizer)
 		{

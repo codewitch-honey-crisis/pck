@@ -62,6 +62,9 @@ namespace Pck
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.createPCKSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createFactoredPCKSpecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lL1ParserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lalr1ParserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuSplitTextArea = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -100,6 +103,7 @@ namespace Pck
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.buildToolStripMenuItem,
+            this.testToolStripMenuItem,
             this.optionsToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
@@ -130,7 +134,7 @@ namespace Pck
             this.pckFileToolStripMenuItem});
 			this.menuFileNew.Name = "menuFileNew";
 			this.menuFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.menuFileNew.Size = new System.Drawing.Size(216, 26);
+			this.menuFileNew.Size = new System.Drawing.Size(182, 26);
 			this.menuFileNew.Text = "&New";
 			this.menuFileNew.Click += new System.EventHandler(this.menuFileNew_Click);
 			// 
@@ -152,7 +156,7 @@ namespace Pck
 			// 
 			this.menuFileOpen.Name = "menuFileOpen";
 			this.menuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.menuFileOpen.Size = new System.Drawing.Size(216, 26);
+			this.menuFileOpen.Size = new System.Drawing.Size(182, 26);
 			this.menuFileOpen.Text = "&Open...";
 			this.menuFileOpen.Click += new System.EventHandler(this.menuFileOpen_Click);
 			// 
@@ -160,14 +164,14 @@ namespace Pck
 			// 
 			this.menuFileSave.Name = "menuFileSave";
 			this.menuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.menuFileSave.Size = new System.Drawing.Size(216, 26);
+			this.menuFileSave.Size = new System.Drawing.Size(182, 26);
 			this.menuFileSave.Text = "&Save";
 			this.menuFileSave.Click += new System.EventHandler(this.menuFileSave_Click);
 			// 
 			// menuFileSaveAs
 			// 
 			this.menuFileSaveAs.Name = "menuFileSaveAs";
-			this.menuFileSaveAs.Size = new System.Drawing.Size(216, 26);
+			this.menuFileSaveAs.Size = new System.Drawing.Size(182, 26);
 			this.menuFileSaveAs.Text = "Save as...";
 			this.menuFileSaveAs.Click += new System.EventHandler(this.menuFileSaveAs_Click);
 			// 
@@ -175,19 +179,19 @@ namespace Pck
 			// 
 			this.menuFileClose.Name = "menuFileClose";
 			this.menuFileClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
-			this.menuFileClose.Size = new System.Drawing.Size(216, 26);
+			this.menuFileClose.Size = new System.Drawing.Size(182, 26);
 			this.menuFileClose.Text = "&Close";
 			this.menuFileClose.Click += new System.EventHandler(this.menuFileClose_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(179, 6);
 			// 
 			// menuFileExit
 			// 
 			this.menuFileExit.Name = "menuFileExit";
-			this.menuFileExit.Size = new System.Drawing.Size(216, 26);
+			this.menuFileExit.Size = new System.Drawing.Size(182, 26);
 			this.menuFileExit.Text = "E&xit";
 			this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
 			// 
@@ -368,6 +372,29 @@ namespace Pck
 			this.createFactoredPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
 			this.createFactoredPCKSpecToolStripMenuItem.Text = "&Factored PCK spec";
 			this.createFactoredPCKSpecToolStripMenuItem.Click += new System.EventHandler(this.createFactoredPCKSpecToolStripMenuItem_Click);
+			// 
+			// testToolStripMenuItem
+			// 
+			this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lL1ParserToolStripMenuItem,
+            this.lalr1ParserToolStripMenuItem});
+			this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+			this.testToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
+			this.testToolStripMenuItem.Text = "&Test";
+			// 
+			// lL1ParserToolStripMenuItem
+			// 
+			this.lL1ParserToolStripMenuItem.Name = "lL1ParserToolStripMenuItem";
+			this.lL1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.lL1ParserToolStripMenuItem.Text = "&LL(1) Parser...";
+			this.lL1ParserToolStripMenuItem.Click += new System.EventHandler(this.lL1ParserToolStripMenuItem_Click);
+			// 
+			// lalr1ParserToolStripMenuItem
+			// 
+			this.lalr1ParserToolStripMenuItem.Name = "lalr1ParserToolStripMenuItem";
+			this.lalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.lalr1ParserToolStripMenuItem.Text = "Lal&r(1) Parser...";
+			this.lalr1ParserToolStripMenuItem.Click += new System.EventHandler(this.lalr1ParserToolStripMenuItem_Click);
 			// 
 			// optionsToolStripMenuItem
 			// 
@@ -663,6 +690,9 @@ namespace Pck
 		private System.Windows.Forms.ToolStripMenuItem fATokenizerLL1ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
 		private System.Windows.Forms.ImageList imageList1;
+		private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem lL1ParserToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem lalr1ParserToolStripMenuItem;
 	}
 }
 

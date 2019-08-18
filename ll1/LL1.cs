@@ -6,9 +6,17 @@ namespace Pck
 {
 	public static class LL1
 	{
-		public static LL1Parser ToLL1Parser(this CfgDocument cfg,IEnumerable<Token> tokenizer = null)
+		public static LL1Parser ToLL1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null, IProgress<CfgLL1Progress> progress = null)
 		{
-			var parseTable = cfg.ToLL1ParseTable();
+			LL1Parser parser;
+			var res = TryToLL1Parser(cfg, out parser, tokenizer, progress);
+			CfgException.ThrowIfErrors(res);
+			return parser;
+		}
+		public static IList<CfgMessage> TryToLL1Parser(this CfgDocument cfg,out LL1Parser parser,IEnumerable<Token> tokenizer = null,IProgress<CfgLL1Progress> progress=null)
+		{
+			CfgLL1ParseTable parseTable;
+			var result = cfg.TryToLL1ParseTable(progress,out parseTable);
 			var syms = new List<string>();
 			cfg.FillSymbols(syms);
 			var nodeFlags = new int[syms.Count];
@@ -50,7 +58,8 @@ namespace Pck
 			var ss = cfg.GetIdOfSymbol(cfg.StartSymbol);
 			var ntc = cfg.FillNonTerminals().Count;
 			var initCfg = new int[] { ss, ntc};
-			return new LL1TableParser(parseTable.ToArray(syms), initCfg, syms.ToArray(), nodeFlags, substitutions,attrSets, tokenizer);
+			parser =new LL1TableParser(parseTable.ToArray(syms), initCfg, syms.ToArray(), nodeFlags, substitutions,attrSets, tokenizer);
+			return result;
 
 		}
 		public static CfgLL1ParseTable ToLL1ParseTable(this CfgDocument cfg, IProgress<CfgLL1Progress> progress=null)

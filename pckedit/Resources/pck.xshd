@@ -51,7 +51,7 @@ Version 1.0
       </Span>
 
       <MarkPrevious bold = "true" italic = "false" color = "#000060" markmarker="false">-</MarkPrevious>
-      <MarkPrevious bold = "true" italic = "false" color = "#000040" markmarker="false">=</MarkPrevious>
+      <MarkPrevious bold = "true" italic = "false" color = "#803000" markmarker="false">=</MarkPrevious>
       <MarkPrevious bold = "true" italic = "false" color = "#803080" markmarker="false">:</MarkPrevious>
       <KeyWords color="#000040">
         <Key word="start"/>

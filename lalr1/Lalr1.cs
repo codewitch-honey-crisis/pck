@@ -8,10 +8,17 @@ namespace Pck
 	using Lrfa = FA<string, ICollection<Lalr1.LRItem>>;
 	public static class Lalr1
 	{
-
-		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null,IProgress<CfgLalr1Progress> progress=null)
+		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg,IEnumerable<Token> tokenizer,IProgress<CfgLalr1Progress> progress=null)
 		{
-			var parseTable = ToLalr1ParseTable(cfg,progress);
+			Lalr1Parser parser;
+			var res = TryToLalr1Parser(cfg, out parser,tokenizer,progress);
+			CfgException.ThrowIfErrors(res);
+			return parser;
+		}
+		public static IList<CfgMessage> TryToLalr1Parser(this CfgDocument cfg, out Lalr1Parser parser,IEnumerable<Token> tokenizer = null,IProgress<CfgLalr1Progress> progress=null)
+		{
+			CfgLalr1ParseTable parseTable;
+			var result = TryToLalr1ParseTable(cfg, progress, out parseTable);
 			var syms = new List<string>();
 			cfg.FillSymbols(syms);
 			var nodeFlags = new int[syms.Count];
@@ -52,7 +59,8 @@ namespace Pck
 			}
 			var ss = cfg.GetIdOfSymbol(cfg.StartSymbol);
 			var ntc = cfg.FillNonTerminals().Count;
-			return new Lalr1TableParser(parseTable.ToArray(syms), syms.ToArray(), nodeFlags, substitutions, attrSets, tokenizer);
+			parser = new Lalr1TableParser(parseTable.ToArray(syms), syms.ToArray(), nodeFlags, substitutions, attrSets, tokenizer);
+			return result;
 
 		}
 		public static CfgLalr1ParseTable ToLalr1ParseTable(this CfgDocument cfg,IProgress<CfgLalr1Progress> progress=null)
