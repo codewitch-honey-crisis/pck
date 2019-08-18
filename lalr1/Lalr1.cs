@@ -22,7 +22,7 @@ namespace Pck
 			var syms = new List<string>();
 			cfg.FillSymbols(syms);
 			var nodeFlags = new int[syms.Count];
-			for (var i = 0; i < nodeFlags.Length; ++i)
+			for (var i = 0; i < nodeFlags.Length; i++)
 			{
 				var o = cfg.GetAttribute(syms[i], "hidden", false);
 				if (o is bool && (bool)o)

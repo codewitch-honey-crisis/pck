@@ -91,12 +91,16 @@ namespace Pck
 			{
 				_lalr1Parser.Restart();
 				_lalr1Parser.ShowHidden = showHidden.Checked;
+				var opt = pt;
 				while (LRNodeType.EndDocument != _lalr1Parser.NodeType)
 				{
 					pt = _lalr1Parser.ParseReductions(trimTree.Checked, transformTree.Checked);
-					if (null == pt.Value)
+					if (null==pt || null == pt.Value)
 						break;
+					opt = pt;
 				}
+				if (null == pt)
+					pt = opt;
 			}
 			parseTree.Nodes.Clear();
 			if(null!=pt)

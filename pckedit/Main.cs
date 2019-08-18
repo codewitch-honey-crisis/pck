@@ -1236,11 +1236,7 @@ namespace Pck
 			vBToolStripMenuItem.Checked = true;	
 		}
 		
-		private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-		{
-			
-		}
-
+	
 		private void lL1ParserToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var name = _GetFilename(fileTabs.SelectedTab);

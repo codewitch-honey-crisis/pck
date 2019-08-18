@@ -90,6 +90,8 @@ namespace Pck
 							{
 								var pc = rs.Pop();
 								_AddChildren(pc, transform, p.Children);
+								if ("#ERROR" == pc.Symbol)
+									break;
 								// don't count hidden terminals
 								if (pc.IsHidden)
 									--i;
@@ -109,10 +111,11 @@ namespace Pck
 						break;
 				}
 			}
+			if (0 == rs.Count)
+				return null;
 			var result = rs.Pop();
-			while (0 < rs.Count)
+			while ("#ERROR"!=result.Symbol && 0 < rs.Count)
 				_AddChildren(rs.Pop(), transform, result.Children);
-
 			return result;
 		}
 		void _AddChildren(ParseNode pc, bool transform, IList<ParseNode> result)

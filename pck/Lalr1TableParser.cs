@@ -195,6 +195,11 @@ namespace Pck
 			}
 			var entry = _parseTable[_stack.Peek()];
 			//(int RuleOrStateId, int Left, int[] Right) trns;
+			if(_errorId==_tokenEnum.Current.SymbolId)
+			{
+				_Panic();
+				return true;
+			}
 			int[] trns = entry[_tokenEnum.Current.SymbolId];
 			if (null==trns)
 			{
@@ -280,7 +285,7 @@ namespace Pck
 			_errorToken.Column = _tokenEnum.Current.Column;
 			_errorToken.Position = _tokenEnum.Current.Position;
 			var s = _tokenEnum.Current.SymbolId;
-			if (null!=(e=d[s]) && _eosId != s)
+			if (_errorId!=s && null!=(e=d[s]) && _eosId != s)
 			{
 				_errorToken.Value += _tokenEnum.Current.Value;
 				while (_tokenEnum.MoveNext() && _eosId != (s = _tokenEnum.Current.SymbolId))
@@ -288,6 +293,10 @@ namespace Pck
 						_errorToken.Value += _tokenEnum.Current.Value;
 					else
 						break;
+			} else 
+			{
+				_errorToken.Value += _tokenEnum.Current.Value;
+				_tokenEnum.MoveNext();
 			}
 		}
 
