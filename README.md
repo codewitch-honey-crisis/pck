@@ -219,6 +219,18 @@ That tells the parser that `json` is the start production. If it is not specifie
 `object | array` tells us the `json` production is derived as an object or array.
 The `object` production contains several literals and a reference to `fields`
 
+### Expressions
+
+`( )` parentheses allow you to create subexpressions like `foo (bar|baz)`
+`[ ]` optional expressions allow the subexpression to occur zero or once
+`{ }` this repeat construct repeats a subexpression zero or more times
+`{ }+` this repeat construct repeats a subexpression one or more times
+`|` this alternation construct derives any one of the subexpressions
+
+Concatenation is implicit, separated by whitespace
+
+### Terminals
+
 The terminals are all defined at the bottom but they can be anywhere in the document. XBNF considers any production that does not reference another production to be a terminal. This is similar to how ANTLR distinguishes the terminals in its grammar. 
 
 Regular expressions are between `'` single quotes and literal expressions are between '"' quotes. You may declare a terminal by using XBNF constructs or by using regular expressions. The regular expressions follow a posix + std extensions paradigm but don't currently support all of posix. They support most of it. If a posix expression doesn't work, consider it a bug.
