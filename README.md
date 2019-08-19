@@ -221,13 +221,13 @@ The `object` production contains several literals and a reference to `fields`
 
 ### Expressions
 
-`( )` parentheses allow you to create subexpressions like `foo (bar|baz)`
-`[ ]` optional expressions allow the subexpression to occur zero or once
-`{ }` this repeat construct repeats a subexpression zero or more times
-`{ }+` this repeat construct repeats a subexpression one or more times
-`|` this alternation construct derives any one of the subexpressions
+* `( )` parentheses allow you to create subexpressions like `foo (bar|baz)`
+* `[ ]` optional expressions allow the subexpression to occur zero or once
+* `{ }` this repeat construct repeats a subexpression zero or more times
+* `{ }+` this repeat construct repeats a subexpression one or more times
+* `|` this alternation construct derives any one of the subexpressions
 
-Concatenation is implicit, separated by whitespace
+* Concatenation is implicit, separated by whitespace
 
 ### Terminals
 
