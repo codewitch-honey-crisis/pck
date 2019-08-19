@@ -177,7 +177,7 @@ There's an api for building additional xlt transformations. They're relatively e
 
 The Gold lexer transformations won't happen until I can implement arden's theorem in c# (any help?)
 
-##The XBNF attributed grammar format
+## The XBNF attributed grammar format
 
 The XBNF format is designed to be easy to learn if you know a little about composing grammars.
 
@@ -223,7 +223,7 @@ The terminals are all defined at the bottom but they can be anywhere in the docu
 
 Regular expressions are between `'` single quotes and literal expressions are between '"' quotes. You may declare a terminal by using XBNF constructs or by using regular expressions. The regular expressions follow a posix + std extensions paradigm but don't currently support all of posix. They support most of it. If a posix expression doesn't work, consider it a bug.
 
-###Attributes
+### Attributes
 
 
 The `collapsed` element tells Pck that this node should not appear in the parse tree. Instead its children will be propagated to its parent. This is helpful if the grammar needs a nonterminal in order to resolve a construct, but it's not useful to the consumer of the parse tree. During LL(1) factoring, generated rules must be made, and their associated non-terminals are typically collapsed. Above we've used it to significantly trim the parse tree of nodes we won't need.
