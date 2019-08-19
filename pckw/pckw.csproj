@@ -49,6 +49,9 @@
     <Compile Include="..\common\CollectionUtility.cs">
       <Link>CollectionUtility.cs</Link>
     </Compile>
+    <Compile Include="..\common\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\common\ListDictionary.cs">
       <Link>ListDictionary.cs</Link>
     </Compile>
