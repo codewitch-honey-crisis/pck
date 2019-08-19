@@ -238,7 +238,7 @@ Regular expressions are between `'` single quotes and literal expressions are be
 ### Attributes
 
 
-The `collapsed` element tells Pck that this node should not appear in the parse tree. Instead its children will be propagated to its parent. This is helpful if the grammar needs a nonterminal in order to resolve a construct, but it's not useful to the consumer of the parse tree. During LL(1) factoring, generated rules must be made, and their associated non-terminals are typically collapsed. Above we've used it to significantly trim the parse tree of nodes we won't need.
+The `collapsed` element tells Pck that this node should not appear in the parse tree. Instead its children will be propagated to its parent. This is helpful if the grammar needs a nonterminal or a terminal in order to resolve a construct, but it's not useful to the consumer of the parse tree. During LL(1) factoring, generated rules must be made, and their associated non-terminals are typically collapsed. Above we've used it to significantly trim the parse tree of nodes we won't need. Above we collapse unnecessary terminals like `:` in the JSON grammar since they don't help us define anything - they just help the parser recognize the input.
 
 The `hidden` element tells Pck that this terminal should be skipped. This is useful for things like comments and whitespace. Hidden terminals can be shown if the parser has `ShowHidden` set to true, if the presence or location of comments is neede during a parse for example.
 
