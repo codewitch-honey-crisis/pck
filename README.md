@@ -176,3 +176,62 @@ or you can pipe these operations. Like, turn an xbnf grammar into a parser:
 There's an api for building additional xlt transformations. They're relatively easy to implement, considering. Right now it's just lex and yacc, and partially Gold.
 
 The Gold lexer transformations won't happen until I can implement arden's theorem in c# (any help?)
+
+##The XBNF attributed grammar format
+
+The XBNF format is designed to be easy to learn if you know a little about composing grammars.
+
+The productions take the form of 
+
+`identifier [ < attributes > ] = expressions`
+
+So for example here's a simple "compliant enough" json grammar that's more than suitable for a tutorial
+
+```
+json<start>= object | array;
+object= "{" "}" | "{" fields "}";
+fields<collapsed>= field | field "," fields;
+field= string ":" value;
+array= "[" "]" | "[" values "]";
+values<collapsed>= value | value "," values;
+value= string | number | object | array | boolean | null;
+boolean= true|false;
+
+// terminals
+number= '\-?(0|[1-9][0-9]*)(\.[0-9]+)?([Ee][\+\-]?[0-9]+)?';
+// below: string is not compliant, should make sure the escapes are valid JSON escapes rather than accepting everything
+string = '"([^"\\]|\\.)*"';
+true="true";
+false="false";
+null="null";
+lbracket<collapsed>="[";
+rbracket<collapsed>="]";
+lbrace<collapsed>="{";
+rbrace<collapsed>="}";
+colon<collapsed>=":";
+comma<collapsed>=",";
+whitespace<hidden>='[ \t\r\n\f\v]+';
+```
+The first thing to note is the `json` production is marked with a start attribute. Since the value was not specified it is implicitly, `start=true`
+
+That tells the parser that `json` is the start production. If it is not specified the first non-terminal in the grammar will be used. Furthermore, this can cause a warning during generation since it's not a great idea to leave it implicit. Only the first occurance of `start` will be honored
+
+`object | array` tells us the `json` production is derived as an object or array.
+The `object` production contains several literals and a reference to `fields`
+
+The terminals are all defined at the bottom but they can be anywhere in the document. XBNF considers any production that does not reference another production to be a terminal. This is similar to how ANTLR distinguishes the terminals in its grammar. 
+
+Regular expressions are between `'` single quotes and literal expressions are between '"' quotes. You may declare a terminal by using XBNF constructs or by using regular expressions. The regular expressions follow a posix + std extensions paradigm but don't currently support all of posix. They support most of it. If a posix expression doesn't work, consider it a bug.
+
+###Attributes
+
+
+The `collapsed` element tells Pck that this node should not appear in the parse tree. Instead its children will be propagated to its parent. This is helpful if the grammar needs a nonterminal in order to resolve a construct, but it's not useful to the consumer of the parse tree. During LL(1) factoring, generated rules must be made, and their associated non-terminals are typically collapsed. Above we've used it to significantly trim the parse tree of nodes we won't need.
+
+The `hidden` element tells Pck that this terminal should be skipped. This is useful for things like comments and whitespace. Hidden terminals can be shown if the parser has `ShowHidden` set to true, if the presence or location of comments is neede during a parse for example.
+
+The `blockEnd` attribute is intended for terminals who have a multi character ending condition like C block comments, XML CDATA sections, and SGML/XML/HTML comments. If present the lexer will continue until the literal specified as the blockEnd is matched.
+
+The `terminal` attribute declares a production to be explicitly terminal. Such a production is considered terminal even it it references other productions. If it does, those other productions which will be included in their terminal form as though they were part of the original expression. This allows you to create composite terminals out of several terminal definitions.
+
+Other attributes can be applied, but they will be ignored. They can be retrieved however, during the parsing process, as the parser exposes them.
