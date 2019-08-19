@@ -238,12 +238,108 @@ Regular expressions are between `'` single quotes and literal expressions are be
 ### Attributes
 
 
-The `collapsed` element tells Pck that this node should not appear in the parse tree. Instead its children will be propagated to its parent. This is helpful if the grammar needs a nonterminal or a terminal in order to resolve a construct, but it's not useful to the consumer of the parse tree. During LL(1) factoring, generated rules must be made, and their associated non-terminals are typically collapsed. Above we've used it to significantly trim the parse tree of nodes we won't need. Above we collapse unnecessary terminals like `:` in the JSON grammar since they don't help us define anything - they just help the parser recognize the input.
+The `collapsed` element tells Pck that this node should not appear in the parse tree. Instead its children will be propagated to its parent. This is helpful if the grammar needs a nonterminal or a terminal in order to resolve a construct, but it's not useful to the consumer of the parse tree. During LL(1) factoring, generated rules must be made, and their associated non-terminals are typically collapsed. Above we've used it to significantly trim the parse tree of nodes we won't need including collapsing unnecessary terminals like `:` in the JSON grammar. This is because they don't help us define anything - they just help the parser recognize the input, so we can throw them out to make the parse tree smaller. The LL(1) parser can remove collapsed nodes during the underlying read if `ShowCollapsed` is set to `false`. This can significantly speed up parsing for large documents with lots of collapsed nodes. This performance feature is unavailable in the other parsers, but the parse trees they generate will have the collapsed nodes removed.
 
 The `hidden` element tells Pck that this terminal should be skipped. This is useful for things like comments and whitespace. Hidden terminals can be shown if the parser has `ShowHidden` set to true, if the presence or location of comments is neede during a parse for example.
 
-The `blockEnd` attribute is intended for terminals who have a multi character ending condition like C block comments, XML CDATA sections, and SGML/XML/HTML comments. If present the lexer will continue until the literal specified as the blockEnd is matched.
+The `blockEnd` attribute is intended for terminals who have a multi character ending condition like C block comments, XML CDATA sections, and SGML/XML/HTML comments. If present the lexer will continue until the literal specified as the `blockEnd` is matched.
 
 The `terminal` attribute declares a production to be explicitly terminal. Such a production is considered terminal even it it references other productions. If it does, those other productions which will be included in their terminal form as though they were part of the original expression. This allows you to create composite terminals out of several terminal definitions.
 
-Other attributes can be applied, but they will be ignored. They can be retrieved however, during the parsing process, as the parser exposes them.
+Other attributes can be applied, but they will be ignored. They can be retrieved however, during the parsing process using `GetAttribute`, as the parser exposes them.
+
+## Using the generated parsers.
+
+Consider the following simple expression grammar, expr.xbnf:
+```
+expr = expr "+" term | term;
+term= term "*" factor | factor;
+factor= "(" expr ")" | int;
+add="+";
+mul="*";
+lparen="(";
+rparen=")";
+int= '[0-9]+';
+```
+
+Generate a parser
+`pckw xlt expr.xbnf /transform xbnfToPck | pckw ll1factor | pckw ll1gen /class ExprParser /namespace Demo > ExprParser.cs`
+Generate a tokenizer
+`pckw xlt expr.xbnf /transform xbnfToPck | pckw ll1factor | pckw fagen /class ExprTokenizer /namespace Demo > ExprTokenizer.cs`
+
+What we just did is take the XBNF, turn it into a PCK spec, factor it, and then generate code from it (twice)
+We have to factor it for the tokenizer as well or the symbols in the parser and tokenizer won't match up so we do it both times.
+
+Now, create a new .NET console project, add a reference to **pck**, add the two newly generated files, and reference the `Demo` namespace in your `using` directives
+
+In the`Main()` function write
+```
+var parser = new ExprParser(new ExprTokenizer("3*(4+7)"));
+```
+This will get you a new parser and tokenizer over the expression `3*(4+7)`
+
+There are a couple of ways from here in which you can use the parser.
+
+If you want streaming access to the pre-transformed parse tree, you can call the parser's `Read()` method in a loop, very much like Microsoft's *XmlReader*:
+
+```
+while(parser.Read())
+{
+   switch(parser.NodeType)
+   {
+      case LLNodeType.Terminal:
+      case LRNodeType.Error:
+         Console.WriteLine("{0}: {1}",parser.Symbol,parser.Value);
+         break;
+      case LRNodeType.NonTerminal:
+         Console.WriteLine(parser.Symbol);
+         break;
+   }
+}
+```
+A lot of times that's not what you want though. You want a parse tree, and you want the collapsed nodes and such to be gone.
+
+So instead of the above, you can use
+```
+var tree = parser.ParseSubtree(); // pass true if you want the tree to be trimmed.
+// write an ascii tree
+Console.WriteLine(tree); // calls tree.ToString() 
+```
+`tree` and each of its nodes contains all of the information about the node at that position in the parse.
+
+Generating and using the LALR(1) parser is very similar:
+
+Generate a parser
+`pckw xlt expr.xbnf /transform xbnfToPck | pckw lalr1gen /class ExprParser /namespace Demo > ExprParser.cs`
+Generate a tokenizer
+`pckw xlt expr.xbnf /transform xbnfToPck | pckw fagen /class ExprTokenizer /namespace Demo > ExprTokenizer.cs`
+
+Note that we didn't factor the grammar since there is no need to do so with LALR(1)
+
+And now, *almost* like before:
+```
+while(parser.Read())
+{
+   switch(parser.NodeType)
+   {
+      case LRNodeType.Shift:
+      case LRNodeType.Error:
+         Console.WriteLine("{0}: {1}",parser.Symbol,parser.Value);
+         break;
+      case LRNodeType.Reduce:
+         Console.WriteLine(parser.Rule);
+         break;
+   }
+}
+```
+or
+```
+var tree = parser.ParseReductions(); // pass true if you want the tree to be trimmed.
+Console.WriteLine(tree);
+```
+
+## Using ParseContext for Handrolled parsers
+
+Please see this codeproject article:
+
+https://www.codeproject.com/Articles/5162847/ParseContext-2-0-Easier-Hand-Rolled-Parsers
