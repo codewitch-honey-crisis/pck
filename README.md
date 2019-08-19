@@ -10,12 +10,12 @@ PCK has tools to cover three major parsing paradigms:
 3. Hand written parsers, since these are so often useful in small doses. It would be extremely heavy handed to, for example, parse an integer using an entire context free grammar! 
 
 
-The runtime library required to use the generated parsers, called simply pck (pck.dll) is small drop in that provides support for generated LL(1) and LALR(1) parsers, as well as support for hand written parsers using the ParseContext class.
+The runtime library required to use the generated parsers, called simply **pck** (*pck.dll*) is a small drop library that provides support for generated LL(1) and LALR(1) parsers, as well as support for hand written parsers using the ParseContext class.
 
 
 The assorted tools that come with pck can be used for parser and lexer/tokenizer generation.
 
-It can generate FA based lexers/tokenizers and PDA based parsers on the LL(1) algorithm, with an eye toward supporting LL(1) conflict resolution in the future.
+It can generate FA based lexers/tokenizers and PDA based parsers on the LL(1) algorithm, with an eye toward supporting LL(1) conflict resolution in the future. It can generate LALR(1) parsers based on an LALR(1) via SLR(1) translation. It can easily be extended to support LR(0), perhaps LR(1) and SLR(1) down the road, if desired.
 
 By far, the simplest way to generate a parser on a windows OS is to use pckedit and create an XBNF grammar, then test or build the parser using the menus.
 
