@@ -17,7 +17,15 @@ The assorted tools that come with pck can be used for parser and lexer/tokenizer
 
 It can generate FA based lexers/tokenizers and PDA based parsers on the LL(1) algorithm, with an eye toward supporting LL(1) conflict resolution in the future. It can generate LALR(1) parsers based on an LALR(1) via SLR(1) translation. It can easily be extended to support LR(0), perhaps LR(1) and SLR(1) down the road, if desired.
 
-By far, the simplest way to generate a parser on a windows OS is to use pckedit and create an XBNF grammar, then test or build the parser using the menus.
+## Installing and updating
+Install simply by taking the binaries and putting them somewhere in your path, or just navigating to that folder whenever you want to use them. Note that **pckedit** will automatically register itself with .xbnf and .pck extensions, and with the shell on the first time it is run, so it doesn't need to be in the path. If you never want to use the commandline, you don't have to set up the paths.
+
+To keep them up to date, simply close all PCK programs, navigate to the folder where your binaries are - this is required regardless of your PATH variable, and then type `pckver /update`
+
+
+## Using the tools
+
+By far, the simplest way to generate a parser on a Windows OS is to use pckedit and create an XBNF grammar, then test or build the parser using the menus.
 
 pckedit is a windows application that acts as a multiple document container for XBNF, pck, and other files, with syntax highlighting. It has menus for code generation and for testing grammars, but otherwise works a lot like notepad++. The menus operate on the *current active document* so be mindful of that if your menus are grayed. For example, it won't let you turn a PCK spec file into another PCK spec file, nor will it let you build/generate code from anything other than an XBNF or PCK file. Below the documents is a list of warnings and errors for the last operation. The test menu allows you to test your grammars with LL(1) and LALR(1) parsers without generating code. Generation does not create files. Files must be saved explicitly in order to be stored, unlike visual studio, for example.
 
@@ -340,6 +348,14 @@ Console.WriteLine(tree);
 
 ## Using ParseContext for Handrolled parsers
 
-Please see this codeproject article:
+If you've ever tried to use `TextReader` or `IEnumerator<char>` to parse a document, you've probably run into these common frustrations: The enumerator doesn't have a way to check if you're at the end of the enumeration after-the-fact, and the text reader's `Peek()` function is unreliable on certain sources, like `NetworkStream`. Both of these limitations require extra bookkeeping to overcome, complicating the parsing code and distracting from the core responsibility - parsing some input!
+
+Another significant limitation is lack of lookahead. You can peek at the one character in front of you and that's it, typically, but sometimes, you just need to look ahead further to complete a parse.
+
+There's also nothing to help with error handling and reporting during a parse.
+
+`ParseContext` can help with all of this, plus has a number of useful helpers for skipping over whitespace and comments, parsing numbers and strings, etc.
+
+Please see this codeproject article for details.
 
 https://www.codeproject.com/Articles/5162847/ParseContext-2-0-Easier-Hand-Rolled-Parsers
