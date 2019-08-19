@@ -29,6 +29,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckver", "pckver\pckver.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckupdatebootstrapper", "pckupdatebootstrapper\pckupdatebootstrapper.csproj", "{B94E49B8-5A5E-4436-920F-2C59A6E64C90}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9F70D51-65E3-4FA0-98C8-5AAFE63D9D8A}"
+	ProjectSection(SolutionItems) = preProject
+		pckpkg.exe = pckpkg.exe
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
