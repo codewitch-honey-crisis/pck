@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lalr1", "lalr1\lalr1.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckedit", "pckedit\pckedit.csproj", "{3A9C7873-AA90-4BED-A95B-2AA06DC2C9D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckver", "pckver\pckver.csproj", "{EE4115DA-109E-4F6B-8464-0B98C8F57453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckupdatebootstrapper", "pckupdatebootstrapper\pckupdatebootstrapper.csproj", "{B94E49B8-5A5E-4436-920F-2C59A6E64C90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{3A9C7873-AA90-4BED-A95B-2AA06DC2C9D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A9C7873-AA90-4BED-A95B-2AA06DC2C9D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A9C7873-AA90-4BED-A95B-2AA06DC2C9D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE4115DA-109E-4F6B-8464-0B98C8F57453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE4115DA-109E-4F6B-8464-0B98C8F57453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE4115DA-109E-4F6B-8464-0B98C8F57453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE4115DA-109E-4F6B-8464-0B98C8F57453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B94E49B8-5A5E-4436-920F-2C59A6E64C90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B94E49B8-5A5E-4436-920F-2C59A6E64C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B94E49B8-5A5E-4436-920F-2C59A6E64C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B94E49B8-5A5E-4436-920F-2C59A6E64C90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
