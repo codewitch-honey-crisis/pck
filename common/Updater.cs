@@ -61,11 +61,11 @@ namespace Pck
 			string pattern =
 					string.Concat(
 						Regex.Escape(GitHubRepo), 
-						@"\/releases\/download\/refresh.v[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*\.zip");
+						@"\/releases\/download\/refresh\.v[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*\.zip");
 
 			Regex urlMatcher = new Regex(pattern, RegexOptions.CultureInvariant | RegexOptions.Compiled);
 			var result = new Dictionary<Version, Uri>();
-			WebRequest wrq = WebRequest.Create(string.Concat("https://github.com", GitHubRepo, "/releases/latest"));
+			WebRequest wrq = WebRequest.Create(string.Concat("https://github.com", GitHubRepo, "/releases"));
 			WebResponse wrs = null;
 			try
 			{
