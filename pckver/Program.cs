@@ -55,7 +55,6 @@ namespace Pck
 				case 1:
 					if("/updated"==args[0])
 					{
-						Console.Error.WriteLine("done!");
 						Updater.DeleteUpdaterFiles();
 						Console.Error.Write("Successfully changed version to Pck v");
 						Console.Error.WriteLine(Assembly.GetEntryAssembly().GetName().Version);

@@ -44,7 +44,7 @@ namespace Pck
 					Console.Error.WriteLine("done!");
 				}
 			}
-			Console.Error.Write("Cleaning up...");
+			Console.Error.WriteLine("Cleaning up...");
 			var psi = new ProcessStartInfo();
 			var args = new StringBuilder();
 			var delim = "";
@@ -57,6 +57,7 @@ namespace Pck
 			psi.FileName = exeName;
 			psi.Arguments = args.ToString();
 			var proc = Process.Start(psi);
+			
 		}
 		static string _Esc(string arg)
 		{
