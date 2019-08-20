@@ -46,6 +46,10 @@ namespace Pck
 					case LRNodeType.Shift:
 						p = new ParseNode();
 						p.SetLocation(Line, Column, Position);
+						// this will get the original nodes attributes
+						// in the case of a substitution. Still not sure
+						// if that's preferred or not.
+						p.AttributeSet = GetAttributeSet(SymbolId);
 						var s = Substitute;
 						if (null != s)
 						{
@@ -70,6 +74,8 @@ namespace Pck
 						{
 							var d = new List<ParseNode>();
 							p = new ParseNode();
+							p.AttributeSet = GetAttributeSet(SymbolId);
+
 							p.IsCollapsed = IsCollapsed;
 							s = Substitute;
 							if (null != s)

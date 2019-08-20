@@ -44,6 +44,10 @@ namespace Pck
 				return null;
 
 			var result = new ParseNode();
+			// will fetch the original node's attributes in the 
+			// case of a substitution. Not sure if that's desired
+			result.AttributeSet = GetAttributeSet(SymbolId);
+
 			result.IsHidden = IsHidden;
 			result.IsCollapsed = IsCollapsed;
 			var s = Substitute;

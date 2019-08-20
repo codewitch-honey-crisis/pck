@@ -40,7 +40,7 @@ namespace Pck
 		/// etc.) that all editor controls share.</summary>
 		ITextEditorProperties _editorSettings;
 
-		private TextEditorControl AddNewTextEditor(string title)
+		TextEditorControl _AddNewTextEditor(string title)
 		{
 			var tab = new TabPage(title);
 			var editor = new TextEditorControl();
@@ -68,6 +68,7 @@ namespace Pck
 				}
 			} else
 				editor.TextEditorProperties = _editorSettings;
+			editor.ContextMenuStrip = editorContextMenu;
 			fileTabs.SelectedTab = tab;
 			_UpdateMenuContext();
 			return editor;
@@ -93,7 +94,7 @@ namespace Pck
 			// Open file(s)
 			foreach (string fn in fns)
 			{
-				var editor = AddNewTextEditor(Path.GetFileName(fn));
+				var editor = _AddNewTextEditor(Path.GetFileName(fn));
 				try {
 					editor.LoadFile(fn);
 					// Modified flag is set during loading because the document 
@@ -675,7 +676,7 @@ namespace Pck
 
 		private void xbnfFileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var editor = AddNewTextEditor("Untitled.xbnf");
+			var editor = _AddNewTextEditor("Untitled.xbnf");
 			editor.Document.HighlightingStrategy =
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile("Untitled.xbnf");
 			_UpdateMenuContext();
@@ -806,7 +807,7 @@ namespace Pck
 		}
 		private void pckFileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var editor = AddNewTextEditor("Untitled.pck");
+			var editor = _AddNewTextEditor("Untitled.pck");
 			editor.Document.HighlightingStrategy =
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile("Untitled.pck");
 			_UpdateMenuContext();
@@ -834,7 +835,7 @@ namespace Pck
 			var sb = new StringBuilder();
 
 			XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
-			var editor = AddNewTextEditor(string.Concat(name,".pck"));
+			var editor = _AddNewTextEditor(string.Concat(name,".pck"));
 			name = _GetUniqueFilename(name);
 			editor.Document.HighlightingStrategy =
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile("Untitled.pck");
@@ -915,7 +916,7 @@ namespace Pck
 						input = string.Concat(cfg.ToString(), Environment.NewLine, lex.ToString());
 						name = string.Concat(name, ".pck");
 						name = _GetUniqueFilename(name);
-						var editor = AddNewTextEditor(name);
+						var editor = _AddNewTextEditor(name);
 						editor.Document.HighlightingStrategy =
 									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
 						editor.Text = input;
@@ -1004,7 +1005,7 @@ namespace Pck
 							LL1ParserCodeGenerator.WriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang,new _LL1Progress(prog), sw);
 						input = sb.ToString();
 						name = _GetUniqueFilename(name);
-						var editor = AddNewTextEditor(name);
+						var editor = _AddNewTextEditor(name);
 						editor.Document.HighlightingStrategy =
 									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
 						editor.Text = input;
@@ -1071,7 +1072,7 @@ namespace Pck
 						{
 							input = sb.ToString();
 							name = _GetUniqueFilename(name);
-							var editor = AddNewTextEditor(name);
+							var editor = _AddNewTextEditor(name);
 							editor.Document.HighlightingStrategy =
 										HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
 							editor.Text = input;
@@ -1119,7 +1120,7 @@ namespace Pck
 					input = sb.ToString();
 					name = _GetUniqueFilename(name);
 
-					var editor = AddNewTextEditor(name);
+					var editor = _AddNewTextEditor(name);
 					editor.Document.HighlightingStrategy =
 								HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
 					editor.Text = input;
@@ -1177,7 +1178,7 @@ namespace Pck
 							TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(), Path.GetFileNameWithoutExtension(name), null, lang,new _FAProgress(prog),  sw);
 						name = _GetUniqueFilename(name);
 						input = sb.ToString();
-						var editor = AddNewTextEditor(name);
+						var editor = _AddNewTextEditor(name);
 						editor.Document.HighlightingStrategy =
 									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
 						editor.Text = input;
@@ -1349,6 +1350,20 @@ namespace Pck
 					break;
 			}
 			prog.Close();
+		}
+
+		private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var ed = ActiveEditor;
+			if(null!=ed)
+				ed.Undo();
+		}
+
+		private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var ed = ActiveEditor;
+			if (null != ed)
+				ed.Redo();
 		}
 	}
 	#region _FAProgress

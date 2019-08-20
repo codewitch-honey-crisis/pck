@@ -41,6 +41,9 @@ namespace Pck
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.menuFileExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
 			this.menuEditCut = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuEditCopy = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuEditPaste = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +96,13 @@ namespace Pck
 			this.lineColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.splitter1 = new System.Windows.Forms.Splitter();
+			this.editorContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
+			this.editorContextMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -197,6 +206,9 @@ namespace Pck
 			// editToolStripMenuItem
 			// 
 			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoToolStripMenuItem,
+            this.redoToolStripMenuItem,
+            this.toolStripMenuItem3,
             this.menuEditCut,
             this.menuEditCopy,
             this.menuEditPaste,
@@ -211,8 +223,30 @@ namespace Pck
             this.menuGoToNextBookmark,
             this.menuGoToPrevBookmark});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+			this.editToolStripMenuItem.ShortcutKeyDisplayString = "";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
 			this.editToolStripMenuItem.Text = "&Edit";
+			// 
+			// undoToolStripMenuItem
+			// 
+			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+			this.undoToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+Z";
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(316, 26);
+			this.undoToolStripMenuItem.Text = "Undo";
+			this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+			// 
+			// redoToolStripMenuItem
+			// 
+			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+			this.redoToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+Y";
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(316, 26);
+			this.redoToolStripMenuItem.Text = "Redo";
+			this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem3
+			// 
+			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(313, 6);
 			// 
 			// menuEditCut
 			// 
@@ -241,6 +275,7 @@ namespace Pck
 			// menuEditDelete
 			// 
 			this.menuEditDelete.Name = "menuEditDelete";
+			this.menuEditDelete.ShortcutKeyDisplayString = "Del";
 			this.menuEditDelete.Size = new System.Drawing.Size(316, 26);
 			this.menuEditDelete.Text = "&Delete";
 			this.menuEditDelete.Click += new System.EventHandler(this.menuEditDelete_Click);
@@ -384,14 +419,14 @@ namespace Pck
 			// lL1ParserToolStripMenuItem
 			// 
 			this.lL1ParserToolStripMenuItem.Name = "lL1ParserToolStripMenuItem";
-			this.lL1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.lL1ParserToolStripMenuItem.Size = new System.Drawing.Size(178, 26);
 			this.lL1ParserToolStripMenuItem.Text = "&LL(1) Parser...";
 			this.lL1ParserToolStripMenuItem.Click += new System.EventHandler(this.lL1ParserToolStripMenuItem_Click);
 			// 
 			// lalr1ParserToolStripMenuItem
 			// 
 			this.lalr1ParserToolStripMenuItem.Name = "lalr1ParserToolStripMenuItem";
-			this.lalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+			this.lalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(178, 26);
 			this.lalr1ParserToolStripMenuItem.Text = "Lal&r(1) Parser...";
 			this.lalr1ParserToolStripMenuItem.Click += new System.EventHandler(this.lalr1ParserToolStripMenuItem_Click);
 			// 
@@ -601,6 +636,49 @@ namespace Pck
 			this.splitter1.TabIndex = 5;
 			this.splitter1.TabStop = false;
 			// 
+			// editorContextMenu
+			// 
+			this.editorContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+			this.editorContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.selectAllToolStripMenuItem});
+			this.editorContextMenu.Name = "editorContextMenu";
+			this.editorContextMenu.Size = new System.Drawing.Size(164, 100);
+			// 
+			// cutToolStripMenuItem
+			// 
+			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+			this.cutToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+X";
+			this.cutToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
+			this.cutToolStripMenuItem.Text = "Cu&t";
+			this.cutToolStripMenuItem.Click += new System.EventHandler(this.menuEditCut_Click);
+			// 
+			// copyToolStripMenuItem
+			// 
+			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+			this.copyToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
+			this.copyToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
+			this.copyToolStripMenuItem.Text = "&Copy";
+			this.copyToolStripMenuItem.Click += new System.EventHandler(this.menuEditCopy_Click);
+			// 
+			// pasteToolStripMenuItem
+			// 
+			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+			this.pasteToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+V";
+			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
+			this.pasteToolStripMenuItem.Text = "&Paste";
+			this.pasteToolStripMenuItem.Click += new System.EventHandler(this.menuEditPaste_Click);
+			// 
+			// selectAllToolStripMenuItem
+			// 
+			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+			this.selectAllToolStripMenuItem.ShortcutKeyDisplayString = "Del";
+			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
+			this.selectAllToolStripMenuItem.Text = "&Delete";
+			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.menuEditDelete_Click);
+			// 
 			// Main
 			// 
 			this.AllowDrop = true;
@@ -621,6 +699,7 @@ namespace Pck
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextEditorForm_DragEnter);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
+			this.editorContextMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -692,6 +771,14 @@ namespace Pck
 		private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lL1ParserToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lalr1ParserToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip editorContextMenu;
+		private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
 	}
 }
 

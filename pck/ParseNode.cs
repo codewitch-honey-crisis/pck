@@ -12,7 +12,19 @@ namespace Pck
 		int _line;
 		int _column;
 		long _position;
+		public KeyValuePair<string, object>[] AttributeSet { get; set; }
 
+		public object GetAttribute(string name,object @default=null)
+		{
+			var attrs = AttributeSet;
+			for(var i =0;i<attrs.Length;i++)
+			{
+				var attr = attrs[i];
+				if (attr.Key == name)
+					return attr.Value;
+			}
+			return @default;
+		}
 		/// <summary>
 		/// Gets every descendent of this node and itself
 		/// </summary>
