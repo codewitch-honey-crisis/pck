@@ -296,10 +296,10 @@ while(parser.Read())
    switch(parser.NodeType)
    {
       case LLNodeType.Terminal:
-      case LRNodeType.Error:
+      case LLNodeType.Error:
          Console.WriteLine("{0}: {1}",parser.Symbol,parser.Value);
          break;
-      case LRNodeType.NonTerminal:
+      case LLNodeType.NonTerminal:
          Console.WriteLine(parser.Symbol);
          break;
    }
