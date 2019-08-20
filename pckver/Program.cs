@@ -109,7 +109,7 @@ namespace Pck
 		static void _DoUpdate(Version c,Version v)
 		{
 			Console.Error.WriteLine("Version change from Pck v{0} to Pck v{1} in progress...",c,v);
-			Updater.Update(new string[] { "/updated" });
+			Updater.Update(v,new string[] { "/updated" });
 		}
 	}
 }
