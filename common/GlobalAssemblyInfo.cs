@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 [assembly: AssemblyCompany("codewitch honey crisis")]
-[assembly: AssemblyProduct("pckedit")]
-[assembly: AssemblyCopyright("Copyright ©  2019 by codewitch honey crisis")]
+[assembly: AssemblyProduct("Pck")]
+[assembly: AssemblyCopyright("Copyright © 2019 by codewitch honey crisis")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // Version information for an assembly consists of the following four values:
