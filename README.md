@@ -10,7 +10,7 @@ PCK has tools to cover three major parsing paradigms:
 3. Hand written parsers, since these are so often useful in small doses. It would be extremely heavy handed to, for example, parse an integer using an entire context free grammar! 
 
 
-The runtime library required to use the generated parsers, called simply **pck** (*pck.dll*) is a small drop library that provides support for generated LL(1) and LALR(1) parsers, as well as support for hand written parsers using the ParseContext class.
+The runtime library required to use the generated parsers, called simply **pck** (*pck.dll*) is a small library that provides support for generated LL(1) and LALR(1) parsers, as well as support for hand written parsers using the ParseContext class.
 
 
 The assorted tools that come with pck can be used for parser and lexer/tokenizer generation.
@@ -359,3 +359,4 @@ There's also nothing to help with error handling and reporting during a parse.
 Please see this codeproject article for details.
 
 https://www.codeproject.com/Articles/5162847/ParseContext-2-0-Easier-Hand-Rolled-Parsers
+
