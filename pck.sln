@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pckupdatebootstrapper", "pc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9F70D51-65E3-4FA0-98C8-5AAFE63D9D8A}"
 	ProjectSection(SolutionItems) = preProject
+		clean.cmd = clean.cmd
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		LICENSE = LICENSE
 		pckpkg.exe = pckpkg.exe
 		README.md = README.md
 	EndProjectSection
