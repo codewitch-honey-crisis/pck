@@ -24,8 +24,8 @@ class Program
 		//	Console.WriteLine(RegexExpression.Parse(test));
 		//_RunLL(args);
 		//_RunLalr(args);	
-		_RunXbnfGenerated(args);
-		_RunLalrXbnf(args);
+		//_RunXbnfGenerated(args);
+		_RunDebugLalrXbnf(args);
 	}
 	static void _TestXbnfTokenizers(string[] args)
 	{
@@ -79,12 +79,24 @@ class Program
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.pck");
 		var lex = LexDocument.ReadFrom(@"..\..\..\xbnf.pck");
 		var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"), cfg.EnumSymbols());
-		//var pt = cfg.ToLalr1ParseTable();// new _ConsoleProgress());
 		var parser = cfg.ToLalr1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
 
 		parser.ShowHidden = true;
 		while (LRNodeType.EndDocument != parser.NodeType)
 			Console.WriteLine(parser.ParseReductions(true));
+
+	}
+	static void _RunDebugLalrXbnf(string[] args)
+	{
+		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.pck");
+		var lex = LexDocument.ReadFrom(@"..\..\..\xbnf.pck");
+		IEnumerable<char> input = new FileReaderEnumerable(@"..\..\..\xbnf.xbnf");
+		input = "foo<start>=bar;";
+		var tokenizer = lex.ToTokenizer(input, cfg.EnumSymbols());
+		var parser = cfg.ToLalr1Parser(tokenizer, new _ConsoleProgress());//new Lalr1DebugParser2(cfg, tokenizer);
+		parser.ShowHidden = false;
+		while (LRNodeType.EndDocument != parser.NodeType)
+			Console.WriteLine(parser.ParseReductions());
 
 	}
 	static void _RunLalr(string[] args)

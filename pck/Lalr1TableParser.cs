@@ -175,12 +175,17 @@ namespace Pck
 			else if (LRNodeType.Accept == _nodeType)
 			{
 				_nodeType = LRNodeType.EndDocument;
+				_stack.Clear();
 				return true;
 			}
-			else if (LRNodeType.EndDocument == _nodeType )
+			else if (LRNodeType.EndDocument == _nodeType)
 				return false;
-			else if (_eosId == _tokenEnum.Current.SymbolId && LRNodeType.Error == _nodeType)
-				return false;
+			else if (LRNodeType.Error == _nodeType)
+			{
+				_nodeType = LRNodeType.EndDocument;
+				_stack.Clear();
+				return true;
+			}
 			if (LRNodeType.Error != _nodeType)
 			{
 				if (!ShowHidden)
@@ -270,6 +275,7 @@ namespace Pck
 				_tokenEnum.Dispose();
 				_tokenEnum = null;
 			}
+			_nodeType = LRNodeType.EndDocument;
 			_stack.Clear();
 		}
 		public override void Restart()
@@ -287,6 +293,7 @@ namespace Pck
 			{
 				_tokenizer = tokenizer;
 				_tokenEnum = tokenizer.GetEnumerator();
+				_nodeType = LRNodeType.Initial;
 			}
 		}
 		public override void Restart(IEnumerable<char> input)
@@ -294,6 +301,7 @@ namespace Pck
 			Close();
 			_tokenizer.Restart(input);
 			_tokenEnum = _tokenizer.GetEnumerator();
+			_nodeType = LRNodeType.Initial;
 		}
 		void _Panic()
 		{
@@ -321,7 +329,7 @@ namespace Pck
 						break;
 			} else 
 			{
-				_errorToken.Value += _tokenEnum.Current.Value;
+				//_errorToken.Value += _tokenEnum.Current.Value;
 				_tokenEnum.MoveNext();
 			}
 		}

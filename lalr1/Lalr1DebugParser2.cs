@@ -11,27 +11,52 @@ namespace Pck
 		HashSet<string> _hidden;
 		HashSet<string> _collapsed;
 		ITokenizer _tokenizer;
-
-		Queue<Token> _tokens;
+		CfgLalr1ParseTable _parseTable;
+		Token _token;
 		string[] _ruleDef;
-		LRNodeType _nodeType;
 		IEnumerator<Token> _tokenEnum;
 		Stack<int> _stack;
-
-		public override LRNodeType NodeType {
-			get {
-				if(0<_tokens.Count)
+		LRNodeType _nodeType;
+		public Lalr1DebugParser2(CfgDocument cfg,ITokenizer tokenizer,CfgLalr1ParseTable parseTable=null)
+		{
+			_cfg = cfg;
+			_parseTable = parseTable ?? cfg.ToLalr1ParseTable();
+			_stack = new Stack<int>();
+			_Populate();
+			Restart(tokenizer);
+		}
+		void _Populate()
+		{
+			_substitutions = new Dictionary<string, string>();
+			_hidden = new HashSet<string>();
+			_collapsed = new HashSet<string>();
+			foreach (var attrsym in _cfg.AttributeSets)
+			{
+				var i = attrsym.Value.IndexOf("hidden");
+				if (-1 < i)
 				{
-					var t = _tokens.Peek();
-					return ("#ERROR" == t.Symbol) ? LRNodeType.Error : LRNodeType.Shift;
+					var hidden = attrsym.Value[i].Value;
+					if ((hidden is bool) && ((bool)hidden))
+						_hidden.Add(attrsym.Key);
 				}
-				if(null!=_ruleDef)
-					return LRNodeType.Reduce;
-				if (0!=_stack.Count)
-					return LRNodeType.EndDocument;
-				return LRNodeType.Initial;
+				i = attrsym.Value.IndexOf("collapsed");
+				if (-1 < i)
+				{
+					var collapsed = attrsym.Value[i].Value;
+					if ((collapsed is bool) && ((bool)collapsed))
+						_collapsed.Add(attrsym.Key);
+				}
+				i = attrsym.Value.IndexOf("substitute");
+				if (-1 < i)
+				{
+					var substitute = attrsym.Value[i].Value as string;
+					if (!string.IsNullOrEmpty(substitute) && _cfg.IsSymbol(substitute) && substitute != attrsym.Key)
+						_substitutions.Add(attrsym.Key, substitute);
+				}
 			}
 		}
+		public override LRNodeType NodeType => _nodeType;
+		
 
 		public override string Value {
 			get {
@@ -39,7 +64,7 @@ namespace Pck
 				{
 					case LRNodeType.Shift:
 					case LRNodeType.Error:
-						return _tokens.Peek().Value;
+						return _token.Value;
 				}
 				return null;
 			}
@@ -50,7 +75,7 @@ namespace Pck
 				{
 					case LRNodeType.Error:
 					case LRNodeType.Shift:
-						return _tokens.Peek().Symbol;
+						return _token.Symbol;
 					case LRNodeType.Reduce:
 						return _ruleDef[0];
 				}
@@ -104,27 +129,10 @@ namespace Pck
 				return null;
 			}
 		}
-		public override int Line {
-			get {
-				if (0 < _tokens.Count)
-					return _tokens.Peek().Line;
-				return 1;
-			}
-		}
-		public override int Column {
-			get {
-				if (0 < _tokens.Count)
-					return _tokens.Peek().Column;
-				return 1;
-			}
-		}
-		public override long Position {
-			get {
-				if (0 < _tokens.Count)
-					return _tokens.Peek().Position;
-				return 0;
-			}
-		}
+		public override int Line => _token.Line;
+		public override int Column => _token.Column;
+		public override long Position => _token.Position;
+
 		public override bool IsHidden => _hidden.Contains(Symbol);
 		public override bool IsCollapsed => _collapsed.Contains(Symbol);
 
@@ -134,7 +142,7 @@ namespace Pck
 				_tokenEnum.Dispose();
 			_tokenEnum = null;
 			_stack.Clear();
-			_tokens.Clear();
+			_nodeType = LRNodeType.EndDocument;
 		}
 		public override void Restart()
 		{
@@ -142,7 +150,7 @@ namespace Pck
 				throw new ObjectDisposedException(GetType().Name);
 			_tokenEnum.Reset();
 			_stack.Clear();
-			_tokens.Clear();
+			_nodeType = LRNodeType.Initial;
 		}
 		public override void Restart(IEnumerable<char> input)
 		{
@@ -151,22 +159,30 @@ namespace Pck
 			Close();
 			_tokenizer.Restart(input);
 			_tokenEnum = _tokenizer.GetEnumerator();
-
+			_nodeType = LRNodeType.Initial;
 		}
 		public override void Restart(ITokenizer tokenizer)
 		{
 			Close();
-			if (null != _tokenizer)
+			if (null != tokenizer)
 			{
 				_tokenizer = tokenizer;
 				_tokenEnum = _tokenizer.GetEnumerator();
-				_nodeType =LRNodeType.Initial;
+				_nodeType = LRNodeType.Initial;
 			}
 		}
 		public override bool Read()
 		{
 			switch(NodeType)
 			{
+				case LRNodeType.Error:
+					_stack.Clear();
+					_nodeType = LRNodeType.EndDocument;
+					return false;
+				case LRNodeType.Accept:
+					_stack.Clear();
+					_nodeType = LRNodeType.EndDocument;
+					return true;
 				case LRNodeType.EndDocument:
 					return false;
 				case LRNodeType.Initial:
@@ -176,17 +192,107 @@ namespace Pck
 					if (!_tokenEnum.MoveNext())
 						throw new Exception("Error in ITokenizer implementation.");
 					break;
+				
 			}
-			if(!ShowHidden)
-				while (IsHidden)
-					_tokens.Dequeue();
-
-			if (0<_tokens.Count)
+			if (!ShowHidden)
 			{
-
+				while (_hidden.Contains(_tokenEnum.Current.Symbol))
+					_tokenEnum.MoveNext();
+			} else
+			{
+				if(_hidden.Contains(_tokenEnum.Current.Symbol))
+				{
+					_token = _tokenEnum.Current;
+					_tokenEnum.MoveNext();
+					_nodeType = LRNodeType.Shift;
+					return true;
+				}
+			}
+			
+			(int RuleOrStateId, string Left, string[] Right) trns;
+			if(!_parseTable[_stack.Peek()].TryGetValue(_tokenEnum.Current.Symbol,out trns))
+			{
+				_Panic();
 				return true;
 			}
-			return false;
+			if (null == trns.Right) // shift or accept
+			{
+				if (-1 != trns.RuleOrStateId) // shift
+				{
+					_ruleDef = null;
+					_token=_tokenEnum.Current;
+					_tokenEnum.MoveNext();
+					_stack.Push(trns.RuleOrStateId);
+					_nodeType = LRNodeType.Shift;
+					return true;
+				}
+				else
+				{ // accept 
+					_ruleDef = null;
+					//throw if _tok is not $ (end)
+					if ("#EOS" != _tokenEnum.Current.Symbol)
+					{
+						_Panic();
+						return true;
+					}
+					_nodeType = LRNodeType.Accept;
+					_stack.Clear();
+					return true;
+				}
+			}
+			else // reduce
+			{
+				_ruleDef = new string[trns.Right.Length + 1];
+				_ruleDef[0] = trns.Left;
+				trns.Right.CopyTo(_ruleDef, 1);
+				for (int i = 0; i < trns.Right.Length; ++i)
+					if (null != trns.Right[i])
+						_stack.Pop();
+
+				// There is a new number at the top of the stack. 
+				// This number is our temporary state. Get the symbol 
+				// from the left-hand side of the rule #. Treat it as 
+				// the next input token in the GOTO table (and place 
+				// the matching state at the top of the set stack).
+				_stack.Push(_parseTable[_stack.Peek()][trns.Left].RuleOrStateId);
+				_nodeType = LRNodeType.Reduce;
+				return true;
+			}
+			
+		}
+		void _Panic()
+		{
+			if(0==_stack.Count)
+				throw new Exception("Parse error");
+			var sb = new StringBuilder();
+			var l = _tokenEnum.Current.Line;
+			var c = _tokenEnum.Current.Column;
+			var p = _tokenEnum.Current.Position;
+			var moved = false;
+			while (!_IsMatch(_tokenEnum.Current.Symbol) && "#EOS" != _tokenEnum.Current.Symbol)
+			{
+				moved = true;
+				sb.Append(_tokenEnum.Current.Value);
+				_tokenEnum.MoveNext();
+			}
+			if (moved)
+			{
+				var et = new Token();
+				et.Symbol = "#ERROR";
+				et.SymbolId = _cfg.GetIdOfSymbol(et.Symbol);
+				et.Line = l;
+				et.Column = c;
+				et.Position = p;
+				et.Value = sb.ToString();
+				_token = et;
+				_nodeType = LRNodeType.Error;
+			}
+
+			
+		}
+		bool _IsMatch(string sym)
+		{
+			return _parseTable[_stack.Peek()].ContainsKey(sym);
 		}
 	}
 }
