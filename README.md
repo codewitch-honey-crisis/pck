@@ -25,6 +25,17 @@ To keep them up to date, simply close all PCK programs, navigate to the folder w
 
 ## Using the tools
 
+### Choosing Your Parser
+You'll want to decide carefully which parser best meets your needs before you begin.
+
+Use the LL(1) parser if your grammar can be recognized by it, or unless you're building a hand rolled parser
+The LL(1) parser is the most flexible and potentially the fastest generated parser, depending on what you're doing. It's also the easiest to use overall, although there's not a lot of difference between the generated parsers in use. It's main drawback is the limited subset of CFG grammars it can support.
+
+Use the LALR(1) parser if you need greater power in terms of what your grammars can do. It can be a little more complicated if you're not using the parse tree, but rather the reader directly, though most people won't unless they need to stream. It's main limitation is error recovery. Currently it can't do it, and it will never be as good as the LL(1) error recovery even if it could, because of the way the algorithm works.
+
+Use handrolled parsers either for very simple grammars where generated parsers won't really save you time, or for grammars where you need the greatest flexibility and CFG grammars just won't cut it. 
+
+### Creating Grammars and Parsers
 By far, the simplest way to generate a parser on a Windows OS is to use pckedit and create an XBNF grammar, then test or build the parser using the menus.
 
 pckedit is a windows application that acts as a multiple document container for XBNF, pck, and other files, with syntax highlighting. It has menus for code generation and for testing grammars, but otherwise works a lot like notepad++. The menus operate on the *current active document* so be mindful of that if your menus are grayed. For example, it won't let you turn a PCK spec file into another PCK spec file, nor will it let you build/generate code from anything other than an XBNF or PCK file. Below the documents is a list of warnings and errors for the last operation. The test menu allows you to test your grammars with LL(1) and LALR(1) parsers without generating code. Generation does not create files. Files must be saved explicitly in order to be stored, unlike visual studio, for example.
