@@ -33,7 +33,7 @@ The LL(1) parser is the most flexible and potentially the fastest generated pars
 
 * Use the LALR(1) parser if you need greater power in terms of what your grammars can do. It can be a little more complicated if you're not using the parse tree, but rather the reader directly, though most people won't unless they need to stream. Its main limitation is error recovery. Currently it can't do it, and it will never be as good as the LL(1) error recovery even if it could, because of the way the algorithm works.
 
-* Use handrolled parsers either for very simple grammars where generated parsers won't really save you time, or for grammars where you need the greatest flexibility and CFG grammars just won't cut it. Its main limitation for anything other than trivial grammars is maintenance and the potential for bugs.
+* Use handrolled parsers either for very simple grammars where generated parsers won't really save you time, or for grammars where you need the greatest flexibility and CFG grammars just won't cut it. Its main limitation for anything other than trivial grammars is maintenance and increased potential for bugs.
 
 ### Creating Grammars and Parsers
 By far, the simplest way to generate a parser on a Windows OS is to use pckedit and create an XBNF grammar, then test or build the parser using the menus.
