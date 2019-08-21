@@ -18,7 +18,8 @@ namespace Pck
 		public abstract long Position { get; }
 		public abstract bool Read();
 		public abstract void Restart();
-		public abstract void Restart(IEnumerable<Token> tokenizer);
+		public abstract void Restart(ITokenizer tokenizer);
+		public abstract void Restart(IEnumerable<char> input);
 		public abstract void Close();
 		public abstract bool IsHidden { get; }
 		public abstract bool IsCollapsed { get; }

@@ -12,6 +12,7 @@ namespace Pck
 	public class LL1TableParser : LL1Parser
 	{
 		int[][][] _parseTable;
+		ITokenizer _tokenizer;
 		IEnumerator<Token> _tokenEnum;
 		Token _errorToken;
 		Stack<int> _stack;
@@ -35,7 +36,7 @@ namespace Pck
 		}
 		public override KeyValuePair<string, object>[] GetAttributeSet(int symbolId)
 		{
-			if (0 < symbolId || _attributeSets.Length <= symbolId)
+			if (0 > symbolId || _attributeSets.Length <= symbolId)
 				return null;
 			return _attributeSets[symbolId];
 		}
@@ -82,11 +83,21 @@ namespace Pck
 				return LLNodeType.Initial;
 			}
 		}
-		public override void Restart(IEnumerable<Token> tokenizer)
+		public override void Restart(ITokenizer tokenizer)
 		{
 			Close();
-			if(null!=tokenizer)
+			_tokenizer = null;
+			if (null != tokenizer)
+			{
+				_tokenizer = tokenizer;
 				_tokenEnum = tokenizer.GetEnumerator();
+			}
+		}
+		public override void Restart(IEnumerable<char> input)
+		{
+			Close();
+			_tokenizer.Restart(input);
+			_tokenEnum = _tokenizer.GetEnumerator();
 		}
 		public override void Restart()
 		{
@@ -161,7 +172,7 @@ namespace Pck
 			int[] nodeFlags,
 			int[] substitutions,
 			KeyValuePair<string,object>[][] attributeSets,
-			IEnumerable<Token> tokenizer)
+			ITokenizer tokenizer)
 		{
 			_parseTable = parseTable;
 			_initCfg = initCfg;

@@ -30,7 +30,8 @@ namespace Pck
 		public abstract KeyValuePair<string, object>[] GetAttributeSet(int symbolId);
 		public abstract object GetAttribute(string name, object @default = null);
 		public abstract bool Read();
-		public abstract void Restart(IEnumerable<Token> tokenizer);
+		public abstract void Restart(ITokenizer tokenizer);
+		public abstract void Restart(IEnumerable<char> input);
 		public abstract void Restart();
 		public abstract void Close();
 		void IDisposable.Dispose()

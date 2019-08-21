@@ -8,14 +8,14 @@ namespace Pck
 	using Lrfa = FA<string, ICollection<Lalr1.LRItem>>;
 	public static class Lalr1
 	{
-		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg,IEnumerable<Token> tokenizer,IProgress<CfgLalr1Progress> progress=null)
+		public static Lalr1Parser ToLalr1Parser(this CfgDocument cfg,ITokenizer tokenizer,IProgress<CfgLalr1Progress> progress=null)
 		{
 			Lalr1Parser parser;
 			var res = TryToLalr1Parser(cfg, out parser,tokenizer,progress);
 			CfgException.ThrowIfErrors(res);
 			return parser;
 		}
-		public static IList<CfgMessage> TryToLalr1Parser(this CfgDocument cfg, out Lalr1Parser parser,IEnumerable<Token> tokenizer = null,IProgress<CfgLalr1Progress> progress=null)
+		public static IList<CfgMessage> TryToLalr1Parser(this CfgDocument cfg, out Lalr1Parser parser,ITokenizer tokenizer = null,IProgress<CfgLalr1Progress> progress=null)
 		{
 			CfgLalr1ParseTable parseTable;
 			var result = TryToLalr1ParseTable(cfg, progress, out parseTable);

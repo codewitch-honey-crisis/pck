@@ -10,6 +10,7 @@ namespace Pck
 		CfgLalr1ParseTable _parseTable;
 		Token _token;
 		Token _errorToken;
+		ITokenizer _tokenizer;
 		IEnumerator<Token> _tokenEnum;
 		HashSet<string> _hidden;
 		HashSet<string> _collapsed;
@@ -18,12 +19,14 @@ namespace Pck
 		LRNodeType _nodeType;
 		Stack<int> _stack;
 		string[] _ruleDef;
-		public Lalr1DebugParser(CfgDocument cfg, IEnumerable<Token> tokenizer, CfgLalr1ParseTable parseTable = null)
+		public Lalr1DebugParser(CfgDocument cfg, ITokenizer tokenizer, CfgLalr1ParseTable parseTable = null)
 		{
 			_cfg = cfg;
 			_PopulateAttrs();
 			_stack = new Stack<int>();
-			_tokenEnum = tokenizer.GetEnumerator();
+			_tokenizer = tokenizer;
+			if(null!=tokenizer)
+				_tokenEnum = tokenizer.GetEnumerator();
 			_parseTable = parseTable ?? cfg.ToLalr1ParseTable();
 			_nodeType = LRNodeType.Initial;
 		}
@@ -288,11 +291,22 @@ namespace Pck
 			_stack.Clear();
 			_nodeType = LRNodeType.Initial;
 		}
-		public override void Restart(IEnumerable<Token> tokenizer)
+		public override void Restart(ITokenizer tokenizer)
 		{
 			Close();
+			_tokenizer = null;
 			if (null != tokenizer)
+			{
+				_tokenizer = tokenizer;
 				_tokenEnum = tokenizer.GetEnumerator();
+			}
+			_nodeType = LRNodeType.Initial;
+		}
+		public override void Restart(IEnumerable<char> input)
+		{
+			Close();
+			_tokenizer.Restart(input);
+			_tokenEnum = _tokenizer.GetEnumerator();
 		}
 		void _Panic()
 		{

@@ -82,8 +82,8 @@ namespace Pck
 			this.menuSetFont = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.codeLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.cToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.vBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.csToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.vbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.fileTabs = new System.Windows.Forms.TabControl();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -363,49 +363,49 @@ namespace Pck
 			// createLL1ParserToolStripMenuItem
 			// 
 			this.createLL1ParserToolStripMenuItem.Name = "createLL1ParserToolStripMenuItem";
-			this.createLL1ParserToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+			this.createLL1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
 			this.createLL1ParserToolStripMenuItem.Text = "&LL(1) Parser";
-			this.createLL1ParserToolStripMenuItem.Click += new System.EventHandler(this.createLL1ParserToolStripMenuItem_Click);
+			this.createLL1ParserToolStripMenuItem.Click += new System.EventHandler(this._HandleCreateLL1Parser);
 			// 
 			// createLalr1ParserToolStripMenuItem
 			// 
 			this.createLalr1ParserToolStripMenuItem.Name = "createLalr1ParserToolStripMenuItem";
-			this.createLalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+			this.createLalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
 			this.createLalr1ParserToolStripMenuItem.Text = "Lal&r(1) Parser";
-			this.createLalr1ParserToolStripMenuItem.Click += new System.EventHandler(this.createLalr1ParserToolStripMenuItem_Click);
+			this.createLalr1ParserToolStripMenuItem.Click += new System.EventHandler(this._HandleCreateLalr1ParserClass);
 			// 
 			// createFATokenizerToolStripMenuItem
 			// 
 			this.createFATokenizerToolStripMenuItem.Name = "createFATokenizerToolStripMenuItem";
-			this.createFATokenizerToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+			this.createFATokenizerToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
 			this.createFATokenizerToolStripMenuItem.Text = "FA &Tokenizer";
-			this.createFATokenizerToolStripMenuItem.Click += new System.EventHandler(this.createFATokenizerToolStripMenuItem_Click);
+			this.createFATokenizerToolStripMenuItem.Click += new System.EventHandler(this._HandleCreateTokenizerClass);
 			// 
 			// fATokenizerLL1ToolStripMenuItem
 			// 
 			this.fATokenizerLL1ToolStripMenuItem.Name = "fATokenizerLL1ToolStripMenuItem";
-			this.fATokenizerLL1ToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+			this.fATokenizerLL1ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
 			this.fATokenizerLL1ToolStripMenuItem.Text = "FA Tokeni&zer / LL(1)";
-			this.fATokenizerLL1ToolStripMenuItem.Click += new System.EventHandler(this.fATokenizerLL1ToolStripMenuItem_Click);
+			this.fATokenizerLL1ToolStripMenuItem.Click += new System.EventHandler(this._HandleCreateTokenizerClass);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(210, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(213, 6);
 			// 
 			// createPCKSpecToolStripMenuItem
 			// 
 			this.createPCKSpecToolStripMenuItem.Name = "createPCKSpecToolStripMenuItem";
-			this.createPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+			this.createPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
 			this.createPCKSpecToolStripMenuItem.Text = "&PCK spec";
-			this.createPCKSpecToolStripMenuItem.Click += new System.EventHandler(this.createPCKSpecToolStripMenuItem_Click);
+			this.createPCKSpecToolStripMenuItem.Click += new System.EventHandler(this._HandleCreatePckSpec);
 			// 
 			// createFactoredPCKSpecToolStripMenuItem
 			// 
 			this.createFactoredPCKSpecToolStripMenuItem.Name = "createFactoredPCKSpecToolStripMenuItem";
-			this.createFactoredPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+			this.createFactoredPCKSpecToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
 			this.createFactoredPCKSpecToolStripMenuItem.Text = "&Factored PCK spec";
-			this.createFactoredPCKSpecToolStripMenuItem.Click += new System.EventHandler(this.createFactoredPCKSpecToolStripMenuItem_Click);
+			this.createFactoredPCKSpecToolStripMenuItem.Click += new System.EventHandler(this._HandleCreatePckSpec);
 			// 
 			// testToolStripMenuItem
 			// 
@@ -421,14 +421,14 @@ namespace Pck
 			this.lL1ParserToolStripMenuItem.Name = "lL1ParserToolStripMenuItem";
 			this.lL1ParserToolStripMenuItem.Size = new System.Drawing.Size(178, 26);
 			this.lL1ParserToolStripMenuItem.Text = "&LL(1) Parser...";
-			this.lL1ParserToolStripMenuItem.Click += new System.EventHandler(this.lL1ParserToolStripMenuItem_Click);
+			this.lL1ParserToolStripMenuItem.Click += new System.EventHandler(this._HandleTestLL1Parser);
 			// 
 			// lalr1ParserToolStripMenuItem
 			// 
 			this.lalr1ParserToolStripMenuItem.Name = "lalr1ParserToolStripMenuItem";
 			this.lalr1ParserToolStripMenuItem.Size = new System.Drawing.Size(178, 26);
 			this.lalr1ParserToolStripMenuItem.Text = "Lal&r(1) Parser...";
-			this.lalr1ParserToolStripMenuItem.Click += new System.EventHandler(this.lalr1ParserToolStripMenuItem_Click);
+			this.lalr1ParserToolStripMenuItem.Click += new System.EventHandler(this._HandleTestLalr1Parser);
 			// 
 			// optionsToolStripMenuItem
 			// 
@@ -531,27 +531,27 @@ namespace Pck
 			// codeLanguageToolStripMenuItem
 			// 
 			this.codeLanguageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cToolStripMenuItem,
-            this.vBToolStripMenuItem});
+            this.csToolStripMenuItem,
+            this.vbToolStripMenuItem});
 			this.codeLanguageToolStripMenuItem.Name = "codeLanguageToolStripMenuItem";
 			this.codeLanguageToolStripMenuItem.Size = new System.Drawing.Size(403, 26);
 			this.codeLanguageToolStripMenuItem.Text = "Code Language";
 			// 
 			// cToolStripMenuItem
 			// 
-			this.cToolStripMenuItem.Checked = true;
-			this.cToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cToolStripMenuItem.Name = "cToolStripMenuItem";
-			this.cToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
-			this.cToolStripMenuItem.Text = "C#";
-			this.cToolStripMenuItem.Click += new System.EventHandler(this.cToolStripMenuItem_Click);
+			this.csToolStripMenuItem.Checked = true;
+			this.csToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.csToolStripMenuItem.Name = "cToolStripMenuItem";
+			this.csToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+			this.csToolStripMenuItem.Text = "C#";
+			this.csToolStripMenuItem.Click += new System.EventHandler(this.csToolStripMenuItem_Click);
 			// 
 			// vBToolStripMenuItem
 			// 
-			this.vBToolStripMenuItem.Name = "vBToolStripMenuItem";
-			this.vBToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
-			this.vBToolStripMenuItem.Text = "Visual Basic";
-			this.vBToolStripMenuItem.Click += new System.EventHandler(this.vBToolStripMenuItem_Click);
+			this.vbToolStripMenuItem.Name = "vBToolStripMenuItem";
+			this.vbToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+			this.vbToolStripMenuItem.Text = "Visual Basic";
+			this.vbToolStripMenuItem.Click += new System.EventHandler(this.vBToolStripMenuItem_Click);
 			// 
 			// openFileDialog
 			// 
@@ -763,8 +763,8 @@ namespace Pck
 		private System.Windows.Forms.ToolStripMenuItem createFATokenizerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem codeLanguageToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem cToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem vBToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem csToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem vbToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem fATokenizerLL1ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
 		private System.Windows.Forms.ImageList imageList1;

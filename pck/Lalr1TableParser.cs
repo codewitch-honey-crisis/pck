@@ -12,6 +12,7 @@ namespace Pck
 		string[] _symbols;
 		int[] _nodeFlags;
 		int[] _substitutions;
+		ITokenizer _tokenizer;
 		IEnumerator<Token> _tokenEnum;
 		LRNodeType _nodeType;
 		Stack<int> _stack;
@@ -20,7 +21,7 @@ namespace Pck
 		int _errorId;
 		KeyValuePair<string, object>[][] _attributeSets;
 
-		public Lalr1TableParser(int[][][] parseTable, string[] symbols,int[] nodeFlags, int[] substitutions,KeyValuePair<string, object>[][] attributeSets,IEnumerable<Token> tokenizer)
+		public Lalr1TableParser(int[][][] parseTable, string[] symbols,int[] nodeFlags, int[] substitutions,KeyValuePair<string, object>[][] attributeSets,ITokenizer tokenizer)
 		{
 			_parseTable = parseTable;
 			_symbols = symbols;
@@ -34,7 +35,9 @@ namespace Pck
 				throw new ArgumentException("Error in symbol table", "symbols");
 
 			_stack = new Stack<int>();
-			_tokenEnum = tokenizer.GetEnumerator();
+			_tokenizer = tokenizer;
+			if(null!=tokenizer)
+				_tokenEnum = tokenizer.GetEnumerator();
 			_nodeType = LRNodeType.Initial;
 
 		}
@@ -174,7 +177,7 @@ namespace Pck
 				_nodeType = LRNodeType.EndDocument;
 				return true;
 			}
-			else if (LRNodeType.EndDocument == _nodeType)
+			else if (LRNodeType.EndDocument == _nodeType || (LRNodeType.Error==_nodeType&&0==_stack.Count))
 				return false;
 			else if (_eosId == _tokenEnum.Current.SymbolId && LRNodeType.Error == _nodeType)
 				return false;
@@ -193,58 +196,65 @@ namespace Pck
 					return true;
 				}
 			}
-			var entry = _parseTable[_stack.Peek()];
-			//(int RuleOrStateId, int Left, int[] Right) trns;
-			if(_errorId==_tokenEnum.Current.SymbolId)
+			if (0 < _stack.Count)
 			{
-				_Panic();
-				return true;
-			}
-			int[] trns = entry[_tokenEnum.Current.SymbolId];
-			if (null==trns)
-			{
-				_Panic();
-				return true;
-			}
-			if (1== trns.Length) // shift or accept
-			{
-				if (-1 != trns[0]) // shift
+				var entry = _parseTable[_stack.Peek()];
+				//(int RuleOrStateId, int Left, int[] Right) trns;
+				if (_errorId == _tokenEnum.Current.SymbolId)
 				{
-					_nodeType = LRNodeType.Shift;
-					_token = _tokenEnum.Current;
-					_tokenEnum.MoveNext();
-					_stack.Push(trns[0]);
+					_Panic();
 					return true;
 				}
-				else
-				{ // accept 
-				  //throw if _tok is not $ (end)
-					if (_eosId!= _tokenEnum.Current.SymbolId)
+				int[] trns = entry[_tokenEnum.Current.SymbolId];
+				if (null == trns)
+				{
+					_Panic();
+					return true;
+				}
+				if (1 == trns.Length) // shift or accept
+				{
+					if (-1 != trns[0]) // shift
 					{
-						_Panic();
+						_nodeType = LRNodeType.Shift;
+						_token = _tokenEnum.Current;
+						_tokenEnum.MoveNext();
+						_stack.Push(trns[0]);
 						return true;
 					}
+					else
+					{ // accept 
+					  //throw if _tok is not $ (end)
+						if (_eosId != _tokenEnum.Current.SymbolId)
+						{
+							_Panic();
+							return true;
+						}
 
-					_nodeType = LRNodeType.Accept;
-					_stack.Clear();
+						_nodeType = LRNodeType.Accept;
+						_stack.Clear();
+						return true;
+					}
+				}
+				else // reduce
+				{
+					_ruleDef = new int[trns.Length - 1];
+					for (var i = 1; i < trns.Length; i++)
+						_ruleDef[i - 1] = trns[i];
+					for (int i = 2; i < trns.Length; ++i)
+						_stack.Pop();
+
+					// There is a new number at the top of the stack. 
+					// This number is our temporary state. Get the symbol 
+					// from the left-hand side of the rule #. Treat it as 
+					// the next input token in the GOTO table (and place 
+					// the matching state at the top of the set stack).
+					_stack.Push(_parseTable[_stack.Peek()][trns[1]][0]);
+					_nodeType = LRNodeType.Reduce;
 					return true;
 				}
-			}
-			else // reduce
+			} else
 			{
-				_ruleDef = new int[trns.Length - 1];
-				for(var i=1;i<trns.Length;i++)
-					_ruleDef[i - 1] = trns[i];
-				for (int i = 2; i < trns.Length; ++i)
-					_stack.Pop();
-
-				// There is a new number at the top of the stack. 
-				// This number is our temporary state. Get the symbol 
-				// from the left-hand side of the rule #. Treat it as 
-				// the next input token in the GOTO table (and place 
-				// the matching state at the top of the set stack).
-				_stack.Push(_parseTable[_stack.Peek()][trns[1]][0]);
-				_nodeType = LRNodeType.Reduce;
+				_Panic();
 				return true;
 			}
 
@@ -265,18 +275,26 @@ namespace Pck
 			_stack.Clear();
 			_nodeType = LRNodeType.Initial;
 		}
-		public override void Restart(IEnumerable<Token> tokenizer)
+		public override void Restart(ITokenizer tokenizer)
 		{
 			Close();
+			_tokenizer = null;
 			if (null != tokenizer)
+			{
+				_tokenizer = tokenizer;
 				_tokenEnum = tokenizer.GetEnumerator();
+			}
+		}
+		public override void Restart(IEnumerable<char> input)
+		{
+			Close();
+			_tokenizer.Restart(input);
+			_tokenEnum = _tokenizer.GetEnumerator();
 		}
 		void _Panic()
 		{
 			// This is primitive. Should see if the Dragon Book has something better
 			_nodeType = LRNodeType.Error;
-			var state = _stack.Peek();
-			var d = _parseTable[state];
 			int[] e;
 			_errorToken.Symbol = "#ERROR";
 			_errorToken.SymbolId = _errorId;
@@ -285,6 +303,10 @@ namespace Pck
 			_errorToken.Column = _tokenEnum.Current.Column;
 			_errorToken.Position = _tokenEnum.Current.Position;
 			var s = _tokenEnum.Current.SymbolId;
+			if (0 == _stack.Count)
+				return;
+			var state = _stack.Peek();
+			var d = _parseTable[state];
 			if (_errorId!=s && null!=(e=d[s]) && _eosId != s)
 			{
 				_errorToken.Value += _tokenEnum.Current.Value;

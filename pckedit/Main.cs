@@ -10,6 +10,8 @@ using ICSharpCode.TextEditor.Document;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pck
 {
@@ -17,9 +19,12 @@ namespace Pck
 	/// ICSharpCode.TextEditor.TextEditorControl.</summary>
 	public partial class Main : Form
 	{
+		readonly SynchronizationContext _synchronizationContext;
+
 		Mru _mru;
 		public Main()
 		{
+			_synchronizationContext = SynchronizationContext.Current;
 			InitializeComponent();
 			var smp = new FileSyntaxModeProvider(".");
 			HighlightingManager.Manager.AddSyntaxModeFileProvider(smp);
@@ -158,6 +163,11 @@ namespace Pck
 					lvi.ImageIndex = 2;
 					break;
 			}
+
+			messages.BeginInvoke(new Action<ListViewItem>(_AddLVItem), lvi);
+		}
+		private void _AddLVItem(ListViewItem lvi)
+		{
 			messages.Items.Add(lvi);
 		}
 		void _AddMessage(XbnfMessage msg, string filename)
@@ -812,37 +822,32 @@ namespace Pck
 						HighlightingStrategyFactory.CreateHighlightingStrategyForFile("Untitled.pck");
 			_UpdateMenuContext();
 		}
-
-		private void createPCKSpecToolStripMenuItem_Click(object sender, EventArgs e)
+		string _GetUniqueFilename(string filename)
 		{
-			var fname = _GetFilename(fileTabs.SelectedTab);
-			XbnfDocument xbnf = null;
-			try
+			var names = new HashSet<string>();
+			foreach (var editor in AllEditors)
 			{
-				xbnf=XbnfDocument.Parse(ActiveEditor.Text);
+				var name = editor.Parent.Text;
+				if (name.EndsWith("*"))
+					name = name.Substring(0, name.Length - 1);
+				names.Add(name);
 			}
-			catch(ExpectingException expex)
+			var i = 2;
+			var fn = filename;
+			while (true)
 			{
-				_AddMessage(expex,fname);
-				return;
+				if (names.Contains(fn))
+				{
+					var ext = Path.GetExtension(filename);
+					fn = Path.GetFileNameWithoutExtension(filename);
+					fn = string.Concat(fn, i.ToString(), ext);
+				}
+				else
+					return fn;
+				++i;
 			}
-			catch(Exception ex)
-			{
-				_AddMessage(ex, fname);
-				return;
-			}
-			var name = Path.GetFileNameWithoutExtension(fname);
-			var sb = new StringBuilder();
-
-			XbnfToPckTransform.Transform(xbnf, new StringWriter(sb));
-			var editor = _AddNewTextEditor(string.Concat(name,".pck"));
-			name = _GetUniqueFilename(name);
-			editor.Document.HighlightingStrategy =
-						HighlightingStrategyFactory.CreateHighlightingStrategyForFile("Untitled.pck");
-			editor.Text = sb.ToString();
-			SetModifiedFlag(editor, true);	
 		}
-		string _LoadXbnf(string input,string fname=null, ProgressForm form=null)
+		string _XbnfToPck(string input,string fname=null, Progress form=null)
 		{
 			if (string.IsNullOrEmpty(input))
 				return input;
@@ -872,12 +877,13 @@ namespace Pck
 			return sb.ToString();
 
 		}
-		private void createFactoredPCKSpecToolStripMenuItem_Click(object sender, EventArgs e)
+		async void _HandleCreatePckSpec(object sender, EventArgs e)
 		{
-			var prog = new ProgressForm();
-			var name = _GetFilename(fileTabs.SelectedTab);
-			var ext = Path.GetExtension(name).ToLowerInvariant();
-			name = Path.GetFileNameWithoutExtension(name);
+			var prog = new Progress();
+			var fname = _GetFilename(fileTabs.SelectedTab);
+			var ext = Path.GetExtension(fname).ToLowerInvariant();
+			var name = Path.GetFileNameWithoutExtension(fname);
+			var factor = ReferenceEquals(sender, createFactoredPCKSpecToolStripMenuItem);
 			messages.Items.Clear();
 			var hasErrors = false;
 			prog.Show(this);
@@ -886,289 +892,239 @@ namespace Pck
 			switch (ext)
 			{
 				case ".xbnf":
-					input = _LoadXbnf(input,_GetFilename(fileTabs.SelectedTab),prog);
+					await Task.Run(()=>{
+						input = _XbnfToPck(input, fname, prog);
+					});
 					goto case ".pck";
 				case ".pck":
-					name = string.Concat(name , ".ll1");
-					var cfg = CfgDocument.Parse(input);
-					var lex = LexDocument.Parse(input);
-					lex.AttributeSets.Clear(); // prevent attributes from being written twice
-					foreach (var msg in cfg.TryValidateLL1())
+					await Task.Run(() =>
 					{
-						if (CfgErrorLevel.Error == msg.ErrorLevel)
-							hasErrors = true;
-						var n = _GetFilename(fileTabs.SelectedTab);
-						_AddMessage(msg, (".pck" == ext) ? n : "");
-					}
-					if (!hasErrors)
-					{
-						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+						if(factor)
+							name = string.Concat(name, ".ll1");
+						var cfg = CfgDocument.Parse(input);
+						var lex = LexDocument.Parse(input);
+						lex.AttributeSets.Clear(); // prevent attributes from being written twice
+						foreach (var msg in cfg.TryValidateLL1())
 						{
 							if (CfgErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
-							var n = _GetFilename(fileTabs.SelectedTab);
-							_AddMessage(msg, (".pck" == ext) ? n : "");
-
+							_AddMessage(msg, (".pck" == ext) ? fname : "");
 						}
-					}
-					if (!hasErrors)
-					{
-						input = string.Concat(cfg.ToString(), Environment.NewLine, lex.ToString());
-						name = string.Concat(name, ".pck");
-						name = _GetUniqueFilename(name);
-						var editor = _AddNewTextEditor(name);
-						editor.Document.HighlightingStrategy =
-									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
-						editor.Text = input;
-						SetModifiedFlag(editor, true);
-					}
-					break;
-			}
-			prog.Close();
-
-		}
-		string _GetUniqueFilename(string filename)
-		{
-			var names = new HashSet<string>();
-			foreach (var editor in AllEditors)
-			{
-				var name = editor.Parent.Text;
-				if (name.EndsWith("*"))
-					name = name.Substring(0, name.Length - 1);
-				names.Add(name);
-			}
-			var i = 2;
-			var fn = filename;
-			while (true)
-			{
-				if (names.Contains(fn))
-				{
-					var ext = Path.GetExtension(filename);
-					fn = Path.GetFileNameWithoutExtension(filename);
-					fn = string.Concat(fn, i.ToString(), ext);
-				}
-				else
-					return fn;
-				++i;
-			}
-		}
-		private void createLL1ParserToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var name = _GetFilename(fileTabs.SelectedTab);
-			var ext = Path.GetExtension(name).ToLowerInvariant();
-			name = Path.GetFileNameWithoutExtension(name);
-			var input = ActiveEditor.Text;
-			var prog = new ProgressForm();
-			prog.Show(this);
-			var sb = new StringBuilder();
-			var hasErrors = false;
-			messages.Items.Clear();
-			switch (ext)
-			{
-				case ".xbnf":
-					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
-					goto case ".pck";
-				case ".pck":
-					var cfg = CfgDocument.Parse(input);
-					foreach (var msg in cfg.TryValidateLL1())
-					{
-						if (CfgErrorLevel.Error == msg.ErrorLevel)
-							hasErrors = true;
-						var n = _GetFilename(fileTabs.SelectedTab);
-						_AddMessage(msg, (".pck" == ext) ? n : "");
-					}
-					if (!hasErrors)
-					{
-						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+						if (!hasErrors && factor)
 						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
-								hasErrors = true;
-							var n = _GetFilename(fileTabs.SelectedTab);
-							_AddMessage(msg, (".pck" == ext) ? n : "");
-						}
-					}
-					if (!hasErrors)
-					{
-						string lang = null;
-						if (cToolStripMenuItem.Checked)
-						{
-							lang = "cs";
-							name = string.Concat(name, "Parser.cs");
-						}
-						else if (vBToolStripMenuItem.Checked)
-						{
-							lang = "vb";
-							name = string.Concat(name, "Parser.vb");
-						}
-						sb.Clear();
-						using (var sw = new StringWriter(sb))
-							LL1ParserCodeGenerator.WriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang,new _LL1Progress(prog), sw);
-						input = sb.ToString();
-						name = _GetUniqueFilename(name);
-						var editor = _AddNewTextEditor(name);
-						editor.Document.HighlightingStrategy =
-									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
-						editor.Text = input;
-						SetModifiedFlag(editor, true);
-						
-					}
-					break;
-			}
-			prog.Close();
-		}
-
-		private void createLalr1ParserToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var name = _GetFilename(fileTabs.SelectedTab);
-			var ext = Path.GetExtension(name).ToLowerInvariant();
-			name = Path.GetFileNameWithoutExtension(name);
-			var input = ActiveEditor.Text;
-			var sb = new StringBuilder();
-			var prog = new ProgressForm();
-			prog.Show(this);
-			messages.Items.Clear();
-			var hasErrors = false;
-			switch (ext)
-			{
-				case ".xbnf":
-					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
-
-					goto case ".pck";
-				case ".pck":
-					var cfg = CfgDocument.Parse(input);
-					foreach (var msg in cfg.TryValidateLalr1())
-					{
-						if (CfgErrorLevel.Error == msg.ErrorLevel)
-							hasErrors = true;
-						var n = _GetFilename(fileTabs.SelectedTab);
-						_AddMessage(msg, (".pck" == ext) ? n : "");
-
-					}
-					if (!hasErrors)
-					{
-						string lang = null;
-						if (cToolStripMenuItem.Checked)
-						{
-							lang = "cs";
-							name = string.Concat(name, "Parser.cs");
-						}
-						else if (vBToolStripMenuItem.Checked)
-						{
-							lang = "vb";
-							name = string.Concat(name, "Parser.vb");
-						}
-						sb.Clear();
-						using (var sw = new StringWriter(sb))
-						{
-							foreach(var msg in Lalr1ParserCodeGenerator.TryWriteClassTo(cfg, Path.GetFileNameWithoutExtension(name),null, lang,new _Lalr1Progress(prog), sw))
+							foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 							{
 								if (CfgErrorLevel.Error == msg.ErrorLevel)
 									hasErrors = true;
-								var n = _GetFilename(fileTabs.SelectedTab);
-								_AddMessage(msg, (".pck" == ext) ? n : "");
+								_AddMessage(msg, (".pck" == ext) ? fname : "");
+
 							}
 						}
 						if (!hasErrors)
 						{
-							input = sb.ToString();
-							name = _GetUniqueFilename(name);
-							var editor = _AddNewTextEditor(name);
-							editor.Document.HighlightingStrategy =
-										HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
-							editor.Text = input;
-							SetModifiedFlag(editor, true);
+							input = string.Concat(cfg.ToString(), Environment.NewLine, lex.ToString());
+							name = string.Concat(name, ".pck");
 						}
+					});
+					if(!hasErrors)
+					{
+						name = _GetUniqueFilename(name);
+						var editor = _AddNewTextEditor(name);
+						editor.Document.HighlightingStrategy =
+									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
+						editor.Text = input;
+						SetModifiedFlag(editor, true);
 					}
 					break;
 			}
 			prog.Close();
-		}
 
-		private void createFATokenizerToolStripMenuItem_Click(object sender, EventArgs e)
+		}
+		async void _HandleCreateLL1Parser(object sender, EventArgs e)
 		{
-			var prog = new ProgressForm();
-			prog.Show(this);
-			var name = fileTabs.SelectedTab.Text;
-			if (name.EndsWith("*"))
-				name = name.Substring(0, name.Length - 1);
-			var ext = Path.GetExtension(name).ToLowerInvariant();
-			name = Path.GetFileNameWithoutExtension(name);
+			var fname = _GetFilename(fileTabs.SelectedTab);
+			var ext = Path.GetExtension(fname).ToLowerInvariant();
+			var name = Path.GetFileNameWithoutExtension(fname);
 			var input = ActiveEditor.Text;
-			var sb = new StringBuilder();
+			var prog = new Progress();
+			prog.Show(this);
+			var hasErrors = false;
+			var isVB = vbToolStripMenuItem.Checked;
+			messages.Items.Clear();
 			switch (ext)
 			{
 				case ".xbnf":
-					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
+					await Task.Run(() =>
+					{
+						input = _XbnfToPck(input, _GetFilename(fileTabs.SelectedTab), prog);
+					});
 					goto case ".pck";
 				case ".pck":
-					var cfg = CfgDocument.Parse(input);
-					var lex = LexDocument.Parse(input);
-					string lang = null;
-					if (cToolStripMenuItem.Checked)
-					{
-						lang = "cs";
-						name = string.Concat(name, "Tokenizer.cs");
+					await Task.Run(() => { 
+						var sb = new StringBuilder();
+						var cfg = CfgDocument.Parse(input);
+						foreach (var msg in cfg.TryValidateLL1())
+						{
+							if (CfgErrorLevel.Error == msg.ErrorLevel)
+								hasErrors = true;
+							_AddMessage(msg, (".pck" == ext) ? fname : "");
+						}
+						if (!hasErrors)
+						{
+							foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+							{
+								if (CfgErrorLevel.Error == msg.ErrorLevel)
+									hasErrors = true;
+								_AddMessage(msg, (".pck" == ext) ? fname : "");
+							}
+						}
+						if (!hasErrors)
+						{
+							string lang = null;
+							if (!isVB)
+							{
+								lang = "cs";
+								name = string.Concat(name, "Parser.cs");
+							}
+							else
+							{
+								lang = "vb";
+								name = string.Concat(name, "Parser.vb");
+							}
+							sb.Clear();
+							using (var sw = new StringWriter(sb))
+								LL1ParserCodeGenerator.WriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang, new _LL1Progress(prog), sw);
+							input = sb.ToString();
+						}
+					});
+					if(!hasErrors)
+					{ 
+						name = _GetUniqueFilename(name);
+						var editor = _AddNewTextEditor(name);
+						editor.Document.HighlightingStrategy =
+									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
+						editor.Text = input;
+						SetModifiedFlag(editor, true);	
 					}
-					else if (vBToolStripMenuItem.Checked)
-					{
-						lang = "vb";
-						name = string.Concat(name, "Tokenizer.vb");
-					}
-					sb.Clear();
-					using (var sw = new StringWriter(sb)) 
-						TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(),Path.GetFileNameWithoutExtension(name), null, lang, new _FAProgress(prog),sw);
-					input = sb.ToString();
-					name = _GetUniqueFilename(name);
-
-					var editor = _AddNewTextEditor(name);
-					editor.Document.HighlightingStrategy =
-								HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
-					editor.Text = input;
-					SetModifiedFlag(editor, true);
 					break;
 			}
 			prog.Close();
 		}
 
-		private void fATokenizerLL1ToolStripMenuItem_Click(object sender, EventArgs e)
+		async void _HandleCreateLalr1ParserClass(object sender, EventArgs e)
 		{
-			var name = _GetFilename(fileTabs.SelectedTab);
-			var prog = new ProgressForm();
-			var ext = Path.GetExtension(name).ToLowerInvariant();
-			name = Path.GetFileNameWithoutExtension(name);
+			var fname = _GetFilename(fileTabs.SelectedTab);
+			var ext = Path.GetExtension(fname).ToLowerInvariant();
+			var name = Path.GetFileNameWithoutExtension(fname);
 			var input = ActiveEditor.Text;
-			var sb = new StringBuilder();
+			var prog = new Progress();
+			prog.Show(this);
+			messages.Items.Clear();
+			var isVB = vbToolStripMenuItem.Checked;
+			var hasErrors = false;
+			switch (ext)
+			{
+				case ".xbnf":
+					input = _XbnfToPck(input, fname, prog);
+					goto case ".pck";
+				case ".pck":
+					await Task.Run(()=>{ 
+						var sb = new StringBuilder();
+						var cfg = CfgDocument.Parse(input);
+						foreach (var msg in cfg.TryValidateLalr1())
+						{
+							if (CfgErrorLevel.Error == msg.ErrorLevel)
+								hasErrors = true;
+							_AddMessage(msg, (".pck" == ext) ? fname : "");
+
+						}
+						if (!hasErrors)
+						{
+							string lang = null;
+							if (!isVB)
+							{
+								lang = "cs";
+								name = string.Concat(name, "Parser.cs");
+							}
+							else
+							{
+								lang = "vb";
+								name = string.Concat(name, "Parser.vb");
+							}
+							sb.Clear();
+							using (var sw = new StringWriter(sb))
+							{
+								foreach (var msg in Lalr1ParserCodeGenerator.TryWriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang, new _Lalr1Progress(prog), sw))
+								{
+									if (CfgErrorLevel.Error == msg.ErrorLevel)
+										hasErrors = true;
+									_AddMessage(msg, (".pck" == ext) ? fname : "");
+								}
+							}
+							if (!hasErrors)
+								input = sb.ToString();
+						}
+					});
+					if (!hasErrors)
+					{
+						name = _GetUniqueFilename(name);
+						var editor = _AddNewTextEditor(name);
+						editor.Document.HighlightingStrategy =
+									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
+						editor.Text = input;
+						SetModifiedFlag(editor, true);
+					}
+
+
+					break;
+			}
+			prog.Close();
+		}
+
+		
+		async void _HandleCreateTokenizerClass(object sender, EventArgs e)
+		{
+			var fname = _GetFilename(fileTabs.SelectedTab);
+			var prog = new Progress();
+			var ext = Path.GetExtension(fname).ToLowerInvariant();
+			var name = Path.GetFileNameWithoutExtension(fname);
+			var input = ActiveEditor.Text;
+			var factor = ReferenceEquals(sender, fATokenizerLL1ToolStripMenuItem);
+			var isVB = vbToolStripMenuItem.Checked;
 			var hasErrors = false;
 			messages.Items.Clear();
 			prog.Show(this);
 			switch (ext)
 			{
 				case ".xbnf":
-					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
+					input = _XbnfToPck(input, _GetFilename(fileTabs.SelectedTab), prog);
 
 					goto case ".pck";
 				case ".pck":
-					//if(".pck"==ext)
+					await Task.Run(() => { 
+					var sb = new StringBuilder();
 					var cfg = CfgDocument.Parse(input);
 					var lex = LexDocument.Parse(input);
-					foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+					if (factor)
 					{
-						if (CfgErrorLevel.Error == msg.ErrorLevel)
-							hasErrors = true;
-						var n = _GetFilename(fileTabs.SelectedTab);
-						_AddMessage(msg, (".pck" == ext) ? n : "");
+						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+						{
+							if (CfgErrorLevel.Error == msg.ErrorLevel)
+								hasErrors = true;
+							_AddMessage(msg, (".pck" == ext) ? fname : "");
 
+						}
+						prog.WriteLog(Environment.NewLine);
 					}
-					prog.WriteLog(Environment.NewLine);
 					if (!hasErrors)
 					{
 						string lang = null;
-						if (cToolStripMenuItem.Checked)
+						if (!isVB)
 						{
 							lang = "cs";
 							name = string.Concat(name, "Tokenizer.cs");
 						}
-						else if (vBToolStripMenuItem.Checked)
+						else 
 						{
 							lang = "vb";
 							name = string.Concat(name, "Tokenizer.vb");
@@ -1176,8 +1132,12 @@ namespace Pck
 						sb.Clear();
 						using (var sw = new StringWriter(sb))
 							TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(), Path.GetFileNameWithoutExtension(name), null, lang,new _FAProgress(prog),  sw);
-						name = _GetUniqueFilename(name);
 						input = sb.ToString();
+					}
+					});
+					if (!hasErrors)
+					{
+						name = _GetUniqueFilename(name);
 						var editor = _AddNewTextEditor(name);
 						editor.Document.HighlightingStrategy =
 									HighlightingStrategyFactory.CreateHighlightingStrategyForFile(name);
@@ -1224,131 +1184,143 @@ namespace Pck
 			}
 		}
 
-		private void cToolStripMenuItem_Click(object sender, EventArgs e)
+		private void csToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			cToolStripMenuItem.Checked = true;
-			vBToolStripMenuItem.Checked = false;
+			csToolStripMenuItem.Checked = true;
+			vbToolStripMenuItem.Checked = false;
 		}
 
 		private void vBToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
-			cToolStripMenuItem.Checked = false;
-			vBToolStripMenuItem.Checked = true;	
+			csToolStripMenuItem.Checked = false;
+			vbToolStripMenuItem.Checked = true;	
 		}
 		
 	
-		private void lL1ParserToolStripMenuItem_Click(object sender, EventArgs e)
+		async void _HandleTestLL1Parser(object sender, EventArgs e)
 		{
-			var name = _GetFilename(fileTabs.SelectedTab);
-			var ext = Path.GetExtension(name).ToLowerInvariant();
-			name = Path.GetFileNameWithoutExtension(name);
+			var fname = _GetFilename(fileTabs.SelectedTab);
+			var ext = Path.GetExtension(fname).ToLowerInvariant();
+			var name = Path.GetFileNameWithoutExtension(fname);
 			var input = ActiveEditor.Text;
-			var prog = new ProgressForm();
+			var prog = new Progress();
 			prog.Show(this);
+			var test = new Test();
+			test.Text = string.Concat(test.Text, " - ", fname);
 			var sb = new StringBuilder();
 			var hasErrors = false;
 			messages.Items.Clear();
-			switch (ext)
+			await Task.Run(() =>
 			{
-				case ".xbnf":
-					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
-					goto case ".pck";
-				case ".pck":
-					var cfg = CfgDocument.Parse(input);
-					var lex = LexDocument.Parse(input);
-					foreach (var msg in cfg.TryValidateLL1())
-					{
-						if (CfgErrorLevel.Error == msg.ErrorLevel)
-							hasErrors = true;
-						var n = _GetFilename(fileTabs.SelectedTab);
-						_AddMessage(msg, (".pck" == ext) ? n : "");
-					}
-					if (!hasErrors)
-					{
-						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+				switch (ext)
+				{
+					case ".xbnf":
+						input = _XbnfToPck(input, fname, prog);
+						goto case ".pck";
+					case ".pck":
+						var cfg = CfgDocument.Parse(input);
+						var lex = LexDocument.Parse(input);
+						foreach (var msg in cfg.TryValidateLL1())
 						{
 							if (CfgErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
-							var n = _GetFilename(fileTabs.SelectedTab);
-							_AddMessage(msg, (".pck" == ext) ? n : "");
-						}
-					}
-					if (!hasErrors)
-					{
-						var test = new Test();
-						test.Text = string.Concat(test.Text, " - ", _GetFilename(fileTabs.SelectedTab));
-						var tokenizer = lex.ToTokenizer(test.Input, cfg.EnumSymbols(), new _FAProgress(prog));
-						LL1Parser parser;
-						foreach (var msg in cfg.TryToLL1Parser(out parser, tokenizer, new _LL1Progress(prog)))
-						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
-								hasErrors = true;
-							var n = _GetFilename(fileTabs.SelectedTab);
+							var n = fname;
 							_AddMessage(msg, (".pck" == ext) ? n : "");
 						}
 						if (!hasErrors)
 						{
-							test.SetParser(parser);
-							test.Show(this);
+							foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
+							{
+								if (CfgErrorLevel.Error == msg.ErrorLevel)
+									hasErrors = true;
+								var n = fname;
+								_AddMessage(msg, (".pck" == ext) ? n : "");
+							}
 						}
-						else test.Close();
-					}
+						if (!hasErrors)
+						{
+							var tokenizer = lex.ToTokenizer(null, cfg.EnumSymbols(), new _FAProgress(prog));
+							LL1Parser parser;
+							foreach (var msg in cfg.TryToLL1Parser(out parser, tokenizer, new _LL1Progress(prog)))
+							{
+								if (CfgErrorLevel.Error == msg.ErrorLevel)
+									hasErrors = true;
+								var n = fname;
+								_AddMessage(msg, (".pck" == ext) ? n : "");
+							}
+							if (!hasErrors)
+							{
+								test.SetParser(parser);
+								BeginInvoke(new Action<Form>(test.Show), this);
 
-					break;
-			}
+							}
+							else BeginInvoke(new Action(test.Close));
+
+						}
+						else BeginInvoke(new Action(test.Close));
+
+						break;
+				}
+			});
 			prog.Close();
 		}
 
-		private void lalr1ParserToolStripMenuItem_Click(object sender, EventArgs e)
+		private async void _HandleTestLalr1Parser(object sender, EventArgs e)
 		{
-			var name = _GetFilename(fileTabs.SelectedTab);
-			var ext = Path.GetExtension(name).ToLowerInvariant();
-			name = Path.GetFileNameWithoutExtension(name);
-			var input = ActiveEditor.Text;
-			var prog = new ProgressForm();
+			var prog = new Progress();
 			prog.Show(this);
+			var fname = _GetFilename(fileTabs.SelectedTab);
+			var ext = Path.GetExtension(fname).ToLowerInvariant();
+			var name = Path.GetFileNameWithoutExtension(fname);
+			var input = ActiveEditor.Text;
 			var sb = new StringBuilder();
 			var hasErrors = false;
 			messages.Items.Clear();
-			switch (ext)
-			{
-				case ".xbnf":
-					input = _LoadXbnf(input, _GetFilename(fileTabs.SelectedTab), prog);
-					goto case ".pck";
-				case ".pck":
-					var cfg = CfgDocument.Parse(input);
-					var lex = LexDocument.Parse(input);
-					foreach (var msg in cfg.TryValidateLalr1())
-					{
-						if (CfgErrorLevel.Error == msg.ErrorLevel)
-							hasErrors = true;
-						var n = _GetFilename(fileTabs.SelectedTab);
-						_AddMessage(msg, (".pck" == ext) ? n : "");
-					}
-					if (!hasErrors)
-					{
-						var test = new Test();
-						test.Text = string.Concat(test.Text, " - ", _GetFilename(fileTabs.SelectedTab));
-						var tokenizer = lex.ToTokenizer(test.Input, cfg.EnumSymbols(), new _FAProgress(prog));
-						Lalr1Parser parser;
-						foreach (var msg in cfg.TryToLalr1Parser(out parser, tokenizer, new _Lalr1Progress(prog)))
+			var test = new Test();
+			test.Text = string.Concat(test.Text, " - ", fname);
+			await Task.Run(() => {
+				switch (ext)
+				{
+					case ".xbnf":
+						input = _XbnfToPck(input, fname, prog);
+						goto case ".pck";
+					case ".pck":
+						var cfg = CfgDocument.Parse(input);
+						var lex = LexDocument.Parse(input);
+						foreach (var msg in cfg.TryValidateLalr1())
 						{
 							if (CfgErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
-							var n = _GetFilename(fileTabs.SelectedTab);
+							var n = fname;
 							_AddMessage(msg, (".pck" == ext) ? n : "");
 						}
 						if (!hasErrors)
 						{
-							test.SetParser(parser);
-							test.Show(this);
-						}
-						else test.Close();
-					}
+							var tokenizer = lex.ToTokenizer(null, cfg.EnumSymbols(), new _FAProgress(prog));
+							Lalr1Parser parser;
+							foreach (var msg in cfg.TryToLalr1Parser(out parser, tokenizer, new _Lalr1Progress(prog)))
+							{
+								if (CfgErrorLevel.Error == msg.ErrorLevel)
+									hasErrors = true;
+								var n = fname;
+								_AddMessage(msg, (".pck" == ext) ? n : "");
+							}
 
-					break;
-			}
+							if (!hasErrors)
+							{
+								test.SetParser(parser);
+								BeginInvoke(new Action<Form>(test.Show), this);
+							}
+							else BeginInvoke(new Action(test.Close));
+						}
+						else
+							BeginInvoke(new Action(test.Close));
+
+						break;
+				}
+
+			});
 			prog.Close();
 		}
 
@@ -1369,9 +1341,9 @@ namespace Pck
 	#region _FAProgress
 	class _FAProgress : IProgress<FAProgress>
 	{
-		ProgressForm _form;
+		Progress _form;
 		FAStatus _oldStatus;
-		public _FAProgress(ProgressForm form)
+		public _FAProgress(Progress form)
 		{
 			_form = form;
 		}
@@ -1402,9 +1374,9 @@ namespace Pck
 	#region _Lalr1Progress
 	class _Lalr1Progress : IProgress<CfgLalr1Progress>
 	{
-		ProgressForm _form;
+		Progress _form;
 		CfgLalr1Status _oldStatus;
-		public _Lalr1Progress(ProgressForm form)
+		public _Lalr1Progress(Progress form)
 		{
 			_form = form;
 		}
@@ -1450,9 +1422,9 @@ namespace Pck
 	#region _LL1Progress
 	class _LL1Progress : IProgress<CfgLL1Progress>
 	{
-		ProgressForm _form;
+		Progress _form;
 		CfgLL1Status _oldStatus;
-		public _LL1Progress(ProgressForm form)
+		public _LL1Progress(Progress form)
 		{
 			_form = form;
 		}

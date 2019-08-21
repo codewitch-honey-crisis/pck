@@ -6,14 +6,14 @@ namespace Pck
 {
 	public static class LL1
 	{
-		public static LL1Parser ToLL1Parser(this CfgDocument cfg, IEnumerable<Token> tokenizer = null, IProgress<CfgLL1Progress> progress = null)
+		public static LL1Parser ToLL1Parser(this CfgDocument cfg, ITokenizer tokenizer = null, IProgress<CfgLL1Progress> progress = null)
 		{
 			LL1Parser parser;
 			var res = TryToLL1Parser(cfg, out parser, tokenizer, progress);
 			CfgException.ThrowIfErrors(res);
 			return parser;
 		}
-		public static IList<CfgMessage> TryToLL1Parser(this CfgDocument cfg,out LL1Parser parser,IEnumerable<Token> tokenizer = null,IProgress<CfgLL1Progress> progress=null)
+		public static IList<CfgMessage> TryToLL1Parser(this CfgDocument cfg,out LL1Parser parser,ITokenizer tokenizer = null,IProgress<CfgLL1Progress> progress=null)
 		{
 			CfgLL1ParseTable parseTable;
 			var result = cfg.TryToLL1ParseTable(progress,out parseTable);

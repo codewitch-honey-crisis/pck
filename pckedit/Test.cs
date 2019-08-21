@@ -38,36 +38,7 @@ namespace Pck
 				_ll1Parser.Close();
 			_ll1Parser = null;
 		}
-		class _InputEnumerable : IEnumerable<char>
-		{
-			Test _outer;
-			public _InputEnumerable(Test outer) { _outer = outer; }
-
-			public IEnumerator<char> GetEnumerator() { return new _InputEnumerator(_outer); }
-			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		}
-		class _InputEnumerator : IEnumerator<char>
-		{
-			Test _outer;
-			IEnumerator<char> _inner;
-			public _InputEnumerator(Test outer) { _outer = outer; Reset(); }
-
-			public char Current => _inner.Current;
-			object IEnumerator.Current => _inner.Current;
-
-			public void Dispose() { if (null != _inner) _inner.Dispose(); }
-
-			public bool MoveNext()
-				=> _inner.MoveNext();
-
-			public void Reset()
-			{
-				if (null != _inner) _inner.Dispose();
-				_inner = _outer.editor.Text.GetEnumerator();
-			}
-		}
-		public IEnumerable<char> Input { get { return new _InputEnumerable(this); } }
-
+		
 		private void editor_TextChanged(object sender, EventArgs e)
 		{
 			parseTimer.Enabled = true;
@@ -79,7 +50,7 @@ namespace Pck
 			ParseNode pt=null;
 			if (null != _ll1Parser)
 			{
-				_ll1Parser.Restart();
+				_ll1Parser.Restart(editor.Text);
 				_ll1Parser.ShowHidden = showHidden.Checked;
 				while(LLNodeType.EndDocument!=_ll1Parser.NodeType)
 				{
@@ -89,7 +60,7 @@ namespace Pck
 				}
 			} else if(null!=_lalr1Parser)
 			{
-				_lalr1Parser.Restart();
+				_lalr1Parser.Restart(editor.Text);
 				_lalr1Parser.ShowHidden = showHidden.Checked;
 				var opt = pt;
 				while (LRNodeType.EndDocument != _lalr1Parser.NodeType)

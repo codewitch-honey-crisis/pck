@@ -1,6 +1,6 @@
 ﻿namespace Pck
 {
-	partial class ProgressForm
+	partial class Progress
 	{
 		/// <summary>
 		/// Required designer variable.

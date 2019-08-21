@@ -2605,7 +2605,7 @@ public class XbnfParser : Pck.Lalr1TableParser {
                     new System.Collections.Generic.KeyValuePair<string, object>("color", "green")},
             null,
             null};
-    public XbnfParser(System.Collections.Generic.IEnumerable<Pck.Token> tokenizer) : 
+    public XbnfParser(Pck.ITokenizer tokenizer) : 
             base(XbnfParser._ParseTable, XbnfParser._Symbols, XbnfParser._NodeFlags, XbnfParser._Substitutions, XbnfParser._AttributeSets, tokenizer) {
     }
     public XbnfParser() : 

@@ -130,7 +130,7 @@ namespace Pck
 			}
 			return result as CharFA<string>;
 		}
-		public IEnumerable<Token> ToTokenizer(IEnumerable<char> input, IEnumerable<string> symbols = null,IProgress<FAProgress> progress=null)
+		public ITokenizer ToTokenizer(IEnumerable<char> input, IEnumerable<string> symbols = null,IProgress<FAProgress> progress=null)
 		{
 			var lexer = ToLexer(progress);
 			var ii = 0;

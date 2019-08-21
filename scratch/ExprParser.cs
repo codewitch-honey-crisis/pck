@@ -127,7 +127,7 @@ public class ExprParser : Pck.LL1TableParser {
             null,
             null,
             null};
-    public ExprParser(System.Collections.Generic.IEnumerable<Pck.Token> tokenizer) : 
+    public ExprParser(Pck.ITokenizer tokenizer) : 
             base(ExprParser._ParseTable, ExprParser._InitCfg, ExprParser._Symbols, ExprParser._NodeFlags, ExprParser._Substitutions, ExprParser._AttributeSets, tokenizer) {
     }
     public ExprParser() : 

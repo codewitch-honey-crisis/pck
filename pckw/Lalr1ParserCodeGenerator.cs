@@ -129,7 +129,7 @@ namespace Pck
 				parserClass.Members.Add(f);
 
 				var ctor = new CodeConstructor();
-				ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(IEnumerable<Token>), "tokenizer"));
+				ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(ITokenizer), "tokenizer"));
 				ctor.BaseConstructorArgs.AddRange(new CodeExpression[] {
 				new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(parserClass.Name), "_ParseTable"),
 				new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(parserClass.Name), "_Symbols"),

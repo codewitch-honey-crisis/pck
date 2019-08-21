@@ -13,6 +13,7 @@ namespace Pck
 	{
 		CfgDocument _cfg;
 		CfgLL1ParseTable _parseTable;
+		ITokenizer _tokenizer;
 		IEnumerator<Token> _tokenEnum;
 		Token _errorToken;
 		Stack<string> _stack;
@@ -49,11 +50,21 @@ namespace Pck
 				return LLNodeType.Initial;
 			}
 		}
-		public override void Restart(IEnumerable<Token> tokenizer)
+		public override void Restart(ITokenizer tokenizer)
 		{
 			Close();
+			_tokenizer = null;
 			if (null != tokenizer)
+			{
+				_tokenizer = tokenizer;
 				_tokenEnum = tokenizer.GetEnumerator();
+			}
+		}
+		public override void Restart(IEnumerable<char> input)
+		{
+			Close();
+			_tokenizer.Restart(input);
+			_tokenEnum = _tokenizer.GetEnumerator();
 		}
 		public override void Restart()
 		{
@@ -137,7 +148,7 @@ namespace Pck
 		/// <param name="tokenizer">The tokenizer to use </param>
 		/// <param name="startSymbol">The start symbol</param>
 		public LL1DebugParser(CfgDocument cfg,
-			IEnumerable<Token> tokenizer)
+			ITokenizer tokenizer)
 		{
 			_cfg = cfg;
 			_PopulateAttrs();

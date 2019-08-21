@@ -10,20 +10,24 @@ using System.Windows.Forms;
 
 namespace Pck
 {
-	public partial class ProgressForm : Form
+	public partial class Progress : Form
 	{
-		public ProgressForm()
+		public Progress()
 		{
 			InitializeComponent();
 		}
+		
 		public void ClearLog()
 		{
-			StatusBox.Text = "";
+			StatusBox.BeginInvoke(new Action<string>(_ClearLog),null);
 		}
+		void _ClearLog(string dummy) { StatusBox.Text = "";Application.DoEvents(); }
 		public void WriteLog(string @string)
 		{
 			if(null!=@string)
-				StatusBox.AppendText(@string);
+				StatusBox.BeginInvoke(new Action<string>(StatusBox.AppendText),@string);
+			Application.DoEvents();
 		}
+		
 	}
 }

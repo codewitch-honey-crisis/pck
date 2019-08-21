@@ -6,7 +6,7 @@ using System.Text;
 namespace Pck
 {
 	using CharDfaEntry = KeyValuePair<int, KeyValuePair<string, int>[]>;
-	public class TableTokenizer : IEnumerable<Token>
+	public class TableTokenizer : ITokenizer
 	{
 		CharDfaEntry[] _dfaTable;
 		int _eosSymbol;
@@ -42,6 +42,11 @@ namespace Pck
 			return new _TokenEnumerator(_dfaTable,_errorSymbol,_eosSymbol, _symbols,_blockEnds, _input);
 		}
 
+		public void Restart(IEnumerable<char> input)
+		{
+			_input = input;
+		}
+
 		IEnumerator IEnumerable.GetEnumerator()
 			=> GetEnumerator();
 
@@ -73,7 +78,8 @@ namespace Pck
 				_eosSymbol = eosSymbol;
 				_symbols = symbols;
 				_blockEnds = blockEnds;
-				_input = @string.GetEnumerator();
+				if(null!=@string)
+					_input = @string.GetEnumerator();
 				_buffer = new StringBuilder();
 				_state = -1;
 				_line = 1;
@@ -86,7 +92,11 @@ namespace Pck
 			public void Dispose()
 			{
 				_state = -3;
-				_input.Dispose();
+				if (null != _input)
+				{
+					_input.Dispose();
+					_input = null;
+				}
 			}
 			public bool MoveNext()
 			{
