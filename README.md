@@ -356,7 +356,130 @@ There's also nothing to help with error handling and reporting during a parse.
 
 `ParseContext` can help with all of this, plus has a number of useful helpers for skipping over whitespace and comments, parsing numbers and strings, etc.
 
-Please see this codeproject article for details.
+`ParseContext` works quite a bit like `TextReader` in that it returns input characters as an `int`. It signals end of input with `-1`. Unlike the `TextReader`, it also signals before start of input with `-2`, and disposed with `-3`.
 
-https://www.codeproject.com/Articles/5162847/ParseContext-2-0-Easier-Hand-Rolled-Parsers
+`Advance()` works like the `Read()` function does on the TextReader class. It advances the input by one character and returns the result as an `int`.
 
+However, we'll most often be getting our current character from the `Current` property, which is an `int` that always holds the character under the cursor (or one of the negative number signals as outlined above) while simply using `Advance()` to move through the text. Either one works fine. Use whichever suits you in the moment.
+
+To peek ahead in the input without advancing the cursor, we have the `Peek()` method which takes an optional `int` `lookAhead` parameter that indicates how many characters to look forward. Specifying zero simply retrieves the character under the cursor. In any case, the cursor position remains unchanged. This method is safe for non-seekable sources like `NetworkStream`.
+
+For tracking the position of the input cursor, we have `Line`, `Column`, `Position`, and `TabWidth`. The first three report the location of the cursor while the latter should be set to the width of the tab on the input device. Doing so ensures that `Column` will be reported properly in the even of a tab. The default is `8`, and they work like tab stops do on a console window, with the screen laid out in virtual columns, meaning an actual tab isn't always the same number or "spaces".
+
+For error reporting, we have the `Expecting()` method which takes a variable list of arguments that represent the list of inputs allowed to be present under the cursor. This can include `-1` to signify that end of input is one of the allowable values, while passing no parameters is a way to indicate that anything except end of input will be accepted. In the event that the current character is not accepted, an `ExpectingException` is thrown that reports a detailed error message.
+
+We have an internal capture buffer based around a `StringBuilder` which we can use to hang on to the input we've parsed so far. This is represented by the `CaptureBuffer` property. On the `ParseContext`, we also have `CaptureCurrent()` which captures the current character under the cursor, if there is one, `ClearCapture()` which clears the capture buffer, and `GetCapture()` which retrieves all or part of the capture buffer as a string.
+
+For creating the `ParseContect`, we have several `static` methods: the `Create()` method which takes a `string` or a `char` array, `CreateFrom()` which takes a filename or a `TextReader` and `CreateFromUrl()` which takes a `string` URL.
+
+Remember that `ParseContext` implements `IDisposable` and it's very important to dispose of it when one is finished if one loaded text from anything other than a `string` or a `char` array. A `Close()` method would be the usual way to do so but I removed it because there are too many members that start with "C" and it was making intellisense arduous. Use `Dispose()` or the `using` keyword in C#.
+
+In addition, `ParseContext` includes several helpers including `TrySkipWhitespace()`, `TryReadUntil()` and various other methods for common parsing tasks - even parsing JSON.
+
+### Using the ParseContext Class
+
+For the purpose of this demonstration, we'll reimplement the JSON parsing. 
+
+The JSON grammar is pretty simple, and you can see all the particulars at https://json.org.
+
+The parsing implementation is below. Roughly, it's divided into 3 major parts to represent the major components of a JSON tree: A JSON object, a JSON array, and a JSON value.
+
+Notice how easily one can call subfunctions in this parse without having to worry about transferring the current character - something that's difficult to do with an enumerator or a text reader. Overall, this leads to much cleaner separation of the various parsing functions, and an easier time writing them. The comments should explain the particulars:
+
+```
+static object _ParseJson(ParseContext pc)
+{
+    pc.TrySkipWhiteSpace();
+    switch(pc.Current)
+    {
+        case '{':
+            return _ParseJsonObject(pc);
+        case '[':
+            return _ParseJsonArray(pc);
+        default:
+            return _ParseJsonValue(pc);
+    }
+}
+static IDictionary<string, object> _ParseJsonObject(ParseContext pc)
+{
+    // a JSON {} object - our objects are dictionaries
+    var result = new Dictionary<string, object>();
+    pc.TrySkipWhiteSpace();
+    pc.Expecting('{');
+    pc.Advance();
+    pc.Expecting(); // expecting anything other than end of input
+    while ('}' != pc.Current && -1 != pc.Current) // loop until } or end
+    {
+        pc.TrySkipWhiteSpace();
+        // _ParseJsonValue parses any scalar value, but we only want 
+        // a string so we check here that there's a quote mark to 
+        // ensure the field will be a string.
+        pc.Expecting('"');
+        var fn = _ParseJsonValue(pc);
+        pc.TrySkipWhiteSpace();
+        pc.Expecting(':');
+        pc.Advance();
+        // add the next value to the dictionary
+        result.Add(fn, _ParseJson(pc));
+        pc.TrySkipWhiteSpace();
+        pc.Expecting('}', ',');
+        // skip commas
+        if (',' == pc.Current) pc.Advance();
+    }
+    // make sure we're positioned on the end
+    pc.Expecting('}');
+    // ... and read past it
+    pc.Advance();
+    return result;
+}
+static IList<object> _ParseJsonArray(ParseContext pc)
+{
+    // a JSON [] array - our arrays are lists
+    var result = new List<object>();
+    pc.TrySkipWhiteSpace();
+    pc.Expecting('[');
+    pc.Advance();
+    pc.Expecting(); // expect anything but end of input
+    // loop until end of array or input
+    while (-1!=pc.Current && ']'!=pc.Current) 
+    {
+        pc.TrySkipWhiteSpace();
+        // add the next item
+        result.Add(_ParseJson(pc));
+        pc.TrySkipWhiteSpace();
+        pc.Expecting(']', ',');
+        // skip the comma
+        if (',' == pc.Current) pc.Advance();
+    }
+    // ensure we're on the final position
+    pc.Expecting(']');
+    // .. and read past it
+    pc.Advance();
+    return result;
+}
+static string _ParseJsonValue(ParseContext pc) {
+    // parses a scalar JSON value, represented as a string
+    // strings are returned quotes and all, with escapes 
+    // embedded
+    pc.TrySkipWhiteSpace();
+    pc.Expecting(); // expect anything but end of input
+    pc.ClearCapture();
+    if ('\"' == pc.Current)
+    {
+        pc.CaptureCurrent();
+        pc.Advance();
+        // reads until it finds a quote
+        // using \ as an escape character
+        // and consuming the final quote 
+        // at the end
+        pc.TryReadUntil('\"', '\\', true);
+        // return what we read
+        return pc.GetCapture();
+    }
+    pc.TryReadUntil(false,',', '}', ']', ' ', '\t', '\r', '\n', '\v', '\f');
+    return pc.GetCapture();
+}
+```
+While this is a bit fast and loose, it does demonstrate the concept of using `ParseContext` to implement a recursive descent parser.
+
+Using this should significantly reduce the effort involved in doing so.
