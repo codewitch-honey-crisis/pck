@@ -241,7 +241,7 @@ The `object` production contains several literals and a reference to `fields`
 
 The terminals are all defined at the bottom but they can be anywhere in the document. XBNF considers any production that does not reference another production to be a terminal. This is similar to how ANTLR distinguishes the terminals in its grammar. 
 
-Regular expressions are between `'` single quotes and literal expressions are between '"' quotes. You may declare a terminal by using XBNF constructs or by using regular expressions. The regular expressions follow a posix + std extensions paradigm but don't currently support all of posix. They support most of it. If a posix expression doesn't work, consider it a bug.
+Regular expressions are between `'` single quotes and literal expressions are between `"` double quotes. You may declare a terminal by using XBNF constructs or by using regular expressions. The regular expressions follow a POSIX + std extensions paradigm but don't currently support all of POSIX. They support most of it. If a POSIX expression doesn't work, consider it a bug.
 
 ### Attributes
 
