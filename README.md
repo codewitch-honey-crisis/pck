@@ -6,7 +6,7 @@ The Parser Construction Kit is a parser generator that targets the .NET platform
 PCK has tools to cover three major parsing paradigms:
 
 1. LL(1) parsers: The preferred parsing mechanism if it will meet the requirements necessary.
-2. LALR(1) parsers: A more powerful parser that accepts more grammars, but with some drawbacks compared to LL(1), such as additional complexity, and more stodgy error recovery due to the nature of the algorithm.
+2. LALR(1) parsers: A more powerful parser that accepts more grammars, but with some drawbacks compared to LL(1), such as additional complexity, and lack of error recovery and continuation due to the nature of the algorithm.
 3. Hand written parsers, since these are so often useful in small doses. It would be extremely heavy handed to, for example, parse an integer using an entire context free grammar! 
 
 
