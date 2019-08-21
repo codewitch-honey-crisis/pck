@@ -31,7 +31,10 @@ namespace Pck
 			try
 			{
 				var ast = RegexExpression.Parse(Regex.Text);
-				fa = ast.ToFA("Accept");
+				if (null != ast)
+					fa = ast.ToFA("Accept");
+				else
+					Status.Text = "Waiting for Regex";
 			}
 			catch(Exception ex)
 			{

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -416,32 +417,51 @@ namespace Pck
 			foreach (var val in exprs)
 			{
 				if (null == val) continue;
+				//Debug.Assert(null != val.FirstAcceptingState);
 				var nval = val.Clone();
+				//Debug.Assert(null != nval.FirstAcceptingState);
 				if (null == left)
 				{
 					left = nval;
+					//Debug.Assert(null != left.FirstAcceptingState);
 					continue;
 				}
 				else if (null == right)
+				{
 					right = nval;
+					//Debug.Assert(null != right.FirstAcceptingState);
+				}
 				else
+				{
+					//Debug.Assert(null != right.FirstAcceptingState);
 					_Concat(right, nval);
+					//Debug.Assert(null != right.FirstAcceptingState);
 
-				_Concat(left, right);
+				}
+				//Debug.Assert(null != left.FirstAcceptingState);
+				_Concat(left, right.Clone());
+				//Debug.Assert(null != left.FirstAcceptingState);
+
 			}
 			if (null != right)
 			{
-				right.FirstAcceptingState.AcceptSymbol = accept;	
-			} 
+				right.FirstAcceptingState.AcceptSymbol = accept;
+			}
 			else
+			{
 				left.FirstAcceptingState.AcceptSymbol = accept;
+			}
 			return left;
 		}
 		static void _Concat(CharFA<TAccept> lhs, CharFA<TAccept> rhs)
 		{
+			//Debug.Assert(lhs != rhs);
 			var f = lhs.FirstAcceptingState;
-			f.EpsilonTransitions.Add(rhs);
+			//Debug.Assert(null != rhs.FirstAcceptingState);
 			f.IsAccepting = false;
+			f.EpsilonTransitions.Add(rhs);
+			//Debug.Assert(null!= lhs.FirstAcceptingState);
+
 		}
 		/// <summary>
 		/// Creates an FA that will match any one of a set of a characters
@@ -496,6 +516,7 @@ namespace Pck
 			expr = expr.Clone();
 			if (minOccurs >0 && maxOccurs > 0 && minOccurs > maxOccurs)
 				throw new ArgumentOutOfRangeException(nameof(maxOccurs));
+			CharFA<TAccept> result;
 			switch (minOccurs)
 			{
 				case -1:
@@ -504,7 +525,7 @@ namespace Pck
 					{
 						case -1:
 						case 0:
-							var result = new CharFA<TAccept>();
+							result = new CharFA<TAccept>();
 							var final = new CharFA<TAccept>(true,accept);
 							final.EpsilonTransitions.Add(result);
 							foreach (var afa in expr.FillAccepting())
@@ -514,9 +535,12 @@ namespace Pck
 							}
 							result.EpsilonTransitions.Add(expr);
 							result.EpsilonTransitions.Add(final);
+							//Debug.Assert(null != result.FirstAcceptingState);
 							return result;
 						case 1:
-							return Optional(expr, accept);
+							result = Optional(expr, accept);
+							//Debug.Assert(null != result.FirstAcceptingState);
+							return result;
 						default:
 							var l = new List<CharFA<TAccept>>();
 							expr = Optional(expr);
@@ -525,14 +549,16 @@ namespace Pck
 							{
 								l.Add(expr.Clone());
 							}
-							return Concat(l, accept);
+							result = Concat(l, accept);
+							//Debug.Assert(null != result.FirstAcceptingState);
+							return result;
 					}
 				case 1:
 					switch (maxOccurs)
 					{
 						case -1:
 						case 0:
-							var result = new CharFA<TAccept>();
+							result = new CharFA<TAccept>();
 							var final = new CharFA<TAccept>(true,accept);
 							final.EpsilonTransitions.Add(result);
 							foreach (var afa in expr.FillAccepting())
@@ -541,18 +567,24 @@ namespace Pck
 								afa.EpsilonTransitions.Add(final);
 							}
 							result.EpsilonTransitions.Add(expr);
+							//Debug.Assert(null != result.FirstAcceptingState);
 							return result;
 						case 1:
+							//Debug.Assert(null != expr.FirstAcceptingState);
 							return expr;
 						default:
-							return Concat(new CharFA<TAccept>[] { expr, Repeat(expr.Clone(), 0, maxOccurs - 1) },accept);
+							result = Concat(new CharFA<TAccept>[] { expr, Repeat(expr.Clone(), 0, maxOccurs - 1) },accept);
+							//Debug.Assert(null != result.FirstAcceptingState);
+							return result;
 					}
 				default:
 					switch (maxOccurs)
 					{
 						case -1:
 						case 0:
-							return Concat(new CharFA<TAccept>[] { Repeat(expr, minOccurs, minOccurs, accept), Repeat(expr, 0, 0, accept) },accept);
+							result = Concat(new CharFA<TAccept>[] { Repeat(expr, minOccurs, minOccurs, accept), Repeat(expr, 0, 0, accept) },accept);
+							//Debug.Assert(null != result.FirstAcceptingState);
+							return result;
 						case 1:
 							throw new ArgumentOutOfRangeException(nameof(maxOccurs));
 						default:
@@ -560,11 +592,20 @@ namespace Pck
 							{
 								var l = new List<CharFA<TAccept>>();
 								l.Add(expr);
+								//Debug.Assert(null != expr.FirstAcceptingState);
 								for (int i = 1; i < minOccurs; ++i)
-									l.Add(expr.Clone());
-								return Concat( l, accept);
+								{
+									var e = expr.Clone();
+									//Debug.Assert(null != e.FirstAcceptingState);
+									l.Add(e);
+								}
+								result = Concat( l, accept);
+								//Debug.Assert(null != result.FirstAcceptingState);
+								return result;
 							}
-							return Concat(new CharFA<TAccept>[] { Repeat(expr.Clone(), minOccurs, minOccurs, accept), Repeat(Optional(expr.Clone()), maxOccurs - minOccurs, maxOccurs - minOccurs, accept) },accept);
+							result = Concat(new CharFA<TAccept>[] { Repeat(expr.Clone(), minOccurs, minOccurs, accept), Repeat(Optional(expr.Clone()), maxOccurs - minOccurs, maxOccurs - minOccurs, accept) },accept);
+							//Debug.Assert(null != result.FirstAcceptingState);
+							return result;
 
 
 					}

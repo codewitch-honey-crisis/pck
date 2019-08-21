@@ -177,7 +177,7 @@ namespace Pck
 				_nodeType = LRNodeType.EndDocument;
 				return true;
 			}
-			else if (LRNodeType.EndDocument == _nodeType || (LRNodeType.Error==_nodeType&&0==_stack.Count))
+			else if (LRNodeType.EndDocument == _nodeType )
 				return false;
 			else if (_eosId == _tokenEnum.Current.SymbolId && LRNodeType.Error == _nodeType)
 				return false;
@@ -254,8 +254,12 @@ namespace Pck
 				}
 			} else
 			{
+				// if we already encountered an error
+				// return false in this case, since the
+				// stack is empty there's nothing to do
+				var cont = LRNodeType.Error != _nodeType;
 				_Panic();
-				return true;
+				return cont;
 			}
 
 		}
