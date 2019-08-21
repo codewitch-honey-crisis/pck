@@ -177,9 +177,13 @@ namespace Pck
 						throw new Exception("Error in ITokenizer implementation.");
 					break;
 			}
-			if(0<_tokens.Count)
+			if(!ShowHidden)
+				while (IsHidden)
+					_tokens.Dequeue();
+
+			if (0<_tokens.Count)
 			{
-				_tokens.Dequeue();
+
 				return true;
 			}
 			return false;

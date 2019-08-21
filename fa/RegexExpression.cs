@@ -336,7 +336,7 @@ namespace Pck
 							max = int.Parse(pc.GetCapture(l));
 							pc.TrySkipWhiteSpace();
 						}
-					}
+					} else { max = min; }
 					pc.Expecting('}');
 					pc.Advance();
 					expr = new RegexRepeatExpression(expr, min, max);
