@@ -194,7 +194,7 @@ namespace Pck
 					lvi.ImageIndex = 2;
 					break;
 			}
-			messages.Items.Add(lvi);
+			messages.BeginInvoke(new Action<ListViewItem>(_AddLVItem), lvi);
 		}
 		void _AddMessage(ExpectingException ex, string filename)
 		{
@@ -209,8 +209,8 @@ namespace Pck
 
 
 			lvi.ImageIndex = 2;
-			
-			messages.Items.Add(lvi);
+
+			messages.BeginInvoke(new Action<ListViewItem>(_AddLVItem), lvi);
 		}
 		void _AddMessage(Exception ex, string filename)
 		{
@@ -226,7 +226,7 @@ namespace Pck
 
 			lvi.ImageIndex = 2;
 
-			messages.Items.Add(lvi);
+			messages.BeginInvoke(new Action<ListViewItem>(_AddLVItem), lvi);
 		}
 		private void RemoveTextEditor(TextEditorControl editor)
 		{
@@ -866,6 +866,15 @@ namespace Pck
 				_AddMessage(ex, fname);
 				return null;
 			}
+			var hasErrors = false;
+			foreach(var msg in xbnf.TryValidate())
+			{
+				if (msg.ErrorLevel == XbnfErrorLevel.Error)
+					hasErrors = true;
+				_AddMessage(msg, fname);
+			}
+			if (hasErrors)
+				return null;
 			var sb = new StringBuilder();
 			if(null!=form)
 				form.WriteLog("Transforming XBNF to PCK...");
@@ -895,6 +904,8 @@ namespace Pck
 					await Task.Run(()=>{
 						input = _XbnfToPck(input, fname, prog);
 					});
+					if (null == input)
+						break;
 					goto case ".pck";
 				case ".pck":
 					await Task.Run(() =>
@@ -958,6 +969,8 @@ namespace Pck
 					{
 						input = _XbnfToPck(input, _GetFilename(fileTabs.SelectedTab), prog);
 					});
+					if (null == input)
+						break;
 					goto case ".pck";
 				case ".pck":
 					await Task.Run(() => { 
@@ -1026,6 +1039,8 @@ namespace Pck
 			{
 				case ".xbnf":
 					input = _XbnfToPck(input, fname, prog);
+					if (null == input)
+						break;
 					goto case ".pck";
 				case ".pck":
 					await Task.Run(()=>{ 
@@ -1098,7 +1113,8 @@ namespace Pck
 			{
 				case ".xbnf":
 					input = _XbnfToPck(input, _GetFilename(fileTabs.SelectedTab), prog);
-
+					if (null == input)
+						break;
 					goto case ".pck";
 				case ".pck":
 					await Task.Run(() => { 
@@ -1217,6 +1233,8 @@ namespace Pck
 				{
 					case ".xbnf":
 						input = _XbnfToPck(input, fname, prog);
+						if (null == input)
+							break;
 						goto case ".pck";
 					case ".pck":
 						var cfg = CfgDocument.Parse(input);
@@ -1284,6 +1302,8 @@ namespace Pck
 				{
 					case ".xbnf":
 						input = _XbnfToPck(input, fname, prog);
+						if (null == input)
+							break;
 						goto case ".pck";
 					case ".pck":
 						var cfg = CfgDocument.Parse(input);
