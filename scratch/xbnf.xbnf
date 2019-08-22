@@ -1,6 +1,6 @@
 ﻿/****************************************************************\
 *  xbnf.xbnf: a self describing grammar for describing grammars  *
-*   by codewitch honey crisis, july 2019                         *
+*   by codewitch honey crisis, august 2019                         *
 \****************************************************************/
 
 grammar<start>= productions;
@@ -19,13 +19,18 @@ production= identifier [ "<" attributes ">" ] "=" expressions ";";
 //
 // expressions
 //
-expressions<collapsed>= expression { "|" expression }; 
+expressions= expression { orExpression }; 
 expression= { symbol };
-symbol= literal | regex | identifier | 
-	"(" expressions ")" | 
-	"[" expressions "]" |
-	"{" expressions ("}"|"}+");
-
+symbol<collapsed>= literal | regex | identifier | 
+	subexpression | 
+	optionalExpression |
+	repeatExpression;
+orExpression = "|" expression;
+subexpression<collapsed>= "(" expressions ")";
+optionalExpression= "[" expressions "]";
+repeatExpression= "{" expressions (repeatZero | repeatOne);
+repeatZero= rbrace;
+repeatOne= rbracePlus;
 //
 // attributes
 //
@@ -60,16 +65,16 @@ blockComment<hidden,blockEnd="*/",color="green">= "/*";
 // us better constant names
 // double quotes denote a literal. the escapes are nearly the
 // same as C#. \U and \x are not supported
-or="|";
-lt="<";
-gt=">";
-eq="=";
-semi=";";
-comma=",";
-lparen="(";
-rparen=")";
-lbracket="[";
-rbracket="]";
-lbrace="{";
-rbrace="}";
-rbracePlus="}+";
+or<collapsed>="|";
+lt<collapsed>="<";
+gt<collapsed>=">";
+eq<collapsed>="=";
+semi<collapsed>=";";
+comma<collapsed>=",";
+lparen<collapsed>="(";
+rparen<collapsed>=")";
+lbracket<collapsed>="[";
+rbracket<collapsed>="]";
+lbrace<collapsed>="{";
+rbrace<collapsed>="}";
+rbracePlus<collapsed>="}+";

@@ -78,7 +78,7 @@ namespace Pck
 						{
 							if (!trim)
 							{
-								if(0<k.Children.Count)
+								//if(0<k.Children.Count)
 									result.Children.Add(k);
 							}
 							else
