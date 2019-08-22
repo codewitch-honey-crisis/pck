@@ -4,7 +4,7 @@ fields<collapsed>= field | field "," fields;
 field= string ":" value;
 array= "[" "]" | "[" values "]";
 values<collapsed>= value | value "," values;
-value= string |
+value<collapsed>= string |
 	number	|
     object	|
 	array	|

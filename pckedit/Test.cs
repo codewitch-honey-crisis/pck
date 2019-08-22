@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Pck
@@ -44,57 +45,70 @@ namespace Pck
 			parseTimer.Enabled = true;
 		}
 
-		private void parseTimer_Tick(object sender, EventArgs e)
+		async void parseTimer_Tick(object sender, EventArgs e)
 		{
 			parseTimer.Enabled = false;
 			ParseNode pt=null;
 			if (null != _ll1Parser)
 			{
-				_ll1Parser.Restart(editor.Text);
-				_ll1Parser.ShowHidden = showHidden.Checked;
-				while(LLNodeType.EndDocument!=_ll1Parser.NodeType)
+				await Task.Run(() =>
 				{
-					pt = _ll1Parser.ParseSubtree(trimTree.Checked, transformTree.Checked);
-					if (null == pt.Value)
-						break;
-				}
+					_ll1Parser.Restart(editor.Text);
+					_ll1Parser.ShowHidden = showHidden.Checked;
+					while (LLNodeType.EndDocument != _ll1Parser.NodeType)
+					{
+						pt = _ll1Parser.ParseSubtree(trimTree.Checked, transformTree.Checked);
+						if (null == pt.Value)
+							break;
+					}
+				});
 			} else if(null!=_lalr1Parser)
 			{
-				_lalr1Parser.Restart(editor.Text);
-				_lalr1Parser.ShowHidden = showHidden.Checked;
-				var opt = pt;
-				while (LRNodeType.EndDocument != _lalr1Parser.NodeType)
+				await Task.Run(() =>
 				{
-					pt = _lalr1Parser.ParseReductions(trimTree.Checked, transformTree.Checked);
-					if (null==pt || null == pt.Value)
-						break;
-					opt = pt;
-				}
-				if (null == pt)
-					pt = opt;
+					_lalr1Parser.Restart(editor.Text);
+					_lalr1Parser.ShowHidden = showHidden.Checked;
+					var opt = pt;
+					while (LRNodeType.EndDocument != _lalr1Parser.NodeType)
+					{
+						pt = _lalr1Parser.ParseReductions(trimTree.Checked, transformTree.Checked);
+						if (null == pt || null == pt.Value)
+							break;
+						opt = pt;
+					}
+					if (null == pt)
+						pt = opt;
+				});
 			}
 			parseTree.Nodes.Clear();
 			if(null!=pt)
 			{
-				var treeNode = new TreeNode();
-				if(null!=pt.Value)
+				await Task.Run(() =>
 				{
-					treeNode.Text = string.Concat(pt.Symbol, ": ", pt.Value);
-					treeNode.ImageIndex = ("#ERROR" == pt.Symbol) ? 2 : 1;
-					treeNode.SelectedImageIndex = treeNode.ImageIndex;
-					treeNode.Tag = pt;
-					parseTree.Nodes.Add(treeNode);
-				} else
-				{
-					treeNode.Text = pt.Symbol;
-					treeNode.Tag = pt;
-					foreach (var ptc in pt.Children)
+					var treeNode = new TreeNode();
+					if (null != pt.Value)
 					{
-						_AddNodes(treeNode, ptc);
+						treeNode.Text = string.Concat(pt.Symbol, ": ", pt.Value);
+						treeNode.ImageIndex = ("#ERROR" == pt.Symbol) ? 2 : 1;
+						treeNode.SelectedImageIndex = treeNode.ImageIndex;
+						treeNode.Tag = pt;
+						BeginInvoke(new Func<TreeNode, int>(parseTree.Nodes.Add), treeNode);
+						BeginInvoke(new Action(treeNode.Expand));
 					}
-					parseTree.Nodes.Add(treeNode);
-				}
-				treeNode.ExpandAll();
+					else
+					{
+						treeNode.Text = pt.Symbol;
+						treeNode.Tag = pt;
+						foreach (var ptc in pt.Children)
+						{
+							_AddNodes(treeNode, ptc);
+						}
+						BeginInvoke(new Func<TreeNode, int>(parseTree.Nodes.Add), treeNode);
+						BeginInvoke(new Action(treeNode.Expand));
+					}
+					//BeginInvoke(new Action(treeNode.ExpandAll));
+				});
+				
 			}
 		}
 		void _AddNodes(TreeNode node,ParseNode pt)
@@ -107,6 +121,7 @@ namespace Pck
 				treeNode.SelectedImageIndex = treeNode.ImageIndex;
 				treeNode.Tag = pt;
 				node.Nodes.Add(treeNode);
+				treeNode.Expand();
 			}
 			else
 			{
@@ -116,7 +131,7 @@ namespace Pck
 					_AddNodes(treeNode, ptc);
 				}
 				node.Nodes.Add(treeNode);
-
+				treeNode.Expand();
 			}
 		}
 
