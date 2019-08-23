@@ -61,7 +61,7 @@ namespace Pck
 					case -1:
 						return result;
 					case '.':
-						var nset= new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetRangeEntry(char.MinValue, char.MaxValue) }, false);
+						var nset = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetRangeEntry(char.MinValue, char.MaxValue) }, false);
 						nset.SetLocation(line, column, position);
 						if (null == result)
 							result = nset;
@@ -71,29 +71,74 @@ namespace Pck
 							result.SetLocation(line, column, position);
 						}
 						pc.Advance();
-						result = _ParseModifier(result,pc);
+						result = _ParseModifier(result, pc);
 						line = pc.Line;
 						column = pc.Column;
 						position = pc.Position;
 						break;
 					case '\\':
-						if (-1 != (ich = _ParseEscape(pc)))
+						
+						pc.Advance();
+						pc.Expecting();
+						switch (pc.Current)
 						{
-							next = new RegexLiteralExpression((char)ich);
-							next.SetLocation(line, column, position);
-							next = _ParseModifier(next,pc);
-							if (null != result)
-							{
-								result = new RegexConcatExpression(result, next);
-								result.SetLocation(line, column, position);
-							} else
-								result = next;
+							case 'd':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("digit") });
+								pc.Advance();
+								break;
+							case 'D':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("digit") },true);
+								pc.Advance();
+								break;
+							case 'h':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("blank") });
+								pc.Advance();
+								break;
+							case 'l':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("lower") });
+								pc.Advance();
+								break;
+							case 's':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("space") });
+								pc.Advance();
+								break;
+							case 'S':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("space") },true);
+								pc.Advance();
+								break;
+							case 'u':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("upper") });
+								pc.Advance();
+								break;
+							case 'w':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("word") });
+								pc.Advance();
+								break;
+							case 'W':
+								next = new RegexCharsetExpression(new RegexCharsetEntry[] { new RegexCharsetClassEntry("word") },true);
+								pc.Advance();
+								break;
+							default:
+								if (-1 != (ich = _ParseEscapePart(pc)))
+								{
+									next = new RegexLiteralExpression((char)ich);
+								}
+								else
+								{
+									pc.Expecting(); // throw an error
+									return null; // doesn't execute
+								}
+								break;
+						}
+						next.SetLocation(line, column, position);
+						next = _ParseModifier(next, pc);
+						if (null != result)
+						{
+							result = new RegexConcatExpression(result, next);
+							result.SetLocation(line, column, position);
 						}
 						else
-						{
-							pc.Expecting(); // throw an error
-							return null; // doesn't execute
-						}
+							result = next;
 						line = pc.Line;
 						column = pc.Column;
 						position = pc.Position;
@@ -219,27 +264,56 @@ namespace Pck
 						next = null;
 						break;
 					case '\\':
-						//pc.Advance();
-						//pc.Expecting();
-						var ch = (char)_ParseEscape(pc);
-						if (null == next)
+						pc.Advance();
+						pc.Expecting();
+						switch(pc.Current)
 						{
-							next = new RegexCharsetCharEntry(ch);
+							case 'h':
+								_ParseCharClassEscape(pc, "space", result, ref next, ref readDash);
+								break;
+							case 'd':
+								_ParseCharClassEscape(pc, "digit", result, ref next, ref readDash);
+								break;
+							case 'D':
+								_ParseCharClassEscape(pc, "^digit", result, ref next, ref readDash);
+								break;
+							case 'l':
+								_ParseCharClassEscape(pc,"lower", result, ref next, ref readDash);
+								break;
+							case 's':
+								_ParseCharClassEscape(pc, "space", result, ref next, ref readDash);
+								break;
+							case 'S':
+								_ParseCharClassEscape(pc, "^space", result, ref next, ref readDash);
+								break;
+							case 'u':
+								_ParseCharClassEscape(pc, "upper", result, ref next, ref readDash);
+								break;
+							case 'w':
+								_ParseCharClassEscape(pc, "word", result, ref next, ref readDash);
+								break;
+							case 'W':
+								_ParseCharClassEscape(pc, "^word", result, ref next, ref readDash);
+								break;
+							default:
+								var ch = (char)_ParseRangeEscapePart(pc);
+								if (null == next)
+									next = new RegexCharsetCharEntry(ch);
+								else if (readDash)
+								{
+									result.Add(new RegexCharsetRangeEntry(((RegexCharsetCharEntry)next).Value, ch));
+									next = null;
+									readDash = false;
+								}
+								else
+								{
+									result.Add(next);
+									next = new RegexCharsetCharEntry(ch);
+								}
+								
+								break;
 						}
-						else
-						{
-							if (readDash)
-							{
-								result.Add(new RegexCharsetRangeEntry(((RegexCharsetCharEntry)next).Value, ch));
-								next = null;
-								readDash = false;
-							}
-							else
-							{
-								result.Add(next);
-								next = new RegexCharsetCharEntry(ch);
-							}
-						}
+						
 						break;
 					case '-':
 						pc.Advance();
@@ -289,6 +363,22 @@ namespace Pck
 			}
 			return result;
 		}
+
+		static void _ParseCharClassEscape(ParseContext pc, string cls, List<RegexCharsetEntry> result, ref RegexCharsetEntry next, ref bool readDash)
+		{
+			if (null != next)
+			{
+				result.Add(next);
+				if (readDash)
+					result.Add(new RegexCharsetCharEntry('-'));
+				result.Add(new RegexCharsetCharEntry('-'));
+			}
+			pc.Advance();
+			result.Add(new RegexCharsetClassEntry(cls));
+			next = null;
+			readDash = false;
+		}
+
 		static RegexExpression _ParseModifier(RegexExpression expr,ParseContext pc)
 		{
 			var line = pc.Line;
@@ -593,11 +683,70 @@ namespace Pck
 				return true;
 			return false;
 		}
-		static int _ParseEscape(ParseContext pc)
+		// return type is either char or ranges. this is kind of a union return type.
+		static int _ParseEscapePart(ParseContext pc)
 		{
-			if ('\\' != pc.Current)
-				return -1;
-			if (-1 == pc.Advance())
+			if (-1 == pc.Current) return -1;
+			switch (pc.Current)
+			{
+				case 'f':
+					pc.Advance();
+					return '\f';
+				case 'v':
+					pc.Advance();
+					return '\v';
+				case 't':
+					pc.Advance();
+					return '\t';
+				case 'n':
+					pc.Advance();
+					return '\n';
+				case 'r':
+					pc.Advance();
+					return '\r';
+				case 'x':
+					if (-1 == pc.Advance() || !_IsHexChar((char)pc.Current))
+						return 'x';
+					byte b = _FromHexChar((char)pc.Current);
+					if (-1 == pc.Advance() || !_IsHexChar((char)pc.Current))
+						return unchecked((char)b);
+					b <<= 4;
+					b |= _FromHexChar((char)pc.Current);
+					if (-1 == pc.Advance() || !_IsHexChar((char)pc.Current))
+						return unchecked((char)b);
+					b <<= 4;
+					b |= _FromHexChar((char)pc.Current);
+					if (-1 == pc.Advance() || !_IsHexChar((char)pc.Current))
+						return unchecked((char)b);
+					b <<= 4;
+					b |= _FromHexChar((char)pc.Current);
+					return unchecked((char)b);
+				case 'u':
+					if (-1 == pc.Advance())
+						return 'u';
+					ushort u = _FromHexChar((char)pc.Current);
+					u <<= 4;
+					if (-1 == pc.Advance())
+						return unchecked((char)u);
+					u |= _FromHexChar((char)pc.Current);
+					u <<= 4;
+					if (-1 == pc.Advance())
+						return unchecked((char)u);
+					u |= _FromHexChar((char)pc.Current);
+					u <<= 4;
+					if (-1 == pc.Advance())
+						return unchecked((char)u);
+					u |= _FromHexChar((char)pc.Current);
+					return unchecked((char)u);
+				default:
+					int i = pc.Current;
+					pc.Advance();
+					return (char)i;
+			}
+		}
+		static int _ParseRangeEscapePart(ParseContext pc)
+		{
+			if (-1== pc.Current)
 				return -1;
 			switch (pc.Current)
 			{

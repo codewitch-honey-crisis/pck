@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -710,99 +711,91 @@ namespace Pck
 		static IDictionary<string,IList<CharRange>> _GetCharacterClasses()
 		{
 			var result = new Dictionary<string, IList<CharRange>>();
-			result.Add("letter", new List<CharRange>(CharRange.GetRanges(CharUtility.Letter)));
-			result.Add("digit", new List<CharRange>(CharRange.GetRanges(CharUtility.Digit)));
+			result.Add("alnum", 
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('A','Z'),
+						new CharRange('a', 'z'),
+						new CharRange('0', '9')
+					}));
+			result.Add("alpha",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('A','Z'),
+						new CharRange('a', 'z')
+					}));
+			result.Add("ascii",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('\0','\x7F')
+					}));
+			result.Add("blank",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange(' ',' '),
+						new CharRange('\t','\t')
+					}));
+			result.Add("cntrl",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('\0','\x1F'),
+						new CharRange('\x7F','\x7F')
+					}));
+			result.Add("digit",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('0', '9')
+					}));
+			result.Add("^digit", new List<CharRange>(CharRange.NotRanges(result["digit"])));
+			result.Add("graph", 
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('\x21', '\x7E')
+					}));
+			result.Add("lower",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('a', 'z')
+					}));
+			result.Add("print",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('\x20', '\x7E')
+					}));
+			// [!"\#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]	
+			result.Add("punct",
+				new List<CharRange>(
+					CharRange.GetRanges("!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~")
+					));
+			//[ \t\r\n\v\f]
+			result.Add("space",
+					new List<CharRange>(
+						CharRange.GetRanges(" \t\r\n\v\f")
+						));
+			result.Add("^space", new List<CharRange>(CharRange.NotRanges(result["space"])));
+			result.Add("upper",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('A', 'Z')
+					}));
+			result.Add("word",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('0', '9'),
+						new CharRange('A', 'Z'),
+						new CharRange('_', '_'),
+						new CharRange('a', 'z')
+					}));
+			result.Add("^word",new List<CharRange>(CharRange.NotRanges(result["word"])));
+			result.Add("xdigit",
+				new List<CharRange>(
+					new CharRange[] {
+						new CharRange('0', '9'),
+						new CharRange('A', 'F'),
+						new CharRange('a', 'f')
+					}));
 			return result;
-			
 		}
-		static char _ReadRangeChar(IEnumerator<char> e)
-		{
-			char ch;
-			if ('\\' != e.Current || !e.MoveNext())
-			{
-				return e.Current;
-			}
-			ch = e.Current;
-			switch (ch)
-			{
-				case 't':
-					ch = '\t';
-					break;
-				case 'n':
-					ch = '\n';
-					break;
-				case 'r':
-					ch = '\r';
-					break;
-				case '0':
-					ch = '\0';
-					break;
-				case 'v':
-					ch = '\v';
-					break;
-				case 'f':
-					ch = '\f';
-					break;
-				case 'b':
-					ch = '\b';
-					break;
-				case 'x':
-					if (!e.MoveNext())
-						throw new ExpectingException("Expecting input for escape \\x");
-					ch = e.Current;
-					byte x = _FromHexChar(ch);
-					if (!e.MoveNext())
-					{
-						ch = unchecked((char)x);
-						return ch;
-					}
-					x *= 0x10;
-					x += _FromHexChar(e.Current);
-					ch = unchecked((char)x);
-					break;
-				case 'u':
-					if (!e.MoveNext())
-						throw new ExpectingException("Expecting input for escape \\u");
-					ch = e.Current;
-					ushort u = _FromHexChar(ch);
-					if (!e.MoveNext())
-					{
-						ch = unchecked((char)u);
-						return ch;
-					}
-					u *= 0x10;
-					u += _FromHexChar(e.Current);
-					if (!e.MoveNext())
-					{
-						ch = unchecked((char)u);
-						return ch;
-					}
-					u *= 0x10;
-					u += _FromHexChar(e.Current);
-					if (!e.MoveNext())
-					{
-						ch = unchecked((char)u);
-						return ch;
-					}
-					u *= 0x10;
-					u += _FromHexChar(e.Current);
-					ch = unchecked((char)u);
-					break;
-				default: // return itself
-					break;
-			}
-			return ch;
-		}
-		static byte _FromHexChar(char hex)
-		{
-			if (':' > hex && '/' < hex)
-				return (byte)(hex - '0');
-			if ('G' > hex && '@' < hex)
-				return (byte)(hex - '7'); // 'A'-10
-			if ('g' > hex && '`' < hex)
-				return (byte)(hex - 'W'); // 'a'-10
-			throw new ArgumentException("The value was not hex.", "hex");
-		}
-		
+	
 	}
 }
