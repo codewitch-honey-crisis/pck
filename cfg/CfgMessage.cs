@@ -4,16 +4,10 @@ using System.Text;
 
 namespace Pck
 {
-	public enum CfgErrorLevel
-	{
-		Message = 0,
-		Warning = 1,
-		Error = 2
-	}
 
-	public sealed class CfgMessage : IEquatable<CfgMessage>, ICloneable
+	public sealed class CfgMessage : IMessage, IEquatable<CfgMessage>, ICloneable
 	{
-		public CfgMessage(CfgErrorLevel errorLevel, int errorCode, string message, int line, int column, long position)
+		public CfgMessage(ErrorLevel errorLevel, int errorCode, string message, int line, int column, long position)
 		{
 			ErrorLevel = errorLevel;
 			ErrorCode = errorCode;
@@ -22,7 +16,7 @@ namespace Pck
 			Column = column;
 			Position = position;
 		}
-		public CfgErrorLevel ErrorLevel { get; private set; }
+		public ErrorLevel ErrorLevel { get; private set; }
 		public int ErrorCode { get; private set; }
 		public string Message { get; private set; }
 		public int Line { get; private set; }

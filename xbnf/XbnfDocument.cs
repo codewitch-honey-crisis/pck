@@ -57,7 +57,12 @@ namespace Pck
 			var refCounts = new Dictionary<string, int>(EqualityComparer<string>.Default);
 
 			foreach (var prod in Productions)
-				refCounts.Add(prod.Name, 0);
+			{
+				if (refCounts.ContainsKey(prod.Name))
+					result.Add(new XbnfMessage(ErrorLevel.Error, -1, string.Concat("The production \"", prod.Name, "\" was specified more than once."), prod.Line, prod.Column, prod.Position));
+				else
+					refCounts.Add(prod.Name, 0);
+			}
 			foreach (var prod in Productions)
 			{
 				_ValidateExpression(prod.Expression, refCounts, result);
@@ -76,7 +81,7 @@ namespace Pck
 						isHidden = (o is bool && (bool)o);
 					}
 					if (!isHidden && !Equals(rc.Key, StartProduction.Name))
-						result.Add(new XbnfMessage(XbnfErrorLevel.Warning, -1, string.Concat("Unreferenced production \"", rc.Key, "\""),
+						result.Add(new XbnfMessage(ErrorLevel.Warning, -1, string.Concat("Unreferenced production \"", rc.Key, "\""),
 							prod.Line, prod.Column, prod.Position));
 				}
 			}
@@ -186,7 +191,7 @@ namespace Pck
 				{
 					messages.Add(
 						new XbnfMessage(
-							XbnfErrorLevel.Error, -1,
+							ErrorLevel.Error, -1,
 							"Null reference expression",
 							expr.Line, expr.Column, expr.Position));
 					return;
@@ -195,7 +200,7 @@ namespace Pck
 				{
 					messages.Add(
 						new XbnfMessage(
-							XbnfErrorLevel.Error, -1,
+							ErrorLevel.Error, -1,
 							string.Concat(
 								"Reference to undefined symbol \"",
 								r.Symbol,
@@ -213,7 +218,7 @@ namespace Pck
 				{
 					messages.Add(
 						new XbnfMessage(
-							XbnfErrorLevel.Warning, -1,
+							ErrorLevel.Warning, -1,
 								"Nil expression",
 							expr.Line, expr.Column, expr.Position));
 					return;
@@ -229,7 +234,7 @@ namespace Pck
 				{
 					messages.Add(
 						new XbnfMessage(
-							XbnfErrorLevel.Warning, -1,
+							ErrorLevel.Warning, -1,
 								"Nil expression",
 							expr.Line, expr.Column, expr.Position));
 					return;

@@ -91,7 +91,7 @@ namespace Pck
 				foreach (var msg in cfg.TryValidateLL1())
 				{
 					Console.Error.WriteLine(msg);
-					if (CfgErrorLevel.Error == msg.ErrorLevel)
+					if (ErrorLevel.Error == msg.ErrorLevel)
 						hasErrors = true;
 				}
 				if (!hasErrors)

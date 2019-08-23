@@ -31,7 +31,7 @@ namespace Pck
 			var hasErrors = false;
 			foreach(var msg in result)
 			{
-				if(CfgErrorLevel.Error==msg.ErrorLevel)
+				if(ErrorLevel.Error==msg.ErrorLevel)
 				{
 					hasErrors = true;
 					break;

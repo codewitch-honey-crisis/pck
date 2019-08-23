@@ -14,21 +14,20 @@ grammar<start>= productions;
 // the result but not from the grammar, unlike hidden
 //
 productions<collapsed> = production productions | production;
-production= identifier [ "<" attributes ">" ] "=" expressions ";";
+production= identifier [ "<" attributes ">" ] "=" orExpression ";";
 
 //
 // expressions
 //
-expressions= concatExpression { orExpression }; 
+orExpression = concatExpression { "|" concatExpression }; 
 concatExpression= { symbol };
 symbol<collapsed>= literal | regex | identifier | 
 	subexpression | 
 	optionalExpression |
 	repeatExpression;
-orExpression = "|" concatExpression;
-subexpression<collapsed>= "(" expressions ")";
-optionalExpression= "[" expressions "]";
-repeatExpression= "{" expressions (repeatZero | repeatOne);
+subexpression<collapsed>= "(" orExpression ")";
+optionalExpression= "[" orExpression "]";
+repeatExpression= "{" orExpression (repeatZero | repeatOne);
 repeatZero= rbrace;
 repeatOne= rbracePlus;
 //

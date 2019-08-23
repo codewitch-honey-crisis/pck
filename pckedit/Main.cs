@@ -153,13 +153,13 @@ namespace Pck
 			
 			switch(msg.ErrorLevel)
 			{
-				case CfgErrorLevel.Message:
+				case ErrorLevel.Message:
 					lvi.ImageIndex = 0;
 					break;
-				case CfgErrorLevel.Warning:
+				case ErrorLevel.Warning:
 					lvi.ImageIndex = 1;
 					break;
-				case CfgErrorLevel.Error:
+				case ErrorLevel.Error:
 					lvi.ImageIndex = 2;
 					break;
 			}
@@ -184,13 +184,13 @@ namespace Pck
 
 			switch (msg.ErrorLevel)
 			{
-				case XbnfErrorLevel.Message:
+				case ErrorLevel.Message:
 					lvi.ImageIndex = 0;
 					break;
-				case XbnfErrorLevel.Warning:
+				case ErrorLevel.Warning:
 					lvi.ImageIndex = 1;
 					break;
-				case XbnfErrorLevel.Error:
+				case ErrorLevel.Error:
 					lvi.ImageIndex = 2;
 					break;
 			}
@@ -869,7 +869,7 @@ namespace Pck
 			var hasErrors = false;
 			foreach(var msg in xbnf.TryValidate())
 			{
-				if (msg.ErrorLevel == XbnfErrorLevel.Error)
+				if (msg.ErrorLevel == ErrorLevel.Error)
 					hasErrors = true;
 				_AddMessage(msg, fname);
 			}
@@ -908,7 +908,7 @@ namespace Pck
 						break;
 					goto case ".pck";
 				case ".pck":
-					await Task.Run(() =>
+					await Task.Run((Action)(() =>
 					{
 						if(factor)
 							name = string.Concat(name, ".ll1");
@@ -917,7 +917,7 @@ namespace Pck
 						lex.AttributeSets.Clear(); // prevent attributes from being written twice
 						foreach (var msg in cfg.TryValidateLL1())
 						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
+							if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
 							_AddMessage(msg, (".pck" == ext) ? fname : "");
 						}
@@ -925,7 +925,7 @@ namespace Pck
 						{
 							foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 							{
-								if (CfgErrorLevel.Error == msg.ErrorLevel)
+								if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 									hasErrors = true;
 								_AddMessage(msg, (".pck" == ext) ? fname : "");
 
@@ -936,7 +936,7 @@ namespace Pck
 							input = string.Concat(cfg.ToString(), Environment.NewLine, lex.ToString());
 							name = string.Concat(name, ".pck");
 						}
-					});
+					}));
 					if(!hasErrors)
 					{
 						name = _GetUniqueFilename(name);
@@ -973,12 +973,12 @@ namespace Pck
 						break;
 					goto case ".pck";
 				case ".pck":
-					await Task.Run(() => { 
+					await Task.Run((Action)(() => { 
 						var sb = new StringBuilder();
 						var cfg = CfgDocument.Parse(input);
 						foreach (var msg in cfg.TryValidateLL1())
 						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
+							if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
 							_AddMessage(msg, (".pck" == ext) ? fname : "");
 						}
@@ -986,7 +986,7 @@ namespace Pck
 						{
 							foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 							{
-								if (CfgErrorLevel.Error == msg.ErrorLevel)
+								if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 									hasErrors = true;
 								_AddMessage(msg, (".pck" == ext) ? fname : "");
 							}
@@ -1009,7 +1009,7 @@ namespace Pck
 								LL1ParserCodeGenerator.WriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang, new _LL1Progress(prog), sw);
 							input = sb.ToString();
 						}
-					});
+					}));
 					if(!hasErrors)
 					{ 
 						name = _GetUniqueFilename(name);
@@ -1043,12 +1043,12 @@ namespace Pck
 						break;
 					goto case ".pck";
 				case ".pck":
-					await Task.Run(()=>{ 
+					await Task.Run((Action)(()=>{ 
 						var sb = new StringBuilder();
 						var cfg = CfgDocument.Parse(input);
 						foreach (var msg in cfg.TryValidateLalr1())
 						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
+							if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
 							_AddMessage(msg, (".pck" == ext) ? fname : "");
 
@@ -1071,7 +1071,7 @@ namespace Pck
 							{
 								foreach (var msg in Lalr1ParserCodeGenerator.TryWriteClassTo(cfg, Path.GetFileNameWithoutExtension(name), null, lang, new _Lalr1Progress(prog), sw))
 								{
-									if (CfgErrorLevel.Error == msg.ErrorLevel)
+									if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 										hasErrors = true;
 									_AddMessage(msg, (".pck" == ext) ? fname : "");
 								}
@@ -1079,7 +1079,7 @@ namespace Pck
 							if (!hasErrors)
 								input = sb.ToString();
 						}
-					});
+					}));
 					if (!hasErrors)
 					{
 						name = _GetUniqueFilename(name);
@@ -1117,7 +1117,7 @@ namespace Pck
 						break;
 					goto case ".pck";
 				case ".pck":
-					await Task.Run(() => { 
+					await Task.Run((Action)(() => { 
 					var sb = new StringBuilder();
 					var cfg = CfgDocument.Parse(input);
 					var lex = LexDocument.Parse(input);
@@ -1125,9 +1125,9 @@ namespace Pck
 					{
 						foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
+							if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
-							_AddMessage(msg, (".pck" == ext) ? fname : "");
+								_AddMessage(msg, (".pck" == ext) ? fname : "");
 
 						}
 						prog.WriteLog(Environment.NewLine);
@@ -1147,10 +1147,10 @@ namespace Pck
 						}
 						sb.Clear();
 						using (var sw = new StringWriter(sb))
-							TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(), Path.GetFileNameWithoutExtension(name), null, lang,new _FAProgress(prog),  sw);
+								TokenizerCodeGenerator.WriteClassTo(lex, cfg.FillSymbols(), Path.GetFileNameWithoutExtension(name), null, lang,new _FAProgress(prog),  sw);
 						input = sb.ToString();
 					}
-					});
+					}));
 					if (!hasErrors)
 					{
 						name = _GetUniqueFilename(name);
@@ -1227,7 +1227,7 @@ namespace Pck
 			var sb = new StringBuilder();
 			var hasErrors = false;
 			messages.Items.Clear();
-			await Task.Run(() =>
+			await Task.Run((Action)(() =>
 			{
 				switch (ext)
 				{
@@ -1241,7 +1241,7 @@ namespace Pck
 						var lex = LexDocument.Parse(input);
 						foreach (var msg in cfg.TryValidateLL1())
 						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
+							if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
 							var n = fname;
 							_AddMessage(msg, (".pck" == ext) ? n : "");
@@ -1250,7 +1250,7 @@ namespace Pck
 						{
 							foreach (var msg in cfg.TryPrepareLL1(new _LL1Progress(prog)))
 							{
-								if (CfgErrorLevel.Error == msg.ErrorLevel)
+								if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 									hasErrors = true;
 								var n = fname;
 								_AddMessage(msg, (".pck" == ext) ? n : "");
@@ -1262,7 +1262,7 @@ namespace Pck
 							LL1Parser parser;
 							foreach (var msg in cfg.TryToLL1Parser(out parser, tokenizer, new _LL1Progress(prog)))
 							{
-								if (CfgErrorLevel.Error == msg.ErrorLevel)
+								if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 									hasErrors = true;
 								var n = fname;
 								_AddMessage(msg, (".pck" == ext) ? n : "");
@@ -1280,7 +1280,7 @@ namespace Pck
 
 						break;
 				}
-			});
+			}));
 			prog.Close();
 		}
 
@@ -1297,7 +1297,7 @@ namespace Pck
 			messages.Items.Clear();
 			var test = new Test();
 			test.Text = string.Concat(test.Text, " - ", fname);
-			await Task.Run(() => {
+			await Task.Run((Action)(() => {
 				switch (ext)
 				{
 					case ".xbnf":
@@ -1310,7 +1310,7 @@ namespace Pck
 						var lex = LexDocument.Parse(input);
 						foreach (var msg in cfg.TryValidateLalr1())
 						{
-							if (CfgErrorLevel.Error == msg.ErrorLevel)
+							if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 								hasErrors = true;
 							var n = fname;
 							_AddMessage(msg, (".pck" == ext) ? n : "");
@@ -1321,7 +1321,7 @@ namespace Pck
 							Lalr1Parser parser;
 							foreach (var msg in cfg.TryToLalr1Parser(out parser, tokenizer, new _Lalr1Progress(prog)))
 							{
-								if (CfgErrorLevel.Error == msg.ErrorLevel)
+								if (Pck.ErrorLevel.Error == msg.ErrorLevel)
 									hasErrors = true;
 								var n = fname;
 								_AddMessage(msg, (".pck" == ext) ? n : "");
@@ -1340,7 +1340,7 @@ namespace Pck
 						break;
 				}
 
-			});
+			}));
 			prog.Close();
 		}
 

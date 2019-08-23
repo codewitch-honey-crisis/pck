@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using ICSharpCode.TextEditor;
+using ICSharpCode.TextEditor.Document;
 namespace Pck
 {
 	public partial class Test : Form
@@ -148,6 +149,22 @@ namespace Pck
 		private void showHidden_CheckedChanged(object sender, EventArgs e)
 		{
 			parseTimer.Enabled = true;
+		}
+
+		private void parseTree_AfterSelect(object sender, TreeViewEventArgs e)
+		{
+			var pn = e.Node.Tag as ParseNode;
+			if(null!=pn)
+			{
+				var start = editor.Document.OffsetToPosition((int)pn.Position);
+				var sel = new DefaultSelection(
+					editor.Document, 
+					start, 
+					editor.Document.OffsetToPosition(pn.Length + (int)pn.Position));
+				editor.ActiveTextAreaControl.SelectionManager.SetSelection(sel);
+				editor.ActiveTextAreaControl.Caret.Position = start;
+			}
+
 		}
 	}
 }

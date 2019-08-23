@@ -8,7 +8,7 @@ namespace Pck
 	{
 		public IList<XbnfMessage> Messages { get; }
 		public XbnfException(string message, int errorCode = -1, int line = 0, int column = 0, long position = -1) :
-			this(new XbnfMessage[] { new XbnfMessage(XbnfErrorLevel.Error, errorCode, message, line, column, position) })
+			this(new XbnfMessage[] { new XbnfMessage(ErrorLevel.Error, errorCode, message, line, column, position) })
 		{ }
 		static string _FindMessage(IEnumerable<XbnfMessage> messages)
 		{
@@ -17,7 +17,7 @@ namespace Pck
 			int c = 0;
 			foreach (var m in l)
 			{
-				if (XbnfErrorLevel.Error == m.ErrorLevel)
+				if (ErrorLevel.Error == m.ErrorLevel)
 				{
 					if (1 == l.Count)
 						return m.ToString();
@@ -37,7 +37,7 @@ namespace Pck
 		{
 			if (null == messages) return;
 			foreach (var m in messages)
-				if (XbnfErrorLevel.Error == m.ErrorLevel)
+				if (ErrorLevel.Error == m.ErrorLevel)
 					throw new XbnfException(messages);
 		}
 	}

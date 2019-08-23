@@ -165,7 +165,7 @@ namespace Pck
 							if(null==tuple.Right)
 							{
 								var nr = cfg.Rules[rid];
-								var msg = new CfgMessage(CfgErrorLevel.Warning, -1, string.Format("Shift-Reduce conflict on rule {0}, token {1}", nr, iid), nr.Line, nr.Column, nr.Position);
+								var msg = new CfgMessage(ErrorLevel.Warning, -1, string.Format("Shift-Reduce conflict on rule {0}, token {1}", nr, iid), nr.Line, nr.Column, nr.Position);
 								if(!result.Contains(msg))
 									result.Add(msg);
 							} else
@@ -173,7 +173,7 @@ namespace Pck
 								if (rid != newTuple.RuleOrStateId)
 								{
 									var nr = cfg.Rules[rid];
-									var msg = new CfgMessage(CfgErrorLevel.Error, -1, string.Format("Reduce-Reduce conflict on rule {0}, token {1}", nr, iid), nr.Line, nr.Column, nr.Position);
+									var msg = new CfgMessage(ErrorLevel.Error, -1, string.Format("Reduce-Reduce conflict on rule {0}, token {1}", nr, iid), nr.Line, nr.Column, nr.Position);
 									if (!result.Contains(msg))
 										result.Add(msg);
 								}
@@ -379,25 +379,25 @@ namespace Pck
 				result = new List<CfgMessage>();
 			var ic = cfg.Rules.Count;
 			if (0 == ic)
-				result.Add(new CfgMessage(CfgErrorLevel.Error, -1, "Grammar has no rules", 0, 0, 0));
+				result.Add(new CfgMessage(ErrorLevel.Error, -1, "Grammar has no rules", 0, 0, 0));
 
 			var dups = new HashSet<CfgRule>();
 			for (var i = 0; i < ic; ++i)
 			{
 				var rule = cfg.Rules[i];
 				if (rule.Left.IsNullOrEmpty())
-					result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has empty left hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+					result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has empty left hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
 				else if ("#ERROR" == rule.Left || "#EOS" == rule.Left)
-					result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on left hand side: ", rule.ToString()), rule.Line, rule.Column, rule.Position));
+					result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on left hand side: ", rule.ToString()), rule.Line, rule.Column, rule.Position));
 				for (int jc = rule.Right.Count, j = 0; j > jc; ++j)
 					if (rule.Right[j].IsNullOrEmpty())
-						result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has empty symbols on the right hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has empty symbols on the right hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
 					else if ("#ERROR" == rule.Right[j] || "#EOS" == rule.Right[j])
-						result.Add(new CfgMessage(CfgErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on right hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on right hand side:", rule.ToString()), rule.Line, rule.Column, rule.Position));
 
 				for (var j = 0; j < ic; ++j)
 					if (i != j && cfg.Rules[j] == rule && dups.Add(rule))
-						result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Duplicate rule:", rule.ToString()), rule.Line, rule.Column, rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Duplicate rule:", rule.ToString()), rule.Line, rule.Column, rule.Position));
 
 			}
 			var closure = cfg.FillClosure(cfg.StartSymbol);
@@ -417,7 +417,7 @@ namespace Pck
 						if (0 < rl.Count)
 						{
 							var r = rl[0];
-							result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""), r.Line, r.Column, r.Position));
+							result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""), r.Line, r.Column, r.Position));
 						}
 					}
 				}
@@ -447,7 +447,7 @@ namespace Pck
 					// are suppressed.
 					var i = attrs.Value.IndexOf("hidden");
 					if (!(-1 < i && attrs.Value[i].Value is bool && ((bool)attrs.Value[i].Value)))
-						result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("Attributes declared on a symbol \"", attrs.Key, "\" that is not in the grammar"), attrs.Value[0].Line, attrs.Value[0].Column, attrs.Value[0].Position));
+						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Attributes declared on a symbol \"", attrs.Key, "\" that is not in the grammar"), attrs.Value[0].Line, attrs.Value[0].Column, attrs.Value[0].Position));
 				}
 				foreach (var attr in attrs.Value)
 				{
@@ -457,43 +457,43 @@ namespace Pck
 					{
 						case "start":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "start attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "start attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
 							if (null != start)
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "start attribute was already specified on \"", start, "\" and this declaration will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "start attribute was already specified on \"", start, "\" and this declaration will be ignored"), attr.Line, attr.Column, attr.Position));
 							else
 								start = attrs.Key;
 							continue;
 						case "hidden":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "hidden attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "hidden attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
 							continue;
 						case "terminal":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "terminal attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "terminal attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
 							continue;
 						case "collapsed":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "collapse attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "collapse attribute expects a bool value and will be ignored"), attr.Line, attr.Column, attr.Position));
 							continue;
 						case "substitute":
 							s = attr.Value as string;
 							if (!(attr.Value is string))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
 							else if (string.IsNullOrEmpty(s))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
 							else if (!cfg.IsSymbol(s))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a symbol reference and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a symbol reference and will be ignored"), attr.Line, attr.Column, attr.Position));
 							continue;
 						case "blockEnd":
 							if (cfg.IsNonTerminal(attrs.Key))
-								result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute cannot be specified on a non-terminal and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute cannot be specified on a non-terminal and will be ignored"), attr.Line, attr.Column, attr.Position));
 							else
 							{
 								s = attr.Value as string;
 								if (!(attr.Value is string))
-									result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
 								else if (string.IsNullOrEmpty(s))
-									result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
 							}
 							continue;
 						case "followsConflict":
@@ -505,17 +505,17 @@ namespace Pck
 								case "last":
 									break;
 								default:
-									result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "followsError attribute expects \"error\", \"first\", or \"last\" and will revert to \"error\"."), attr.Line, attr.Column, attr.Position));
+									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "followsError attribute expects \"error\", \"first\", or \"last\" and will revert to \"error\"."), attr.Line, attr.Column, attr.Position));
 									break;
 							}
 							continue;
 					}
-					result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat(p, "Unknown attribute \"", attr.Name, "\" will be ignored"), attr.Line, attr.Column, attr.Position));
+					result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "Unknown attribute \"", attr.Name, "\" will be ignored"), attr.Line, attr.Column, attr.Position));
 				}
 
 			}
 			if (null == start)
-				result.Add(new CfgMessage(CfgErrorLevel.Warning, -1, string.Concat("start attribute was not specified and the first non-terminal in the grammar (\"", cfg.StartSymbol, "\") will be used"), 0, 0, 0));
+				result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("start attribute was not specified and the first non-terminal in the grammar (\"", cfg.StartSymbol, "\") will be used"), 0, 0, 0));
 			return result;
 		}
 		public struct LRItem : IEquatable<LRItem>, ICloneable

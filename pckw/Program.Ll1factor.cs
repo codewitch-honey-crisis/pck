@@ -42,10 +42,10 @@ namespace Pck
 			var hasErrors = false;
 			foreach (var msg in cfg.TryPrepareLL1())
 			{
-				if (CfgErrorLevel.Warning == msg.ErrorLevel || CfgErrorLevel.Error == msg.ErrorLevel)
+				if (ErrorLevel.Warning == msg.ErrorLevel || ErrorLevel.Error == msg.ErrorLevel)
 				{
 					Console.Error.WriteLine(msg);
-					if (CfgErrorLevel.Error == msg.ErrorLevel)
+					if (ErrorLevel.Error == msg.ErrorLevel)
 						hasErrors = true;
 				}
 			}

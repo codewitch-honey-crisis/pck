@@ -33,11 +33,11 @@
 			this.parseTimer = new System.Windows.Forms.Timer(this.components);
 			this.treeImageList = new System.Windows.Forms.ImageList(this.components);
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.editor = new ICSharpCode.TextEditor.TextEditorControl();
 			this.parseTree = new System.Windows.Forms.TreeView();
 			this.showHidden = new System.Windows.Forms.CheckBox();
 			this.transformTree = new System.Windows.Forms.CheckBox();
 			this.trimTree = new System.Windows.Forms.CheckBox();
-			this.editor = new ICSharpCode.TextEditor.TextEditorControl();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -76,6 +76,16 @@
 			this.splitContainer1.SplitterDistance = 450;
 			this.splitContainer1.TabIndex = 4;
 			// 
+			// editor
+			// 
+			this.editor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.editor.IsReadOnly = false;
+			this.editor.Location = new System.Drawing.Point(0, 0);
+			this.editor.Name = "editor";
+			this.editor.Size = new System.Drawing.Size(450, 453);
+			this.editor.TabIndex = 2;
+			this.editor.TextChanged += new System.EventHandler(this.editor_TextChanged);
+			// 
 			// parseTree
 			// 
 			this.parseTree.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -88,6 +98,7 @@
 			this.parseTree.SelectedImageIndex = 0;
 			this.parseTree.Size = new System.Drawing.Size(228, 390);
 			this.parseTree.TabIndex = 6;
+			this.parseTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.parseTree_AfterSelect);
 			// 
 			// showHidden
 			// 
@@ -132,16 +143,6 @@
 			this.trimTree.Text = "Trim Tree";
 			this.trimTree.UseVisualStyleBackColor = false;
 			this.trimTree.CheckedChanged += new System.EventHandler(this.trimTree_CheckedChanged);
-			// 
-			// editor
-			// 
-			this.editor.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.editor.IsReadOnly = false;
-			this.editor.Location = new System.Drawing.Point(0, 0);
-			this.editor.Name = "editor";
-			this.editor.Size = new System.Drawing.Size(450, 453);
-			this.editor.TabIndex = 2;
-			this.editor.TextChanged += new System.EventHandler(this.editor_TextChanged);
 			// 
 			// Test
 			// 
