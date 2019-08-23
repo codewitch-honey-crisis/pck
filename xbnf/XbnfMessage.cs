@@ -7,7 +7,7 @@ namespace Pck
 	
 	public sealed class XbnfMessage : IMessage,IEquatable<XbnfMessage>,ICloneable
 	{
-		public XbnfMessage(ErrorLevel errorLevel, int errorCode, string message, int line, int column, long position)
+		public XbnfMessage(ErrorLevel errorLevel, int errorCode, string message, int line, int column, long position,string filename)
 		{
 			ErrorLevel = errorLevel;
 			ErrorCode = errorCode;
@@ -15,6 +15,7 @@ namespace Pck
 			Line = line;
 			Column = column;
 			Position = position;
+			Filename = filename;
 		}
 		public ErrorLevel ErrorLevel { get; private set; }
 		public int ErrorCode { get; private set; }
@@ -22,7 +23,7 @@ namespace Pck
 		public int Line { get; private set; }
 		public int Column { get; private set; }
 		public long Position { get; private set; }
-
+		public string Filename { get; private set; }
 		public override string ToString()
 		{
 			if (-1 == Position)
@@ -44,7 +45,7 @@ namespace Pck
 		}
 		public XbnfMessage Clone()
 		{
-			return new XbnfMessage(ErrorLevel, ErrorCode, Message, Line, Column, Position);
+			return new XbnfMessage(ErrorLevel, ErrorCode, Message, Line, Column, Position,Filename);
 		}
 		object ICloneable.Clone()
 			=> Clone();
@@ -59,7 +60,8 @@ namespace Pck
 				Message == rhs.Message &&
 				Line == rhs.Line &&
 				Column == rhs.Column &&
-				Position == rhs.Position;
+				Position == rhs.Position &&
+				Filename == rhs.Filename;
 		}
 		public override bool Equals(object rhs)
 			=> Equals(rhs as XbnfMessage);

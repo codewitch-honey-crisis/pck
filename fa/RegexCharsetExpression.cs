@@ -48,39 +48,42 @@ namespace Pck
 					return;
 				}
 				var cls = Entries[0] as RegexCharsetClassEntry;
-				switch(cls.Name)
+				if (null != cls)
 				{
-					case "blank":
-						if (!HasNegatedRanges)
-							sb.Append(@"\h");
-						return;
-					case "digit":
-						if (!HasNegatedRanges)
-							sb.Append(@"\d");
-						else
-							sb.Append(@"\D");
-						return;
-					case "lower":
-						if (!HasNegatedRanges)
-							sb.Append(@"\l");
-						return;
-					case "space":
-						if (!HasNegatedRanges)
-							sb.Append(@"\s");
-						else
-							sb.Append(@"\S");
-						return;
-					case "upper":
-						if (!HasNegatedRanges)
-							sb.Append(@"\u");
-						return;
-					case "word":
-						if (!HasNegatedRanges)
-							sb.Append(@"\w");
-						else
-							sb.Append(@"\W");
-						return;
+					switch (cls.Name)
+					{
+						case "blank":
+							if (!HasNegatedRanges)
+								sb.Append(@"\h");
+							return;
+						case "digit":
+							if (!HasNegatedRanges)
+								sb.Append(@"\d");
+							else
+								sb.Append(@"\D");
+							return;
+						case "lower":
+							if (!HasNegatedRanges)
+								sb.Append(@"\l");
+							return;
+						case "space":
+							if (!HasNegatedRanges)
+								sb.Append(@"\s");
+							else
+								sb.Append(@"\S");
+							return;
+						case "upper":
+							if (!HasNegatedRanges)
+								sb.Append(@"\u");
+							return;
+						case "word":
+							if (!HasNegatedRanges)
+								sb.Append(@"\w");
+							else
+								sb.Append(@"\W");
+							return;
 
+					}
 				}
 			}
 			

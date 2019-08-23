@@ -65,6 +65,9 @@ namespace Pck
 		{
 			var result = new XbnfProduction();
 			pc.TrySkipCCommentsAndWhiteSpace();
+			var l = pc.Line;
+			var c = pc.Column;
+			var p = pc.Position;
 			// read identifier
 			result.Name=ParseIdentifier(pc);
 			// read attributes
@@ -91,6 +94,7 @@ namespace Pck
 			}
 			pc.Expecting(';');
 			pc.Advance();
+			result.SetLocation(l, c, p);
 			return result;
 		}
 		#region Value semantics

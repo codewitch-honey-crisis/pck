@@ -7,8 +7,8 @@ namespace Pck
 	public sealed class XbnfException : Exception
 	{
 		public IList<XbnfMessage> Messages { get; }
-		public XbnfException(string message, int errorCode = -1, int line = 0, int column = 0, long position = -1) :
-			this(new XbnfMessage[] { new XbnfMessage(ErrorLevel.Error, errorCode, message, line, column, position) })
+		public XbnfException(string message, int errorCode = -1, int line = 0, int column = 0, long position = -1,string filename=null) :
+			this(new XbnfMessage[] { new XbnfMessage(ErrorLevel.Error, errorCode, message, line, column, position,filename) })
 		{ }
 		static string _FindMessage(IEnumerable<XbnfMessage> messages)
 		{

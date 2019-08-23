@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 namespace Pck
 {
@@ -107,7 +104,6 @@ namespace Pck
 						BeginInvoke(new Func<TreeNode, int>(parseTree.Nodes.Add), treeNode);
 						BeginInvoke(new Action(treeNode.Expand));
 					}
-					//BeginInvoke(new Action(treeNode.ExpandAll));
 				});
 				
 			}

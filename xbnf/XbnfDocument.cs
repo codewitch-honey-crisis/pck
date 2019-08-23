@@ -7,6 +7,9 @@ namespace Pck
 {
 	public class XbnfDocument : IEquatable<XbnfDocument>, ICloneable
 	{
+		string _filename;
+		public string Filename { get { return _filename; } }
+		public void SetFilename(string filename) { _filename = filename; }
 		public XbnfProduction StartProduction {
 			get {
 				var ic = Productions.Count;
@@ -59,7 +62,7 @@ namespace Pck
 			foreach (var prod in Productions)
 			{
 				if (refCounts.ContainsKey(prod.Name))
-					result.Add(new XbnfMessage(ErrorLevel.Error, -1, string.Concat("The production \"", prod.Name, "\" was specified more than once."), prod.Line, prod.Column, prod.Position));
+					result.Add(new XbnfMessage(ErrorLevel.Error, -1, string.Concat("The production \"", prod.Name, "\" was specified more than once."), prod.Line, prod.Column, prod.Position, Filename));
 				else
 					refCounts.Add(prod.Name, 0);
 			}
@@ -81,8 +84,8 @@ namespace Pck
 						isHidden = (o is bool && (bool)o);
 					}
 					if (!isHidden && !Equals(rc.Key, StartProduction.Name))
-						result.Add(new XbnfMessage(ErrorLevel.Warning, -1, string.Concat("Unreferenced production \"", rc.Key, "\""),
-							prod.Line, prod.Column, prod.Position));
+						result.Add(new XbnfMessage(ErrorLevel.Warning, -1, string.Concat("Unreferenced production \"", prod.Name, "\""),
+							prod.Line, prod.Column, prod.Position, Filename));
 				}
 			}
 			return result;
@@ -122,7 +125,11 @@ namespace Pck
 		public static XbnfDocument ReadFrom(string filename)
 		{
 			using (var sr = File.OpenText(filename))
-				return ReadFrom(sr);
+			{
+				var result = ReadFrom(sr);
+				result.SetFilename(filename);
+				return result;
+			}
 		}
 		#region Value semantics
 		public bool Equals(XbnfDocument rhs)
@@ -193,7 +200,7 @@ namespace Pck
 						new XbnfMessage(
 							ErrorLevel.Error, -1,
 							"Null reference expression",
-							expr.Line, expr.Column, expr.Position));
+							expr.Line, expr.Column, expr.Position, Filename));
 					return;
 				}
 				if (!refCounts.TryGetValue(r.Symbol, out rc))
@@ -205,7 +212,7 @@ namespace Pck
 								"Reference to undefined symbol \"",
 								r.Symbol,
 								"\""),
-							expr.Line, expr.Column, expr.Position));
+							expr.Line, expr.Column, expr.Position, Filename));
 					return;
 				}
 				refCounts[r.Symbol] = rc + 1;
@@ -220,7 +227,7 @@ namespace Pck
 						new XbnfMessage(
 							ErrorLevel.Warning, -1,
 								"Nil expression",
-							expr.Line, expr.Column, expr.Position));
+							expr.Line, expr.Column, expr.Position, Filename));
 					return;
 				}
 				_ValidateExpression(b.Left, refCounts, messages);
@@ -236,7 +243,7 @@ namespace Pck
 						new XbnfMessage(
 							ErrorLevel.Warning, -1,
 								"Nil expression",
-							expr.Line, expr.Column, expr.Position));
+							expr.Line, expr.Column, expr.Position, Filename));
 					return;
 				}
 				_ValidateExpression(u.Expression, refCounts, messages);

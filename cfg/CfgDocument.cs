@@ -10,7 +10,12 @@ namespace Pck
 		HashSet<string> _ntCache = null;
 		HashSet<string> _tCache = null;
 		HashSet<string> _sCache = null;
-
+		string _filename;
+		public string Filename { get { return _filename; } }
+		public void SetFilename(string filename)
+		{
+			_filename = filename;
+		}
 		public void ClearCache()
 		{
 			_ntCache = null;
@@ -696,7 +701,11 @@ namespace Pck
 		public static CfgDocument ReadFrom(string filename)
 		{
 			using (var sr = File.OpenText(filename))
-				return ReadFrom(sr);
+			{
+				var result = ReadFrom(sr);
+				result.SetFilename(filename);
+				return result;
+			}
 		}
 		internal static CfgDocument Parse(ParseContext pc)
 		{

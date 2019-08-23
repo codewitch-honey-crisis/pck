@@ -1,6 +1,6 @@
 ﻿/****************************************************************\
 *  xbnf.xbnf: a self describing grammar for describing grammars  *
-*   by codewitch honey crisis, august 2019                         *
+*   by codewitch honey crisis, august 2019                       *
 \****************************************************************/
 
 grammar<start>= productions;
@@ -19,7 +19,7 @@ production= identifier [ "<" attributes ">" ] "=" orExpression ";";
 //
 // expressions
 //
-orExpression = concatExpression { "|" concatExpression }; 
+orExpression = concatExpression [ "|" orExpression ]; 
 concatExpression= { symbol };
 symbol<collapsed>= literal | regex | identifier | 
 	subexpression | 
@@ -37,8 +37,8 @@ repeatOne= rbracePlus;
 // followsConflict (which can be "error", "first" or "last")
 // and blockEnd (string)
 attributes<collapsed>= attribute { "," attribute};
-attribute<color="red">= identifier [ "=" attrvalue ];
-attrvalue<color="orange">= literal | integer | identifier;
+attribute= identifier [ "=" attrvalue ];
+attrvalue= literal | integer | identifier;
 
 //
 // terminals
@@ -57,8 +57,8 @@ whitespace<hidden,terminal>= {" "|"\v"|"\f"|"\t"|"\r"|"\n"}+; //'[ \v\f\t\r\n]+'
 // single quotes denote regex. make sure to escape single
 // quotes in the regex with \'
 // attributes get passed through to the parser, and you can define your own
-lineComment<hidden,color="green">= '//[^\n]*[\n]';
-blockComment<hidden,blockEnd="*/",color="green">= "/*";
+lineComment<hidden>= '//[^\n]*[\n]';
+blockComment<hidden,blockEnd="*/">= "/*";
 
 // defining these isn't required, but gives
 // us better constant names and an opportunity to 

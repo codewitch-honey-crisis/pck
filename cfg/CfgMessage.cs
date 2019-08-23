@@ -7,7 +7,7 @@ namespace Pck
 
 	public sealed class CfgMessage : IMessage, IEquatable<CfgMessage>, ICloneable
 	{
-		public CfgMessage(ErrorLevel errorLevel, int errorCode, string message, int line, int column, long position)
+		public CfgMessage(ErrorLevel errorLevel, int errorCode, string message, int line, int column, long position,string filename)
 		{
 			ErrorLevel = errorLevel;
 			ErrorCode = errorCode;
@@ -15,6 +15,7 @@ namespace Pck
 			Line = line;
 			Column = column;
 			Position = position;
+			Filename = filename;
 		}
 		public ErrorLevel ErrorLevel { get; private set; }
 		public int ErrorCode { get; private set; }
@@ -22,7 +23,7 @@ namespace Pck
 		public int Line { get; private set; }
 		public int Column { get; private set; }
 		public long Position { get; private set; }
-
+		public string Filename { get; private set; }
 		public override string ToString()
 		{
 			if (-1 == Position)
@@ -44,7 +45,7 @@ namespace Pck
 		}
 		public CfgMessage Clone()
 		{
-			return new CfgMessage(ErrorLevel, ErrorCode, Message, Line, Column, Position);
+			return new CfgMessage(ErrorLevel, ErrorCode, Message, Line, Column, Position,Filename);
 		}
 		object ICloneable.Clone()
 			=> Clone();

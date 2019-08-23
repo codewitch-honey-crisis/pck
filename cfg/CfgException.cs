@@ -7,8 +7,8 @@ namespace Pck
 	public sealed class CfgException : Exception
 	{
 		public IList<CfgMessage> Messages { get; }
-		public CfgException(string message, int errorCode = -1, int line = 0, int column = 0, long position = -1) :
-			this(new CfgMessage[] { new CfgMessage(ErrorLevel.Error, errorCode, message, line, column, position) })
+		public CfgException(string message, int errorCode = -1, int line = 0, int column = 0, long position = -1,string filename=null) :
+			this(new CfgMessage[] { new CfgMessage(ErrorLevel.Error, errorCode, message, line, column, position,filename) })
 		{ }
 		static string _FindMessage(IEnumerable<CfgMessage> messages)
 		{

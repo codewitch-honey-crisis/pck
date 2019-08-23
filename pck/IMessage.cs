@@ -15,8 +15,10 @@ namespace Pck
 	{
 		ErrorLevel ErrorLevel { get;}
 		string Message { get; }
+		int ErrorCode { get; }
 		int Line { get; }
 		int Column { get; }
 		long Position { get; }
+		string Filename { get; }
 	}
 }

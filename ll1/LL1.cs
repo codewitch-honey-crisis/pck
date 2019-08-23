@@ -105,7 +105,7 @@ namespace Pck
 											"first first conflict between {0} and {1} on {2}",
 											or.Rule,
 											f.Rule,
-											f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position));
+											f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position, cfg.Filename));
 						}
 						else
 							d.Add(f.Symbol, re);
@@ -131,7 +131,7 @@ namespace Pck
 											"first follows conflict between {0} and {1} on {2}",
 											or.Rule,
 											f.Rule,
-											fe), f.Rule.Line, f.Rule.Column, f.Rule.Position));
+											fe), f.Rule.Line, f.Rule.Column, f.Rule.Position, cfg.Filename));
 								else if ("last" == fc)
 									d[fe] = new CfgLL1ParseTableEntry(f.Rule);
 							}
@@ -198,11 +198,11 @@ namespace Pck
 						break;
 					}
 				}
-				result.Add(new CfgMessage(ErrorLevel.Error, -1, "Grammar is unresolvably and directly left recursive and cannot be parsed with an LL parser.", r.Line, r.Column, r.Position));
+				result.Add(new CfgMessage(ErrorLevel.Error, -1, "Grammar is unresolvably and directly left recursive and cannot be parsed with an LL parser.", r.Line, r.Column, r.Position, cfg.Filename));
 			}
 			var fc = cfg.FillLL1Conflicts();
 			foreach (var f in fc)
-				result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Format("Grammar has unresolvable first-{0} conflict between {1} and {2} on symbol {3}", f.Kind == CfgLL1ConflictKind.FirstFirst ? "first" : "follows", f.Rule1, f.Rule2, f.Symbol),f.Rule2.Line,f.Rule2.Column,f.Rule2.Position));
+				result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Format("Grammar has unresolvable first-{0} conflict between {1} and {2} on symbol {3}", f.Kind == CfgLL1ConflictKind.FirstFirst ? "first" : "follows", f.Rule1, f.Rule2, f.Symbol),f.Rule2.Line,f.Rule2.Column,f.Rule2.Position, cfg.Filename));
 			cfg.TryValidateLL1(result);
 			return result;
 		}
@@ -221,7 +221,7 @@ namespace Pck
 					if (rule.IsDirectlyLeftRecursive)
 					{
 						cfg.Rules.Remove(rule);
-						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Removed rule {0} because it is directly left recursive.", rule),rule.Line,rule.Column,rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Removed rule {0} because it is directly left recursive.", rule),rule.Line,rule.Column,rule.Position, cfg.Filename));
 
 						var newId = _GetRightAssocId(cfg,rule.Left);
 
@@ -241,12 +241,12 @@ namespace Pck
 							newRule.Right.Add(col[j]);
 						if (!cfg.Rules.Contains(newRule))
 							cfg.Rules.Add(newRule);
-						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {1} to replace rule {0}", rule, newRule),rule.Line,rule.Column,rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {1} to replace rule {0}", rule, newRule),rule.Line,rule.Column,rule.Position, cfg.Filename));
 
 						var rr = new CfgRule(newId);
 						if (!cfg.Rules.Contains(rr))
 							cfg.Rules.Add(rr);
-						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {1} to replace rule {0}", rule, rr),rule.Line,rule.Column,rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {1} to replace rule {0}", rule, rr),rule.Line,rule.Column,rule.Position, cfg.Filename));
 
 						foreach (var r in cfg.Rules)
 						{
@@ -380,7 +380,7 @@ namespace Pck
 				result = new List<CfgMessage>();
 			var ic = cfg.Rules.Count;
 			if (0 == ic)
-				result.Add(new CfgMessage(ErrorLevel.Error, -1, "Grammar has no rules",0,0,0));
+				result.Add(new CfgMessage(ErrorLevel.Error, -1, "Grammar has no rules",0,0,0, cfg.Filename));
 
 			var dups = new HashSet<CfgRule>();
 			for (var i = 0; i < ic; ++i)
@@ -388,20 +388,20 @@ namespace Pck
 				var rule = cfg.Rules[i];
 				// LL specific
 				if (rule.IsDirectlyLeftRecursive)
-					result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Rule is directly left recursive: ", rule.ToString()),rule.Line,rule.Column,rule.Position));
+					result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Rule is directly left recursive: ", rule.ToString()),rule.Line,rule.Column,rule.Position, cfg.Filename));
 				if (rule.Left.IsNullOrEmpty())
-					result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has empty left hand side:",rule.ToString()),rule.Line,rule.Column,rule.Position));
+					result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has empty left hand side:",rule.ToString()),rule.Line,rule.Column,rule.Position, cfg.Filename));
 				else if ("#ERROR" == rule.Left || "#EOS" == rule.Left)
-					result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on left hand side: ", rule.ToString()),rule.Line,rule.Column,rule.Position));
+					result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on left hand side: ", rule.ToString()),rule.Line,rule.Column,rule.Position, cfg.Filename));
 				for (int jc = rule.Right.Count, j = 0; j > jc; ++j)
 					if (rule.Right[j].IsNullOrEmpty())
-						result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has empty symbols on the right hand side:", rule.ToString()),rule.Line,rule.Column,rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has empty symbols on the right hand side:", rule.ToString()),rule.Line,rule.Column,rule.Position, cfg.Filename));
 					else if ("#ERROR" == rule.Right[j] || "#EOS" == rule.Right[j])
-						result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on right hand side:",rule.ToString()),rule.Line,rule.Column,rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Error, -1, string.Concat("Rule has reserved terminal on right hand side:",rule.ToString()),rule.Line,rule.Column,rule.Position, cfg.Filename));
 
 				for (var j = 0; j < ic; ++j)
 					if (i != j && cfg.Rules[j] == rule && dups.Add(rule))
-						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Duplicate rule:", rule.ToString()),rule.Line,rule.Column,rule.Position));
+						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Duplicate rule:", rule.ToString()),rule.Line,rule.Column,rule.Position, cfg.Filename));
 
 			}
 			var closure = cfg.FillClosure(cfg.StartSymbol);
@@ -419,7 +419,7 @@ namespace Pck
 					if (!found)
 					{
 						var r = cfg.FillNonTerminalRules(sym)[0];
-						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""),r.Line,r.Column,r.Position));
+						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Unreachable symbol \"", sym, "\""),r.Line,r.Column,r.Position, cfg.Filename));
 					}
 				}
 			}
@@ -442,7 +442,7 @@ namespace Pck
 									"Rule {0} has a first first conflict with rule {1} on symbol {2} and will require additional lookahead",
 									f.Rule,
 									r,
-									f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position));
+									f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position, cfg.Filename));
 
 						}
 						else
@@ -461,7 +461,7 @@ namespace Pck
 									"Rule {0} has a first follow conflict with rule {1} on symbol {2} and will require additional lookahead",
 									f.Rule,
 									r,
-									ff),f.Rule.Line,f.Rule.Column,f.Rule.Position));
+									ff),f.Rule.Line,f.Rule.Column,f.Rule.Position, cfg.Filename));
 
 							}
 							else
@@ -486,7 +486,7 @@ namespace Pck
 					// are suppressed.
 					var i = attrs.Value.IndexOf("hidden");
 					if (!(-1 < i && attrs.Value[i].Value is bool && ((bool)attrs.Value[i].Value)))
-						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Attributes declared on a symbol \"", attrs.Key, "\" that is not in the grammar"), attrs.Value[0].Line, attrs.Value[0].Column, attrs.Value[0].Position));
+						result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("Attributes declared on a symbol \"", attrs.Key, "\" that is not in the grammar"), attrs.Value[0].Line, attrs.Value[0].Column, attrs.Value[0].Position, cfg.Filename));
 				}
 				foreach (var attr in attrs.Value)
 				{
@@ -496,43 +496,43 @@ namespace Pck
 					{
 						case "start":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "start attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "start attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 							if (null != start)
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "start attribute was already specified on \"", start, "\" and this declaration will be ignored"),attr.Line,attr.Column,attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "start attribute was already specified on \"", start, "\" and this declaration will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 							else
 								start = attrs.Key;
 							continue;
 						case "hidden":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "hidden attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "hidden attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 							continue;
 						case "terminal":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "terminal attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "terminal attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 							continue;
 						case "collapsed":
 							if (!(attr.Value is bool))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "collapse attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "collapse attribute expects a bool value and will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 							continue;
 						case "substitute":
 							s = attr.Value as string;
 							if (!(attr.Value is string))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a string value and will be ignored"), attr.Line, attr.Column, attr.Position, cfg.Filename));
 							else if (string.IsNullOrEmpty(s))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a non-empty string value and will be ignored"), attr.Line, attr.Column, attr.Position, cfg.Filename));
 							else if(!cfg.IsSymbol(s))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a symbol reference and will be ignored"), attr.Line, attr.Column, attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "substitute attribute expects a symbol reference and will be ignored"), attr.Line, attr.Column, attr.Position, cfg.Filename));
 							continue;
 						case "blockEnd":
 							if (cfg.IsNonTerminal(attrs.Key))
-								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute cannot be specified on a non-terminal and will be ignored"),attr.Line,attr.Column,attr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute cannot be specified on a non-terminal and will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 							else
 							{
 								s = attr.Value as string;
 								if (!(attr.Value is string))
-									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a string value and will be ignored"),attr.Line,attr.Column,attr.Position));
+									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a string value and will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 								else if (string.IsNullOrEmpty(s))
-									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a non-empty string value and will be ignored"),attr.Line,attr.Column,attr.Position));
+									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "blockEnd attribute expects a non-empty string value and will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 							}
 							continue;
 						case "followsConflict":
@@ -544,17 +544,17 @@ namespace Pck
 								case "last":
 									break;
 								default:
-									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "followsError attribute expects \"error\", \"first\", or \"last\" and will revert to \"error\"."),attr.Line,attr.Column,attr.Position));
+									result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat(p, "followsError attribute expects \"error\", \"first\", or \"last\" and will revert to \"error\"."),attr.Line,attr.Column,attr.Position, cfg.Filename));
 									break;
 							}
 							continue;
 					}
-					result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat(p, "Unknown attribute \"", attr.Name, "\" will be ignored"),attr.Line,attr.Column,attr.Position));
+					result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat(p, "Unknown attribute \"", attr.Name, "\" will be ignored"),attr.Line,attr.Column,attr.Position, cfg.Filename));
 				}
 
 			}
 			if (null == start)
-				result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("start attribute was not specified and the first non-terminal in the grammar (\"", cfg.StartSymbol, "\") will be used"),0,0,0));
+				result.Add(new CfgMessage(ErrorLevel.Warning, -1, string.Concat("start attribute was not specified and the first non-terminal in the grammar (\"", cfg.StartSymbol, "\") will be used"),0,0,0, cfg.Filename));
 			return result;
 		}
 		public static IList<CfgMessage> EliminateFirstFirstConflicts(this CfgDocument cfg)
@@ -582,7 +582,7 @@ namespace Pck
 							rights.Remove(rule.Right);
 							suffixes.Add(new List<string>(rule.Right.Range(pfx.Count)));
 							cfg.Rules.Remove(rule);
-							result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Removed rule {0} because it is part of a first-first conflict.", rule),rule.Line,rule.Column,rule.Position));
+							result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Removed rule {0} because it is part of a first-first conflict.", rule),rule.Line,rule.Column,rule.Position, cfg.Filename));
 
 						}
 					}
@@ -593,7 +593,7 @@ namespace Pck
 
 					if (!cfg.Rules.Contains(newRule))
 						cfg.Rules.Add(newRule);
-					result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {0} to resolve first-first conflict.", newRule),0,0,0));
+					result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {0} to resolve first-first conflict.", newRule),0,0,0, cfg.Filename));
 					foreach (var suffix in suffixes)
 					{
 						newRule = new CfgRule(nnt);
@@ -601,7 +601,7 @@ namespace Pck
 
 						if (!cfg.Rules.Contains(newRule))
 							cfg.Rules.Add(newRule);
-						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {0} to resolve first-first conflict.", newRule),0,0,0));
+						result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Format("Added rule {0} to resolve first-first conflict.", newRule),0,0,0, cfg.Filename));
 					}
 
 					_SetAttribute(cfg,nnt, "collapsed", true);
@@ -634,15 +634,15 @@ namespace Pck
 								var rr = new CfgRule(r.Left, r.Right.Replace(rule.Left, ntrr.Right));
 								if (!cfg.Rules.Contains(rr))
 									cfg.Rules.Add(rr);
-								result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat("Added rule ", rr.ToString(), " to resolve first-follows conflict."),rr.Line,rr.Column,rr.Position));
+								result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat("Added rule ", rr.ToString(), " to resolve first-follows conflict."),rr.Line,rr.Column,rr.Position, cfg.Filename));
 							}
-							result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat("Removed rule ", refs[j].ToString(), " to resolve first-follows conflict."),refs[j].Line,refs[j].Column,refs[j].Position));
+							result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat("Removed rule ", refs[j].ToString(), " to resolve first-follows conflict."),refs[j].Line,refs[j].Column,refs[j].Position, cfg.Filename));
 							cfg.Rules.Remove(refs[j]);
 						}
 						for (int jc = ntr.Count, j = 0; j < jc; ++j)
 						{
 							cfg.Rules.Remove(ntr[j]);
-							result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat("Removed rule ", ntr[j].ToString(), " to resolve first-follows conflict."),ntr[j].Line,ntr[j].Column,ntr[j].Position));
+							result.Add(new CfgMessage(ErrorLevel.Message, -1, string.Concat("Removed rule ", ntr[j].ToString(), " to resolve first-follows conflict."),ntr[j].Line,ntr[j].Column,ntr[j].Position, cfg.Filename));
 
 						}
 					}
