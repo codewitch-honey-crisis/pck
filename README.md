@@ -312,7 +312,7 @@ var parser = new ExprParser(new ExprTokenizer(new FileReaderEnumerable(@"myexpr.
 ```
 would pull from "myexpr.txt" in the current working directory. 
 
-There is no need to close these explicitly, as they only hold the stream for the duration of the enumerator lifetime. Their enumerators must be disposed of with `Dispose()` or you risk leaving a stream open and possibly locked.
+As far as lifetime, there is no need to close these explicitly, as they only hold the stream for the duration of the enumerator lifetime. Their enumerators must be disposed of with `Dispose()` or you risk leaving a stream open and possibly locked. `foreach` will do this automatically, as will the parser class and tokenizer class where appropriate so you don't have to worry about it as long as you call `Close()` or otherwise dispose of the parser itself.
 
 Anyway, moving on, there are a couple of ways from here in which you can use the parser, wherever your input comes from.
 
