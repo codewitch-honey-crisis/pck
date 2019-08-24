@@ -44,56 +44,9 @@ class Program
 
 		parser.ShowHidden = false;
 		var pt = parser.ParseSubtree();
-		var hasErrors = false;
-		foreach (var pn in ParseNode.Select(pt.FillDescendantsAndSelf(),"#ERROR"))
-		{
-			hasErrors = true;
-			Console.Error.WriteLine("Syntax Error: " + pn.Value);
-		}
-		if(!hasErrors)
-		{
-			var doc = new XbnfDocument();
-			foreach(var pc in pt.Children)
-			{
-				doc.Productions.Add(_ParseProduction(pc));
-			}
-		}
+		
 	}
-	static XbnfAttribute _ParseAttribute(ParseNode p)
-	{
-		var name = p.Children[0].Value;
-		var v = ParseNode.SelectFirst(p.Children, XbnfParser.attrvalue);
-		var val = (object)true;
-		if (null!=v)
-		{
-			string s = v.Children[0].Value;
-			val = ParseContext.Create(s).ParseJsonValue();
-		}
-		return new XbnfAttribute(name, val);
-	}
-	static XbnfExpression _ParseExpression(ParseNode p)
-	{
-		return null;
-	}
-	static XbnfProduction _ParseProduction(ParseNode p)
-	{
-		var result = new XbnfProduction();
-		result.SetLocation(p.Line, p.Column, p.Position);
-		result.Name = p.Children[0].Value;
-		var apn = ParseNode.SelectFirst(p.Children, XbnfParser.attributes);
-		if(null!=apn)
-		{
-			foreach(var ap in ParseNode.Select(apn.Children, XbnfParser.attribute)) 
-				result.Attributes.Add(_ParseAttribute(ap));
-		}
-		var pexp = ParseNode.SelectFirst(p.Children, XbnfParser.orExpression);
-		if (null!=pexp)
-		{
-			result.Expression=_ParseExpression(pexp);
-		}
-		Console.Error.WriteLine(result);
-		return result;
-	}
+
 	static void _TestXbnfTokenizers(string[] args)
 	{
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.pck");

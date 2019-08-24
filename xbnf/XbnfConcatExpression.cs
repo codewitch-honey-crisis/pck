@@ -14,14 +14,13 @@ namespace Pck
 				var r = right[i];
 				if (null == Right)
 					Right = r;
-				else
-				{
-					var c = new XbnfConcatExpression();
-					c.Left = Left;
-					c.Right = Right;
-					Right = null;
-					Left = c;
-				}
+				
+				var c = new XbnfConcatExpression();
+				c.Left = Left;
+				c.Right = Right;
+				Right = null;
+				Left = c;
+
 			}
 		}
 		public XbnfConcatExpression()

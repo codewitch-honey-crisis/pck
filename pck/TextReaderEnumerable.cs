@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Pck
 {
+	
 	public sealed class FileReaderEnumerable : TextReaderEnumerable
 	{
 		protected override bool CanCreateReader => true;
@@ -52,6 +53,31 @@ namespace Pck
 	}
 	public abstract class TextReaderEnumerable : IEnumerable<char>
 	{
+		#region _OnceReaderEnumerable
+		sealed class _OnceTextReaderEnumerable : TextReaderEnumerable
+		{
+			TextReader _reader;
+			internal _OnceTextReaderEnumerable(TextReader reader)
+			{
+				_reader = reader;
+			}
+			protected override TextReader CreateTextReader()
+			{
+				if (null == _reader)
+					throw new NotSupportedException("This method can only be called once.");
+				var r = _reader;
+				_reader = null;
+				return r;
+			}
+			protected override bool CanCreateReader => false;
+		}
+		#endregion
+		public static TextReaderEnumerable FromReader(TextReader reader)
+		{
+			if (null == reader)
+				throw new ArgumentNullException("reader");
+			return new _OnceTextReaderEnumerable(reader);
+		}
 		public IEnumerator<char> GetEnumerator()
 		{
 			return new TextReaderEnumerator(this);
