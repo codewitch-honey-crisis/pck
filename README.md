@@ -1,6 +1,6 @@
 # PCK: The Parser Construction Kit
 
-The Parser Construction Kit is a parser generator that targets the .NET platform, and is written in C#. It was designed with C# in mind. It can use the Microsoft CodeDOM to render parsers in other .NET languages, though no effort was made to ensure compatibility with VB, which won't render due to a bug in Microsoft's VBCodeProvider class. Other CodeDOM providers may work, should they be available.
+The Parser Construction Kit is a parser generator that targets the .NET platform, and is written in C#. It was designed with C# in mind. It can use the Microsoft CodeDOM to render parsers in other .NET languages and bits v0.0.1.8 and above should support VB particularly.
 
 
 PCK has tools to cover three major parsing paradigms:
