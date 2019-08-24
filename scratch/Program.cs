@@ -38,9 +38,9 @@ class Program
 		cfg.PrepareLL1();
 		var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"), cfg.EnumSymbols());
 		//var parser = new XbnfParser(new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf")));
-		var parser = new XbnfParser(tokenizer);
+		//var parser = new XbnfParser(tokenizer);
 
-		//var parser = cfg.ToLL1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
+		var parser = cfg.ToLL1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
 
 		parser.ShowHidden = false;
 		// don't collapse anything. we want to make sure we preserve our line numbers
@@ -48,7 +48,7 @@ class Program
 		var hasErrors = false;
 		foreach (var pn in pt.FillDescendantsAndSelf())
 		{
-			if(XbnfParser._ERROR==pn.SymbolId)
+			if("#ERROR"==pn.Symbol)
 			{
 				hasErrors = true;
 				Console.Error.WriteLine("Syntax Error: " + pn.Value);
@@ -64,7 +64,7 @@ class Program
 	}
 	static XbnfProduction TryParseProduction(ParseNode pt)
 	{
-		if (XbnfParser.production != pt.SymbolId)
+		if ("production"!= pt.Symbol)
 		{
 			System.Diagnostics.Debugger.Break();
 			return null;

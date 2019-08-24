@@ -19,7 +19,7 @@ namespace Pck
 		int[] _nodeFlags; // for hidden, collapsed
 		string[] _symbolTable;
 		int[] _substitutions;
-		KeyValuePair<string, object>[][] _attributeSets;
+		ParseAttribute[][] _attributeSets;
 		int[] _initCfg;
 		int _eosSymbolId;
 		int _errorSymbolId;
@@ -34,7 +34,7 @@ namespace Pck
 				return _substitutions[s];
 			}
 		}
-		public override KeyValuePair<string, object>[] GetAttributeSet(int symbolId)
+		public override ParseAttribute[] GetAttributeSet(int symbolId)
 		{
 			if (0 > symbolId || _attributeSets.Length <= symbolId)
 				return null;
@@ -51,7 +51,7 @@ namespace Pck
 					for (var i = 0; i < attrs.Length; i++)
 					{
 						var attr = attrs[i];
-						if (attr.Key == name)
+						if (attr.Name == name)
 							return attr.Value;
 					}
 				}
@@ -171,7 +171,7 @@ namespace Pck
 			string[] symbolTable,
 			int[] nodeFlags,
 			int[] substitutions,
-			KeyValuePair<string,object>[][] attributeSets,
+			ParseAttribute[][] attributeSets,
 			ITokenizer tokenizer)
 		{
 			_parseTable = parseTable;

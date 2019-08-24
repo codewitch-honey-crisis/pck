@@ -3,9 +3,6 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pck
 {
@@ -59,17 +56,17 @@ namespace Pck
 					else
 						substitutions[i] = -1;
 				}
-				var attrSets = new KeyValuePair<string, object>[syms.Count][];
+				var attrSets = new ParseAttribute[syms.Count][];
 				for (ii = 0; ii < attrSets.Length; ii++)
 				{
 					CfgAttributeList attrs;
 					if (cfg.AttributeSets.TryGetValue(syms[ii], out attrs))
 					{
-						attrSets[ii] = new KeyValuePair<string, object>[attrs.Count];
+						attrSets[ii] = new ParseAttribute[attrs.Count];
 						var j = 0;
 						foreach (var attr in attrs)
 						{
-							attrSets[ii][j] = new KeyValuePair<string, object>(attr.Name, attr.Value);
+							attrSets[ii][j] = new ParseAttribute(attr.Name, attr.Value);
 							++j;
 						}
 					}

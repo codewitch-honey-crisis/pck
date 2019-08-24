@@ -144,7 +144,6 @@ namespace Pck
 			this.menuFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
 			this.menuFileNew.Size = new System.Drawing.Size(182, 26);
 			this.menuFileNew.Text = "&New";
-			this.menuFileNew.Click += new System.EventHandler(this.menuFileNew_Click);
 			// 
 			// xbnfFileToolStripMenuItem
 			// 

@@ -12,7 +12,7 @@ namespace Pck
 		int _line;
 		int _column;
 		long _position;
-		public KeyValuePair<string, object>[] AttributeSet { get; set; }
+		public ParseAttribute[] AttributeSet { get; set; }
 
 		public object GetAttribute(string name,object @default=null)
 		{
@@ -20,7 +20,7 @@ namespace Pck
 			for(var i =0;i<attrs.Length;i++)
 			{
 				var attr = attrs[i];
-				if (attr.Key == name)
+				if (attr.Name == name)
 					return attr.Value;
 			}
 			return @default;

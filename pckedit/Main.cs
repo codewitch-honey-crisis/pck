@@ -26,6 +26,9 @@ namespace Pck
 		{
 			_synchronizationContext = SynchronizationContext.Current;
 			InitializeComponent();
+			_editorSettings = new DefaultTextEditorProperties();
+			_GetSettings();
+			OnSettingsChanged();
 			var smp = new FileSyntaxModeProvider(".");
 			HighlightingManager.Manager.AddSyntaxModeFileProvider(smp);
 			_UpdateMenuContext();
@@ -35,11 +38,6 @@ namespace Pck
 		}
 
 		#region Code related to File menu
-
-		private void menuFileNew_Click(object sender, EventArgs e)
-		{
-			
-		}
 
 		/// <summary>This variable holds the settings (whether to show line numbers, 
 		/// etc.) that all editor controls share.</summary>
@@ -85,8 +83,6 @@ namespace Pck
 				// Try to open chosen file
 				OpenFiles(openFileDialog.FileNames);
 		}
-		
-
 		
 		public void OpenFiles(string[] fns)
 		{
@@ -473,29 +469,40 @@ namespace Pck
 		/// they all share the same DefaultTextEditorProperties object.</remarks>
 		private void OnSettingsChanged()
 		{
-			menuShowSpacesTabs.Checked = _editorSettings.ShowSpaces;
-			menuShowNewlines.Checked = _editorSettings.ShowEOLMarker;
-			menuHighlightCurrentRow.Checked = _editorSettings.LineViewerStyle == LineViewerStyle.FullRow;
-			menuBracketMatchingStyle.Checked = _editorSettings.BracketMatchingStyle == BracketMatchingStyle.After;
-			menuEnableVirtualSpace.Checked = _editorSettings.AllowCaretBeyondEOL;
-			menuShowLineNumbers.Checked = _editorSettings.ShowLineNumbers;
-
+			if (null != _editorSettings)
+			{
+				menuShowSpacesTabs.Checked = _editorSettings.ShowSpaces;
+				menuShowNewlines.Checked = _editorSettings.ShowEOLMarker;
+				menuHighlightCurrentRow.Checked = _editorSettings.LineViewerStyle == LineViewerStyle.FullRow;
+				menuBracketMatchingStyle.Checked = _editorSettings.BracketMatchingStyle == BracketMatchingStyle.After;
+				menuEnableVirtualSpace.Checked = _editorSettings.AllowCaretBeyondEOL;
+				menuShowLineNumbers.Checked = _editorSettings.ShowLineNumbers;
+			}
 			RegistryKey key = null;
 			try
 			{
 				key = Registry.CurrentUser.OpenSubKey(string.Concat(@"Software\", Path.GetFileNameWithoutExtension(_ExeName)), true);
 				if(null!=key)
 				{
-					key.SetValue("ShowSpacesAndTabs", _editorSettings.ShowSpaces?1:0);
-					key.SetValue("ShowNewlines", _editorSettings.ShowEOLMarker? 1 : 0);
-					key.SetValue("HighlightCurrentRow", _editorSettings.LineViewerStyle==LineViewerStyle.FullRow? 1 : 0);
-					key.SetValue("HighlightMatchingBracketsAfter", _editorSettings.BracketMatchingStyle == BracketMatchingStyle.After ? 1 : 0);
-					key.SetValue("EnableVirtualSpace", _editorSettings.AllowCaretBeyondEOL? 1 : 0);
-					key.SetValue("ShowLineNumbers", _editorSettings.ShowLineNumbers? 1 : 0);
-					key.SetValue("TabSize", _editorSettings.TabIndent);
-					key.SetValue("Font", _editorSettings.Font.Name);
-					key.SetValue("FontSize", _editorSettings.Font.Size.ToString());
-
+					if (null != _editorSettings)
+					{
+						key.SetValue("ShowSpacesAndTabs", _editorSettings.ShowSpaces ? 1 : 0);
+						key.SetValue("ShowNewlines", _editorSettings.ShowEOLMarker ? 1 : 0);
+						key.SetValue("HighlightCurrentRow", _editorSettings.LineViewerStyle == LineViewerStyle.FullRow ? 1 : 0);
+						key.SetValue("HighlightMatchingBracketsAfter", _editorSettings.BracketMatchingStyle == BracketMatchingStyle.After ? 1 : 0);
+						key.SetValue("EnableVirtualSpace", _editorSettings.AllowCaretBeyondEOL ? 1 : 0);
+						key.SetValue("ShowLineNumbers", _editorSettings.ShowLineNumbers ? 1 : 0);
+						key.SetValue("TabSize", _editorSettings.TabIndent);
+						key.SetValue("Font", _editorSettings.Font.Name);
+						key.SetValue("FontSize", _editorSettings.Font.Size.ToString());
+					}
+					var isVB = vbToolStripMenuItem.Checked;
+					if (isVB)
+					{
+						key.SetValue("CodeLanguage", "vb");
+					}
+					else
+						key.SetValue("CodeLanguage", "cs");
 				}
 			}
 			finally
@@ -523,6 +530,16 @@ namespace Pck
 					var f = (string)key.GetValue("Font", "Lucida Console");
 					var fs = (string)key.GetValue("FontSize", "10");
 					_editorSettings.Font = new Font(f, float.Parse(fs));
+					var lang = (string)key.GetValue("CodeLanguage",null);
+					if(!string.IsNullOrEmpty(lang) && "vb"==lang.ToLowerInvariant())
+					{
+						vbToolStripMenuItem.Checked = true;
+						csToolStripMenuItem.Checked = false;
+					} else
+					{
+						vbToolStripMenuItem.Checked = false;
+						csToolStripMenuItem.Checked = true;
+					}
 				}
 			}
 			finally
@@ -1216,13 +1233,15 @@ namespace Pck
 		{
 			csToolStripMenuItem.Checked = true;
 			vbToolStripMenuItem.Checked = false;
+			OnSettingsChanged();
 		}
 
 		private void vBToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
 			csToolStripMenuItem.Checked = false;
-			vbToolStripMenuItem.Checked = true;	
+			vbToolStripMenuItem.Checked = true;
+			OnSettingsChanged();
 		}
 		
 	

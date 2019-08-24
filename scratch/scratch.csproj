@@ -21,8 +21,4 @@
     <ProjectReference Include="..\xbnf\xbnf.csproj" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="$(ProjectDir)..\bin\Release\pckw xlt xbnf.xbnf /transform xbnfToPck | $(ProjectDir)..\bin\Release\pckw ll1factor | $(ProjectDir)..\bin\Release\pckw ll1gen /class XbnfParser /namespace Pck &gt; $(ProjectDir)XbnfParser.cs &amp; $(ProjectDir)..\bin\Release\pckw xlt xbnf.xbnf /transform xbnfToPck | $(ProjectDir)..\bin\Release\pckw ll1factor | $(ProjectDir)..\bin\Release\pckw fagen /class XbnfTokenizer /namespace Pck &gt; $(ProjectDir)XbnfTokenizer.cs" />
-  </Target>
-
 </Project>

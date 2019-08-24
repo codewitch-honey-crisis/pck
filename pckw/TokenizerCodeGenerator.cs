@@ -8,14 +8,11 @@ using System.Text;
 
 namespace Pck
 {
-	using CharDfaEntry = KeyValuePair<int, KeyValuePair<char[], int>[]>;
-
 	/// <summary>
 	/// Generates a tokenizer class from a LexDocument and symbol table
 	/// </summary>
 	static class TokenizerCodeGenerator
-	{
-		
+	{	
 		static CodeTypeDeclaration _CreateTokenizerClass(LexDocument lex, IList<string> symbolTable, string name,IProgress<FAProgress> progress)
 		{
 			var lexer = lex.ToLexer(progress);

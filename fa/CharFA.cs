@@ -8,9 +8,7 @@ using System.Text;
 
 namespace Pck
 {
-	// can't used named tuples since CodeDom doesn't really support them
-	// (int Accept, (char[] Ranges, int Destination)[])
-	using CharDfaEntry = KeyValuePair<int, KeyValuePair<char[], int>[]>;
+	
 	/// <summary>
 	/// Represents a simple FA based regular expression engine.
 	/// </summary>
@@ -668,12 +666,12 @@ namespace Pck
 			{
 				var fa = closure[i];
 				var trgs = ((CharFA<TAccept>)fa).FillInputTransitionRangesGroupedByState();
-				var trns = new KeyValuePair<char[], int>[trgs.Count];
+				var trns = new CharDfaTransitionEntry[trgs.Count];
 				var j = 0;
 
 				foreach (var trg in trgs)
 				{
-					trns[j] = new KeyValuePair<char[], int>(
+					trns[j] = new CharDfaTransitionEntry(
 						CharRange.ToPackedChars(trg.Value),
 						closure.IndexOf(trg.Key));
 

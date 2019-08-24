@@ -27,7 +27,7 @@ namespace Pck
 		public abstract bool IsCollapsed { get; }
 		public abstract string Substitute { get; }
 		public abstract int SubstituteId { get; }
-		public abstract KeyValuePair<string, object>[] GetAttributeSet(int symbolId);
+		public abstract ParseAttribute[] GetAttributeSet(int symbolId);
 		public abstract object GetAttribute(string name, object @default = null);
 		public abstract bool Read();
 		public abstract void Restart(ITokenizer tokenizer);

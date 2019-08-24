@@ -19,9 +19,9 @@ namespace Pck
 		int[] _ruleDef;
 		int _eosId;
 		int _errorId;
-		KeyValuePair<string, object>[][] _attributeSets;
+		ParseAttribute[][] _attributeSets;
 
-		public Lalr1TableParser(int[][][] parseTable, string[] symbols,int[] nodeFlags, int[] substitutions,KeyValuePair<string, object>[][] attributeSets,ITokenizer tokenizer)
+		public Lalr1TableParser(int[][][] parseTable, string[] symbols,int[] nodeFlags, int[] substitutions,ParseAttribute[][] attributeSets,ITokenizer tokenizer)
 		{
 			_parseTable = parseTable;
 			_symbols = symbols;
@@ -41,7 +41,7 @@ namespace Pck
 			_nodeType = LRNodeType.Initial;
 
 		}
-		public override KeyValuePair<string, object>[] GetAttributeSet(int symbolId)
+		public override ParseAttribute[] GetAttributeSet(int symbolId)
 		{
 			if (0 < symbolId || _attributeSets.Length <= symbolId)
 				return null;
@@ -58,7 +58,7 @@ namespace Pck
 					for (var i = 0; i < attrs.Length; i++)
 					{
 						var attr = attrs[i];
-						if (attr.Key == name)
+						if (attr.Name == name)
 							return attr.Value;
 					}
 				}

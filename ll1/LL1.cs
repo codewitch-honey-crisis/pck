@@ -38,17 +38,17 @@ namespace Pck
 				else
 					substitutions[i] = -1;
 			}
-			var attrSets = new KeyValuePair<string, object>[syms.Count][];
+			var attrSets = new ParseAttribute[syms.Count][];
 			for (var i = 0; i < attrSets.Length; i++)
 			{
 				CfgAttributeList attrs;
 				if (cfg.AttributeSets.TryGetValue(syms[i], out attrs))
 				{
-					attrSets[i] = new KeyValuePair<string, object>[attrs.Count];
+					attrSets[i] = new ParseAttribute[attrs.Count];
 					var j = 0;
 					foreach (var attr in attrs)
 					{
-						attrSets[i][j] = new KeyValuePair<string, object>(attr.Name, attr.Value);
+						attrSets[i][j] = new ParseAttribute(attr.Name, attr.Value);
 						++j;
 					}
 				}

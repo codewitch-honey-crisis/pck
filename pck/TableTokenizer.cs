@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Pck
 {
-	using CharDfaEntry = KeyValuePair<int, KeyValuePair<char[], int>[]>;
 	public class TableTokenizer : ITokenizer
 	{
 		CharDfaEntry[] _dfaTable;
@@ -66,7 +65,7 @@ namespace Pck
 			int _state;
 			// this holds the current token we're on.
 			Token _token;
-			
+
 			// the DFA Table is a composite "regular expression" with tagged symbols for each one.
 			CharDfaEntry[] _dfaTable;
 			// this holds our current value
@@ -145,7 +144,7 @@ namespace Pck
 						if (!_MoveNextInput())
 						{
 							_state = -2;
-							acc = _dfaTable[states].Key;
+							acc = _dfaTable[states].AcceptSymbolId;
 							if (-1 != acc)
 								return acc;
 							else
@@ -163,17 +162,17 @@ namespace Pck
 				{
 					var next = -1;
 					// go through all the transitions
-					for(var i =0;i<_dfaTable[states].Value.Length;i++)
+					for(var i =0;i<_dfaTable[states].Transitions.Length;i++)
 					{
-						var entry = _dfaTable[states].Value[i];
+						var entry = _dfaTable[states].Transitions[i];
 						var found = false;
 						// go through all the ranges to see if we matched anything.
-						for (var j=0;j<entry.Key.Length;j++)
+						for (var j=0;j<entry.PackedRanges.Length;j++)
 						{
 							var ch = _input.Current;
-							var first = entry.Key[j];
+							var first = entry.PackedRanges[j];
 							++j;
-							var last = entry.Key[j];
+							var last = entry.PackedRanges[j];
 							if (ch > last) continue;
 							if (first > ch) break;
 							found = true;
@@ -183,7 +182,7 @@ namespace Pck
 						if(found)
 						{
 							// set the transition destination
-							next = entry.Value;
+							next = entry.Destination;
 							break;
 						}
 					}
@@ -197,14 +196,14 @@ namespace Pck
 					{
 						// end of stream
 						_state = -2;
-						acc = _dfaTable[states].Key;
+						acc = _dfaTable[states].AcceptSymbolId;
 						if (-1 != acc) // do we accept?
 							return acc;
 						else
 							return _errorSymbol;
 					}
 				}
-				acc = _dfaTable[states].Key;
+				acc = _dfaTable[states].AcceptSymbolId;
 				if (-1 != acc) // do we accept?
 				{
 					var be=_blockEnds[acc];

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pck
 {
-	public class Lalr1DebugParser2 : Lalr1Parser
+	public class Lalr1DebugParser : Lalr1Parser
 	{
 		CfgDocument _cfg;
 		IDictionary<string, string> _substitutions;
@@ -17,7 +17,7 @@ namespace Pck
 		IEnumerator<Token> _tokenEnum;
 		Stack<int> _stack;
 		LRNodeType _nodeType;
-		public Lalr1DebugParser2(CfgDocument cfg,ITokenizer tokenizer,CfgLalr1ParseTable parseTable=null)
+		public Lalr1DebugParser(CfgDocument cfg,ITokenizer tokenizer,CfgLalr1ParseTable parseTable=null)
 		{
 			_cfg = cfg;
 			_parseTable = parseTable ?? cfg.ToLalr1ParseTable();
@@ -102,7 +102,7 @@ namespace Pck
 			if (null == s) return @default;
 			return _cfg.GetAttribute(s, name, @default);
 		}
-		public override KeyValuePair<string, object>[] GetAttributeSet(int symbolId)
+		public override ParseAttribute[] GetAttributeSet(int symbolId)
 		{
 			if (0 > symbolId) return null;
 			var s = _cfg.GetSymbolOfId(symbolId);
@@ -110,9 +110,9 @@ namespace Pck
 			CfgAttributeList attrs;
 			if (!_cfg.AttributeSets.TryGetValue(s, out attrs))
 				return null;
-			var result = new KeyValuePair<string, object>[attrs.Count];
+			var result = new ParseAttribute[attrs.Count];
 			for(var i = 0;i<result.Length;i++)
-				result[i] = new KeyValuePair<string, object>(attrs[i].Name, attrs[i].Value);
+				result[i] = new ParseAttribute(attrs[i].Name, attrs[i].Value);
 			return result;
 		}
 		public override string[] RuleDefinition => (LRNodeType.Reduce == NodeType) ? _ruleDef : null;
