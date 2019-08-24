@@ -11,6 +11,7 @@ namespace Pck
 			=> CloneImpl();
 		protected abstract XbnfExpression CloneImpl();
 		public abstract bool IsTerminal {get;}
+		/*
 		internal static XbnfExpression Parse(ParseContext pc)
 		{
 			XbnfExpression current = null;
@@ -119,5 +120,6 @@ namespace Pck
 			pc.TrySkipCCommentsAndWhiteSpace();
 			return current;
 		}
+		*/
 	}
 }
