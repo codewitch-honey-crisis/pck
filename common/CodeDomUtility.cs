@@ -24,6 +24,15 @@ namespace Pck
 		{
 			if (null == val)
 				return new CodePrimitiveExpression(null);
+			if (val is char) // special case for unicode nonsense
+			{
+				// console likes to cook unicode characters
+				// so we render them as ints cast to the character
+				if (((char)val) > 0x7E)
+					return new CodeCastExpression(typeof(char), new CodePrimitiveExpression((int)(char)val));
+				return new CodePrimitiveExpression((char)val);
+			}
+			else
 			if (val is bool || 
 				val is string || 
 				val is short || 
@@ -36,9 +45,9 @@ namespace Pck
 				val is sbyte || 
 				val is float || 
 				val is double || 
-				val is decimal ||
-				val is char)
+				val is decimal)
 			{
+				// TODO: mess with strings to make them console safe.
 				return new CodePrimitiveExpression(val);
 			}
 			if (val is Array && 1 == ((Array)val).Rank && 0 == ((Array)val).GetLowerBound(0))
@@ -72,7 +81,8 @@ namespace Pck
 				else
 				{
 					// we special case for KeyValuePair types.
-					if (val.GetType().GetGenericTypeDefinition()==typeof(KeyValuePair<,>))
+					var t = val.GetType();
+					if (t.IsGenericType && t.GetGenericTypeDefinition()==typeof(KeyValuePair<,>))
 					{
 						// TODO: Find a workaround for the bug with VBCodeProvider
 						// may need to modify the reference source

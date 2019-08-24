@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Pck
 {
-	using CharDfaEntry = KeyValuePair<int, KeyValuePair<string, int>[]>;
+	using CharDfaEntry = KeyValuePair<int, KeyValuePair<char[], int>[]>;
 	public class TableTokenizer : ITokenizer
 	{
 		CharDfaEntry[] _dfaTable;

@@ -7,6 +7,9 @@
 
   <ItemGroup>
     <Compile Include="..\common\CollectionUtility.cs" Link="CollectionUtility.cs" />
+    <Compile Include="..\common\ListDictionary.cs" Link="ListDictionary.cs" />
+    <Compile Include="..\common\OrderedCollectionEqualityComparer.cs" Link="OrderedCollectionEqualityComparer.cs" />
+    <Compile Include="..\pckw\XbnfToPckTransform.cs" Link="XbnfToPckTransform.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,5 +20,9 @@
     <ProjectReference Include="..\pck\pck.csproj" />
     <ProjectReference Include="..\xbnf\xbnf.csproj" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="$(ProjectDir)..\bin\Release\pckw xlt xbnf.xbnf /transform xbnfToPck | $(ProjectDir)..\bin\Release\pckw ll1factor | $(ProjectDir)..\bin\Release\pckw ll1gen /class XbnfParser /namespace Pck &gt; $(ProjectDir)XbnfParser.cs &amp; $(ProjectDir)..\bin\Release\pckw xlt xbnf.xbnf /transform xbnfToPck | $(ProjectDir)..\bin\Release\pckw ll1factor | $(ProjectDir)..\bin\Release\pckw fagen /class XbnfTokenizer /namespace Pck &gt; $(ProjectDir)XbnfTokenizer.cs" />
+  </Target>
 
 </Project>

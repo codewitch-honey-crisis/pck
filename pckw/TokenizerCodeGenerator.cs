@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Pck
 {
-	using CharDfaEntry = KeyValuePair<int, KeyValuePair<string, int>[]>;
+	using CharDfaEntry = KeyValuePair<int, KeyValuePair<char[], int>[]>;
 
 	/// <summary>
 	/// Generates a tokenizer class from a LexDocument and symbol table

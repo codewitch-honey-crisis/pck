@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+
 class Program
 {
 	static string[] _tests = new string[] {
@@ -25,7 +27,53 @@ class Program
 		//_RunLL(args);
 		//_RunLalr(args);	
 		//_RunXbnfGenerated(args);
-		_RunDebugLalrXbnf(args);
+		//_RunDebugLalrXbnf(args);
+		var xbnf = XbnfDocument.ReadFrom(@"..\..\..\xbnf.xbnf");
+		var sb = new StringBuilder();
+		var sw = new StringWriter(sb);
+		XbnfToPckTransform.Transform(xbnf, sw);
+		sw.Flush();
+		var cfg = CfgDocument.Parse(sb.ToString());
+		var lex = LexDocument.Parse(sb.ToString());
+		cfg.PrepareLL1();
+		var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"), cfg.EnumSymbols());
+		//var parser = new XbnfParser(new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf")));
+		var parser = new XbnfParser(tokenizer);
+
+		//var parser = cfg.ToLL1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
+
+		parser.ShowHidden = false;
+		// don't collapse anything. we want to make sure we preserve our line numbers
+		var pt = parser.ParseSubtree(false,false);
+		var hasErrors = false;
+		foreach (var pn in pt.FillDescendantsAndSelf())
+		{
+			if(XbnfParser._ERROR==pn.SymbolId)
+			{
+				hasErrors = true;
+				Console.Error.WriteLine("Syntax Error: " + pn.Value);
+			}
+		}
+		if(!hasErrors)
+		{
+			foreach(var pc in pt.Children)
+			{
+				TryParseProduction(pc);
+			}
+		}
+	}
+	static XbnfProduction TryParseProduction(ParseNode pt)
+	{
+		if (XbnfParser.production != pt.SymbolId)
+		{
+			System.Diagnostics.Debugger.Break();
+			return null;
+		}
+		var result = new XbnfProduction();
+		result.SetLocation(pt.Line, pt.Column, pt.Position);
+		result.Name = pt.Children[0].Value;
+		Console.Error.WriteLine("Production {0}", result.Name);
+		return result;
 	}
 	static void _TestXbnfTokenizers(string[] args)
 	{
@@ -52,7 +100,7 @@ class Program
 		}
 
 	}
-	static void _RunXbnfGenerated(string[] args)
+	/*static void _RunXbnfGenerated(string[] args)
 	{
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\xbnf.pck");
 		var lex = LexDocument.ReadFrom(@"..\..\..\xbnf.pck");
@@ -62,7 +110,7 @@ class Program
 		while (LRNodeType.EndDocument != parser.NodeType)
 			Console.WriteLine(parser.ParseReductions(true));
 
-	}
+	}*/
 	static void _RunLL(string[] args)
 	{
 		var cfg = CfgDocument.ReadFrom(@"..\..\..\expr.ll1.pck");

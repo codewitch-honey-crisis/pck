@@ -10,7 +10,7 @@ namespace Pck
 {
 	// can't used named tuples since CodeDom doesn't really support them
 	// (int Accept, (char[] Ranges, int Destination)[])
-	using CharDfaEntry = KeyValuePair<int, KeyValuePair<string, int>[]>;
+	using CharDfaEntry = KeyValuePair<int, KeyValuePair<char[], int>[]>;
 	/// <summary>
 	/// Represents a simple FA based regular expression engine.
 	/// </summary>
@@ -668,13 +668,13 @@ namespace Pck
 			{
 				var fa = closure[i];
 				var trgs = ((CharFA<TAccept>)fa).FillInputTransitionRangesGroupedByState();
-				var trns = new KeyValuePair<string, int>[trgs.Count];
+				var trns = new KeyValuePair<char[], int>[trgs.Count];
 				var j = 0;
 
 				foreach (var trg in trgs)
 				{
-					trns[j] = new KeyValuePair<string, int>(
-						CharRange.ToPackedString(trg.Value),
+					trns[j] = new KeyValuePair<char[], int>(
+						CharRange.ToPackedChars(trg.Value),
 						closure.IndexOf(trg.Key));
 
 					++j;

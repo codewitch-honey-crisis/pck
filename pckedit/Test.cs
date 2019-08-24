@@ -49,9 +49,10 @@ namespace Pck
 			ParseNode pt=null;
 			if (null != _ll1Parser)
 			{
+				string text = editor.Text;
 				await Task.Run(() =>
 				{
-					_ll1Parser.Restart(editor.Text);
+					_ll1Parser.Restart(text);
 					_ll1Parser.ShowHidden = showHidden.Checked;
 					while (LLNodeType.EndDocument != _ll1Parser.NodeType)
 					{
@@ -150,17 +151,19 @@ namespace Pck
 		private void parseTree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			var pn = e.Node.Tag as ParseNode;
-			if(null!=pn)
+			if (null != pn)
 			{
 				var start = editor.Document.OffsetToPosition((int)pn.Position);
 				var sel = new DefaultSelection(
-					editor.Document, 
-					start, 
+					editor.Document,
+					start,
 					editor.Document.OffsetToPosition(pn.Length + (int)pn.Position));
 				editor.ActiveTextAreaControl.SelectionManager.SetSelection(sel);
 				editor.ActiveTextAreaControl.Caret.Position = start;
 			}
 
+
 		}
+		
 	}
 }
