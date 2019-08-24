@@ -299,7 +299,22 @@ var parser = new ExprParser(new ExprTokenizer("3*(4+7)"));
 ```
 This will get you a new parser and tokenizer over the expression `3*(4+7)`
 
-There are a couple of ways from here in which you can use the parser.
+**A note about parsing from files and streaming sources:**
+The tokenizers expect `IEnumerable<char>` which is great if you have a `string` or a `char` array, but `TextReader` does not expose one. Simply use the `FileReaderEnumerable`, `ConsoleReaderEnumerable` or `UrlReaderEnumerable` to read input from one of the three sources or expose `IEnumerable<char>` from the source yourself. The prior classes capture input from a file, the console `stdin` or an URL, respectively, and make it simple to `foreach` repeatedly over the characters therein. That's the ideal. Sometimes you can't repeat an enumeration, and it's okay to throw in an implementation that doesn't support it, such as a non-seekable stream with no "getter" method to refetch the stream, like the console.
+
+So for example:
+```
+var parser = new ExprParser(new ExprTokenizer(new ConsoleReaderEnumerable()))
+```
+would pull from stdin, but the parser won't consider itself done until you hit `ctrl-Z` which is the console signal for end of input.
+```
+var parser = new ExprParser(new ExprTokenizer(new FileReaderEnumerable(@"myexpr.txt")))
+```
+would pull from "myexpr.txt" in the current working directory. 
+
+There is no need to close these explicitly, as they only hold the stream for the duration of the enumerator lifetime. Their enumerators must be disposed of with `Dispose()` or you risk leaving a stream open and possibly locked.
+
+Anyway, moving on, there are a couple of ways from here in which you can use the parser, wherever your input comes from.
 
 If you want streaming access to the pre-transformed parse tree, you can call the parser's `Read()` method in a loop, very much like Microsoft's *XmlReader*:
 
