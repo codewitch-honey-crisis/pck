@@ -33,46 +33,65 @@ class Program
 		var sw = new StringWriter(sb);
 		XbnfToPckTransform.Transform(xbnf, sw);
 		sw.Flush();
-		var cfg = CfgDocument.Parse(sb.ToString());
-		var lex = LexDocument.Parse(sb.ToString());
-		cfg.PrepareLL1();
-		var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"), cfg.EnumSymbols());
-		//var parser = new XbnfParser(new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf")));
-		//var parser = new XbnfParser(tokenizer);
 
-		var parser = cfg.ToLL1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
+		//var cfg = CfgDocument.Parse(sb.ToString());
+		//var lex = LexDocument.Parse(sb.ToString());
+		//cfg.PrepareLL1();
+		//var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"), cfg.EnumSymbols());
+		//var parser = cfg.ToLL1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
+		var parser = new XbnfParser(new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf")));
+			
 
 		parser.ShowHidden = false;
-		// don't collapse anything. we want to make sure we preserve our line numbers
-		var pt = parser.ParseSubtree(false,false);
+		var pt = parser.ParseSubtree();
 		var hasErrors = false;
-		foreach (var pn in pt.FillDescendantsAndSelf())
+		foreach (var pn in ParseNode.Select(pt.FillDescendantsAndSelf(),"#ERROR"))
 		{
-			if("#ERROR"==pn.Symbol)
-			{
-				hasErrors = true;
-				Console.Error.WriteLine("Syntax Error: " + pn.Value);
-			}
+			hasErrors = true;
+			Console.Error.WriteLine("Syntax Error: " + pn.Value);
 		}
 		if(!hasErrors)
 		{
+			var doc = new XbnfDocument();
 			foreach(var pc in pt.Children)
 			{
-				TryParseProduction(pc);
+				doc.Productions.Add(_ParseProduction(pc));
 			}
 		}
 	}
-	static XbnfProduction TryParseProduction(ParseNode pt)
+	static XbnfAttribute _ParseAttribute(ParseNode p)
 	{
-		if ("production"!= pt.Symbol)
+		var name = p.Children[0].Value;
+		var v = ParseNode.SelectFirst(p.Children, XbnfParser.attrvalue);
+		var val = (object)true;
+		if (null!=v)
 		{
-			System.Diagnostics.Debugger.Break();
-			return null;
+			string s = v.Children[0].Value;
+			val = ParseContext.Create(s).ParseJsonValue();
 		}
+		return new XbnfAttribute(name, val);
+	}
+	static XbnfExpression _ParseExpression(ParseNode p)
+	{
+		return null;
+	}
+	static XbnfProduction _ParseProduction(ParseNode p)
+	{
 		var result = new XbnfProduction();
-		result.SetLocation(pt.Line, pt.Column, pt.Position);
-		result.Name = pt.Children[0].Value;
-		Console.Error.WriteLine("Production {0}", result.Name);
+		result.SetLocation(p.Line, p.Column, p.Position);
+		result.Name = p.Children[0].Value;
+		var apn = ParseNode.SelectFirst(p.Children, XbnfParser.attributes);
+		if(null!=apn)
+		{
+			foreach(var ap in ParseNode.Select(apn.Children, XbnfParser.attribute)) 
+				result.Attributes.Add(_ParseAttribute(ap));
+		}
+		var pexp = ParseNode.SelectFirst(p.Children, XbnfParser.orExpression);
+		if (null!=pexp)
+		{
+			result.Expression=_ParseExpression(pexp);
+		}
+		Console.Error.WriteLine(result);
 		return result;
 	}
 	static void _TestXbnfTokenizers(string[] args)

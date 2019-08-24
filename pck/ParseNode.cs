@@ -39,6 +39,32 @@ namespace Pck
 				Children[i].FillDescendantsAndSelf(result);
 			return result;
 		}
+		public static IEnumerable<ParseNode> Select(IEnumerable<ParseNode> axis,string symbol)
+		{
+			foreach (var pn in axis)
+				if (null != pn && symbol == pn.Symbol)
+					yield return pn;
+		}
+		public static ParseNode SelectFirst(IEnumerable<ParseNode> axis, string symbol)
+		{
+			foreach (var pn in axis)
+				if (null != pn && symbol == pn.Symbol)
+					return pn;
+			return null;
+		}
+		public static IEnumerable<ParseNode> Select(IEnumerable<ParseNode> axis, int symbolId)
+		{
+			foreach (var pn in axis)
+				if (null != pn && symbolId == pn.SymbolId)
+					yield return pn;
+		}
+		public static ParseNode SelectFirst(IEnumerable<ParseNode> axis, int symbolId)
+		{
+			foreach (var pn in axis)
+				if (null != pn && symbolId == pn.SymbolId)
+					return pn;
+			return null;
+		}
 		public void SetLocation(int line, int column, long position)
 		{
 			_line = line;

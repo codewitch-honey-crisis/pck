@@ -14,7 +14,7 @@ grammar<start>= productions;
 // the result but not from the grammar, unlike hidden
 //
 productions<collapsed> = production productions | production;
-production= identifier [ "<" attributes ">" ] "=" orExpression ";";
+production= identifier [ attributes ] "=" orExpression ";";
 
 //
 // expressions
@@ -36,7 +36,7 @@ repeatOne= rbracePlus;
 // recognized attributes are hidden, collapsed, terminal, start, 
 // followsConflict (which can be "error", "first" or "last")
 // and blockEnd (string)
-attributes<collapsed>= attribute { "," attribute};
+attributes= "<" attribute { "," attribute} ">";
 attribute= identifier [ "=" attrvalue ];
 attrvalue= literal | integer | identifier;
 
@@ -66,16 +66,16 @@ blockComment<hidden,blockEnd="*/">= "/*";
 //
 // double quotes denote a literal. the escapes are nearly the
 // same as C#. \U and \x are not supported
-or<collapsed>="|";
-lt<collapsed>="<";
-gt<collapsed>=">";
-eq<collapsed>="=";
-semi<collapsed>=";";
-comma<collapsed>=",";
-lparen<collapsed>="(";
-rparen<collapsed>=")";
-lbracket<collapsed>="[";
-rbracket<collapsed>="]";
-lbrace<collapsed>="{";
-rbrace<collapsed>="}";
-rbracePlus<collapsed>="}+";
+or="|";
+lt="<";
+gt=">";
+eq="=";
+semi=";";
+comma=",";
+lparen="(";
+rparen=")";
+lbracket="[";
+rbracket="]";
+lbrace="{";
+rbrace="}";
+rbracePlus="}+";
