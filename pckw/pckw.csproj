@@ -75,6 +75,7 @@
     <Compile Include="Program.LL1Tree.cs" />
     <Compile Include="Program.Xlt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringUtility.cs" />
     <Compile Include="TokenizerCodeGenerator.cs" />
     <Compile Include="XbnfToPckTransform.cs" />
   </ItemGroup>

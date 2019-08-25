@@ -337,11 +337,14 @@ namespace Pck
 					if (null != f.Symbol)
 					{
 						CfgRule r;
-						if (d.TryGetValue(f.Symbol, out r) && r != f.Rule)
+						if (d.TryGetValue(f.Symbol, out r))
 						{
-							var cf = new CfgLL1Conflict(CfgLL1ConflictKind.FirstFirst, r, f.Rule, f.Symbol);
-							if (!result.Contains(cf))
-								result.Add(cf);
+							if (r != f.Rule)
+							{
+								var cf = new CfgLL1Conflict(CfgLL1ConflictKind.FirstFirst, r, f.Rule, f.Symbol);
+								if (!result.Contains(cf))
+									result.Add(cf);
+							}
 						}
 						else
 							d.Add(f.Symbol, f.Rule);
@@ -351,11 +354,14 @@ namespace Pck
 						foreach (var ff in follows[nt])
 						{
 							CfgRule r;
-							if (d.TryGetValue(ff, out r) && r != f.Rule)
+							if (d.TryGetValue(ff, out r))
 							{
-								var cf = new CfgLL1Conflict(CfgLL1ConflictKind.FirstFollows, r, f.Rule, ff);
-								if (!result.Contains(cf))
-									result.Add(cf);
+								if (r != f.Rule)
+								{
+									var cf = new CfgLL1Conflict(CfgLL1ConflictKind.FirstFollows, r, f.Rule, ff);
+									if (!result.Contains(cf))
+										result.Add(cf);
+								}
 							}
 							else
 								d.Add(ff, f.Rule);
@@ -435,15 +441,17 @@ namespace Pck
 					if (null != f.Symbol)
 					{
 						CfgRule r;
-						if (d.TryGetValue(f.Symbol, out r) && r != f.Rule)
+						if (d.TryGetValue(f.Symbol, out r))
 						{
-							result.Add(new CfgMessage(ErrorLevel.Message, -1,
-								string.Format(
-									"Rule {0} has a first first conflict with rule {1} on symbol {2} and will require additional lookahead",
-									f.Rule,
-									r,
-									f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position, cfg.Filename));
-
+							if (r != f.Rule)
+							{
+								result.Add(new CfgMessage(ErrorLevel.Message, -1,
+									string.Format(
+										"Rule {0} has a first first conflict with rule {1} on symbol {2} and will require additional lookahead",
+										f.Rule,
+										r,
+										f.Symbol), f.Rule.Line, f.Rule.Column, f.Rule.Position, cfg.Filename));
+							}
 						}
 						else
 							d.Add(f.Symbol, f.Rule);
@@ -453,16 +461,17 @@ namespace Pck
 						foreach (var ff in follows[nt])
 						{
 							CfgRule r;
-							if (d.TryGetValue(ff, out r) && r != f.Rule)
+							if (d.TryGetValue(ff, out r))
 							{
-
-								result.Add(new CfgMessage(ErrorLevel.Message, -1,
-								string.Format(
-									"Rule {0} has a first follow conflict with rule {1} on symbol {2} and will require additional lookahead",
-									f.Rule,
-									r,
-									ff),f.Rule.Line,f.Rule.Column,f.Rule.Position, cfg.Filename));
-
+								if (r != f.Rule)
+								{
+									result.Add(new CfgMessage(ErrorLevel.Message, -1,
+									string.Format(
+										"Rule {0} has a first follow conflict with rule {1} on symbol {2} and will require additional lookahead",
+										f.Rule,
+										r,
+										ff), f.Rule.Line, f.Rule.Column, f.Rule.Position, cfg.Filename));
+								}
 							}
 							else
 								d.Add(ff, f.Rule);

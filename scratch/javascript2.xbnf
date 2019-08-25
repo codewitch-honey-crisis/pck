@@ -1,0 +1,249 @@
+﻿literal = nullLiteral
+            | boolLiteral
+            | numLiteral
+            | stringLiteral;
+
+nullLiteral= "null";
+boolLiteral= "true" | "false";
+stringLiteral = '"([^"\\]|\\.)*"'|'\'([^\'\\]|\\.)*\'';
+identifier = '[A-Z_a-z][0-9A-Z_a-z]*';
+numLiteral = '\-?(0|[1-9][0-9]*)(\.[0-9]+)?([Ee][\+\-]?[0-9]+)?';
+regex='/[A-Za-Z0-9\^\$\*\+\?\{\}\|\-\.\,\#\[\]\_\<\>]/[gim]*';
+
+regexLiteral = regex ;
+
+primaryExpression = "this"
+                       | identifier
+                       | literal 
+                       | arrayLiteral
+                       | objectLiteral
+                       | "(" expression ")"
+                       | regexLiteral;
+
+arrayLiteral = "[" "]"
+                  | "[" elision "]"
+                  | "[" elementList "]"
+                  | "[" elementList "," elision "]";
+
+elision = ","
+            | elision ",";
+
+elementList = elision assignExpression
+                 | elementList "," elision  assignExpression
+                 | elementList "," assignExpression
+                 | assignExpression;
+
+objectLiteral = "{" propNameValueList "}";
+
+propNameValueList = propName ":" assignExpression
+                                 | propNameValueList "," propName ":" assignExpression;
+
+propName = identifier
+                  | stringLiteral
+                  | numLiteral;
+
+memberExpression = primaryExpression
+                       | functionExpression
+                       | memberExpression "[" expression "]"
+                       | memberExpression "." identifier
+                       | "new" memberExpression arguments;
+
+newExpression = memberExpression
+                   | "new" newExpression;
+
+callExpression = memberExpression arguments
+                    | callExpression arguments 
+                    | callExpression "[" expression "]"
+                    | callExpression "." identifier;
+
+arguments = "(" ")"
+              | "(" argumentList ")";
+
+argumentList = assignExpression
+                  | argumentList "," assignExpression;
+
+
+lhsExpression = newExpression 
+                              | callExpression;
+
+postfixExpression = lhsExpression
+                       | postfixExpression "++"
+                       | postfixExpression "--";
+
+unaryExpression = postfixExpression
+                     | "delete" unaryExpression
+                     | "void" unaryExpression
+                     | "typeof" unaryExpression
+                     | "++" unaryExpression
+                     | "--" unaryExpression
+                     | "+" unaryExpression
+                     | "-" unaryExpression
+                     | "~" unaryExpression
+                     | "!" unaryExpression;
+
+multExpression = unaryExpression
+                              | unaryExpression "*" multExpression 
+                              | unaryExpression "/" multExpression                               
+                              | unaryExpression "%" multExpression ;
+
+addExpression = addExpression "+" multExpression 
+                        | addExpression "-" multExpression  
+                        | multExpression;
+
+
+
+shiftExpression = shiftExpression "<<" addExpression
+                     | shiftExpression ">>" addExpression
+                     | shiftExpression ">>>" addExpression
+                     | addExpression;
+
+relationalExpression= shiftExpression 
+                         | relationalExpression "<" shiftExpression 
+                         | relationalExpression ">" shiftExpression 
+                         | relationalExpression "<=" shiftExpression 
+                         | relationalExpression ">=" shiftExpression 
+                         | relationalExpression "instanceof" shiftExpression; 
+
+equalityExpression = relationalExpression
+                        | equalityExpression "==" relationalExpression
+                        | equalityExpression "!=" relationalExpression
+                        | equalityExpression "===" relationalExpression
+                        | equalityExpression "!==" relationalExpression;
+
+bitwiseAndExpression = equalityExpression
+                           | bitwiseAndExpression "&" equalityExpression;
+
+xorExpression = bitwiseAndExpression
+                           | xorExpression "^" bitwiseAndExpression;
+
+bitwiseOrExpression = xorExpression
+                          | bitwiseOrExpression "|" xorExpression;
+
+andExpression = bitwiseOrExpression
+                           | andExpression "&&" bitwiseOrExpression;
+
+orExpression = andExpression
+                          | orExpression "||" andExpression;
+
+conditionalExpression = orExpression 
+                           | orExpression "?" assignExpression ":" assignExpression;
+
+assignExpression = conditionalExpression
+                          | lhsExpression assignmentOperator assignExpression;
+                          
+assignmentOperator = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=";
+
+expression = assignExpression
+               | expression "," assignExpression;
+
+statement = block
+              | variableStatement
+              | emptyStatement
+              | ifStatement
+              | ifElseStatement
+              | iterationStatement
+              | continueStatement
+              | breakStatement
+              | returnStatement
+              | withStatement
+              | labelledStatement
+              | switchStatement
+              | throwStatement
+              | tryStatement
+              | expression;
+
+block = "{" "}"
+           | "{" statementList "}";
+
+statementList = statement
+                   | statementList statement;
+
+variableStatement = "var" variableDeclarationList ";";
+variableDeclarationList = variableDeclaration
+                              | variableDeclarationList "," variableDeclaration;
+
+variableDeclaration = identifier
+                         | identifier initializer;
+
+initializer = "=" assignExpression;
+
+emptyStatement = ";";
+
+ifStatement = "if" "(" expression ")" statement ;
+ifElseStatement = "if" "(" expression ")" statement "else" statement;
+
+iterationStatement = "do" statement "while" "(" expression ")" ";"
+                        | "while" "(" expression ")" statement 
+                        | "for" "(" expression ";" expression ";" expression ")" statement 
+                        | "for" "(" "var" variableDeclarationList ";" expression ";" expression ")" statement 
+                        | "for" "(" lhsExpression "in" expression ")" statement 
+                        | "for" "(" "var" variableDeclaration "in" expression ")" statement ;
+
+continueStatement = "continue" ";"
+                       | "continue" identifier ";";
+
+breakStatement = "break" ";"
+                       | "break" identifier ";";
+
+returnStatement = "return" ";"
+                       | "return" expression ";";
+
+withStatement = "with" "(" expression ")" statement ";";
+
+switchStatement = "switch" "(" expression ")" caseBlock;  
+
+caseBlock = "{" "}"
+               | "{" caseClauses "}"
+               | "{" caseClauses defaultClause "}"
+               | "{" caseClauses defaultClause caseClauses "}"
+               | "{" defaultClause caseClauses "}"
+               | "{" defaultClause "}";
+
+caseClauses = caseClause
+                 | caseClauses caseClause;
+
+caseClause = "case" expression ":" statementList
+                | "case" expression ":";
+
+defaultClause = "default" ":" 
+                   | "default" ":" statementList;
+
+labelledStatement = identifier ":" statement;
+
+throwStatement = "throw" expression;
+
+tryStatement = "try" block catch
+                  | "try" block finally
+                  | "try" block catch finally;
+
+catch = "catch" "(" identifier ")" block;
+
+finally = "finally" block;
+
+functionDeclaration = "function" identifier "(" formalParameterList ")" "{" functionBody "}"
+                         | "function" identifier "(" ")" "{" functionBody "}";
+
+functionExpression = "function" "(" ")" "{" functionBody "}"
+                        | "function" "(" formalParameterList ")" "{" functionBody "}";
+
+
+formalParameterList = identifier
+                          | formalParameterList "," identifier;
+
+functionBody = sourceElements
+                  | ;
+
+program<start> = sourceElements;
+
+sourceElements = sourceElement
+                    | sourceElements  sourceElement;
+
+sourceElement = statement
+                   | functionDeclaration;
+
+    
+   
+
+
+
+

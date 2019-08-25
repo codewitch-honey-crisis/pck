@@ -253,6 +253,12 @@ namespace Pck
 					// from the left-hand side of the rule #. Treat it as 
 					// the next input token in the GOTO table (and place 
 					// the matching state at the top of the set stack).
+					var e = _parseTable[_stack.Peek()];
+					if(null==e)
+					{
+						_Panic();
+						return true;
+					}
 					_stack.Push(_parseTable[_stack.Peek()][trns[1]][0]);
 					_nodeType = LRNodeType.Reduce;
 					return true;

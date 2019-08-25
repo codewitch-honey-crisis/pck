@@ -50,8 +50,7 @@ namespace Pck
 			if (null != _ll1Parser)
 			{
 				string text = editor.Text;
-				await Task.Run(() =>
-				{
+				
 					_ll1Parser.Restart(text);
 					_ll1Parser.ShowHidden = showHidden.Checked;
 					while (LLNodeType.EndDocument != _ll1Parser.NodeType)
@@ -60,15 +59,15 @@ namespace Pck
 						if (null == pt.Value)
 							break;
 					}
-				});
+				
 			} else if(null!=_lalr1Parser)
 			{
-				await Task.Run(() =>
-				{
-					_lalr1Parser.Restart(editor.Text);
+				string text = editor.Text;
+				
+					_lalr1Parser.Restart(text);
 					_lalr1Parser.ShowHidden = showHidden.Checked;
 					var opt = pt;
-					while (LRNodeType.EndDocument != _lalr1Parser.NodeType)
+					while (LRNodeType.EndDocument != _lalr1Parser.NodeType && LRNodeType.Error !=_lalr1Parser.NodeType)
 					{
 						pt = _lalr1Parser.ParseReductions(trimTree.Checked, transformTree.Checked);
 						if (null == pt || null == pt.Value)
@@ -77,7 +76,7 @@ namespace Pck
 					}
 					if (null == pt)
 						pt = opt;
-				});
+				
 			}
 			parseTree.Nodes.Clear();
 			if(null!=pt)

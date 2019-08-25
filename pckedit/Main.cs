@@ -869,9 +869,10 @@ namespace Pck
 			if (string.IsNullOrEmpty(input))
 				return input;
 			XbnfDocument xbnf = null;
+			xbnf = XbnfDocument.Parse(input);
+
 			try
 			{
-				xbnf = XbnfDocument.Parse(input);
 				xbnf.SetFilename(fname);
 			}
 			catch (ExpectingException expex)

@@ -8,6 +8,88 @@ namespace Pck
 	[Transform("cgtToPck",".cgt",".pck","Translates a Gold Parser cgt file into a pck spec. (requires manual intervention)")]
 	class CgtToPckTransform
 	{
+		static readonly IDictionary<char,string> _symbolWords =_GetSymbolWords();
+		static IDictionary<char,string> _GetSymbolWords()
+		{
+			var s = new Dictionary<char, string>();
+			s.Add('~', "Tilde");
+			s.Add('`', "Grave");
+			s.Add('!', "Bang");
+			s.Add('@', "At");
+			s.Add('#', "Hash");
+			s.Add('$', "Dollar");
+			s.Add('%', "Percent");
+			s.Add('^', "Caret");
+			s.Add('&', "Amp");
+			s.Add('*', "Star");
+			s.Add('(', "LParen");
+			s.Add(')', "RParen");
+			s.Add('-', "Dash");
+			s.Add('+', "Plus");
+			s.Add('=', "Eq");
+			s.Add('{', "LBrace");
+			s.Add('}', "RBrace");
+			s.Add('[', "LBracket");
+			s.Add(']', "RBracket");
+			s.Add('|', "Pipe");
+			s.Add('\\',"Backslash");
+			s.Add(':', "Colon");
+			s.Add(';', "Semi");
+			s.Add('\"', "Quote");
+			s.Add('\'', "Apos");
+			s.Add('<', "Lt");
+			s.Add('>', "Gt");
+			s.Add(',', "Comma");
+			s.Add('.', "Dot");
+			s.Add('?', "Question");
+			s.Add('/', "Slash");
+			return s;
+		}
+		static string _SymbolsToWords(string s)
+		{
+			var sb = new StringBuilder();
+			for(var i = 0;i<s.Length;++i)
+			{
+				var ch = s[i];
+				string w;
+				if(_symbolWords.TryGetValue(ch, out w))
+				{
+					sb.Append(w);
+				} else
+				{
+					if (char.IsLetterOrDigit(ch))
+						sb.Append(ch);
+					else
+						sb.Append('_');
+				}
+			}
+			return sb.ToString();
+		}
+		static string _MakeSafeProd(ICollection<string> prods,string s)
+		{
+			s = s.Trim(StringUtility.WordBreakChars);
+			if (0 == s.Length)
+				s = _SymbolsToWords(s);
+			var words = s.SplitWords();
+			var sb = new StringBuilder();
+			var delim = "";
+			foreach (var word in words)
+			{
+				sb.Append(delim);
+				sb.Append(word);
+				delim = "_";
+			}
+			int i = 2;
+			var ss = s;
+			foreach(var p in prods)
+			{
+				if (!prods.Contains(s))
+					return s;
+				s = string.Concat(ss, i.ToString());
+				++i;
+			}
+			return s;
+		}
 		public static void Transform(Stream input,Stream output)
 		{
 			var str = _ReadString(input);
@@ -101,32 +183,15 @@ namespace Pck
 			// fixup the symbols.
 			symbols[eosId] = "#EOS";
 			symbols[1] = "#ERROR";
-			var impl = 2;
 			var nts = new HashSet<int>();
 			for (var i = 0; i < rules.Length; i++)
 				nts.Add(rules[i].Left);
-			for(var i = 0;i<symbols.Length;i++)
-			{
-				if(nts.Contains(i))
-					symbols[i] = _MakeSafeIdentifier(symbols[i]);
-				else if("#ERROR"!=symbols[i] && "#EOS"!=symbols[i])
-				{
-					var isTotallySafe = true;
-					for(int j=0;j<symbols[i].Length;j++)
-					{
-						if(_NotIdentifierChars.Contains(symbols[i][j]))
-						{
-							isTotallySafe = false;
-							break;
-						}
-					}
-					if (!isTotallySafe)
-					{
-						symbols[i] = string.Concat("implicit", impl.ToString());
-						++impl;
-					}
-				}
-			}
+			var seen = new HashSet<string>();
+			seen.Add("#ERROR");
+			seen.Add("#EOS");
+			for (var i = 0; i < symbols.Length; i++)
+				if(1!=i && eosId!=i)
+					seen.Add(symbols[i] = _MakeSafeProd(seen, symbols[i]));
 			
 			var mappedRules=new (string Left, string[] Right)[rules.Length];
 			var cfg = new CfgDocument();

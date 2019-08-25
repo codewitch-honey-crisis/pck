@@ -20,7 +20,7 @@ namespace Pck
 					var hi = prod.Attributes.IndexOf("start");
 					if(-1<hi)
 					{
-						var o = prod.Attributes[i].Value;
+						var o = prod.Attributes[hi].Value;
 						if (o is bool && (bool)o)
 							return prod;
 					}
@@ -176,7 +176,9 @@ namespace Pck
 				case XbnfParser.concatExpression:
 					if (1 == p.Children.Count)
 						return _ParseExpression(p.Children[0]);
-					var right = new List<XbnfExpression>(p.Children.Count - 1);
+					else if (0 == p.Children.Count)
+						return null;
+					var right = new List<XbnfExpression>(p.Children.Count-1);
 					XbnfExpression left = null;
 					foreach (var pch in p.Children)
 					{

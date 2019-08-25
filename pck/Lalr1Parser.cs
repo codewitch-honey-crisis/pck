@@ -71,7 +71,7 @@ namespace Pck
 						rs.Push(p);
 						break;
 					case LRNodeType.Reduce:
-						if (!trim || 1/*2*/ < RuleDefinition.Length)
+						if (!trim || 2 != RuleDefinition.Length)
 						{
 							var d = new List<ParseNode>();
 							p = new ParseNode();
@@ -156,5 +156,4 @@ namespace Pck
 			return sb.ToString();
 		}
 	}
-
 }
