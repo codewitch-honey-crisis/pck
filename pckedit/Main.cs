@@ -870,7 +870,7 @@ namespace Pck
 				return input;
 			XbnfDocument xbnf = null;
 			xbnf = XbnfDocument.Parse(input);
-
+				
 			try
 			{
 				xbnf.SetFilename(fname);
@@ -1069,7 +1069,7 @@ namespace Pck
 						break;
 					goto case ".pck";
 				case ".pck":
-					await Task.Run((Action)(()=>{ 
+					await Task.Run(()=>{ 
 						var sb = new StringBuilder();
 						var cfg = CfgDocument.Parse(input);
 						if (ext == ".pck")
@@ -1107,7 +1107,7 @@ namespace Pck
 							if (!hasErrors)
 								input = sb.ToString();
 						}
-					}));
+					});
 					if (!hasErrors)
 					{
 						name = _GetUniqueFilename(name);

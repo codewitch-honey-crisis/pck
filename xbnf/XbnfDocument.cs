@@ -170,7 +170,9 @@ namespace Pck
 				case XbnfParser.orExpression:
 					if (1 == p.Children.Count)
 						return _ParseExpression(p.Children[0]);
-					result = new XbnfOrExpression(_ParseExpression(p.Children[0]), _ParseExpression(p.Children[2]));
+					var lhs = _ParseExpression(p.Children[0]);
+					var rhs = _ParseExpression(p.Children[2]);
+					result = new XbnfOrExpression(lhs,rhs);
 					result.SetLocation(p.Line, p.Column, p.Position);
 					return result;
 				case XbnfParser.concatExpression:

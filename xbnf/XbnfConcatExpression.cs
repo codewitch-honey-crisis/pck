@@ -20,7 +20,7 @@ namespace Pck
 				c.Right = Right;
 				Right = null;
 				Left = c;
-
+				
 			}
 		}
 		public XbnfConcatExpression()

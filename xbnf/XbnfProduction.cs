@@ -61,7 +61,6 @@ namespace Pck
 			sb.Append(";");
 			return sb.ToString();
 		}
-		/*
 		internal static XbnfProduction Parse(ParseContext pc)
 		{
 			var result = new XbnfProduction();
@@ -98,7 +97,6 @@ namespace Pck
 			result.SetLocation(l, c, p);
 			return result;
 		}
-		*/
 		#region Value semantics
 		public bool Equals(XbnfProduction rhs)
 		{

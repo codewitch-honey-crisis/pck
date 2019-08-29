@@ -1,8 +1,6 @@
-﻿expr= expr "+" term | term;
+﻿expr = expr "+" term | term;
 term= term "*" factor | factor;
 factor= "(" expr ")" | int;
-
-
 add="+";
 mul="*";
 lparen="(";

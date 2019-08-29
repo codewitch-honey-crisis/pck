@@ -1,0 +1,15 @@
+﻿expression<start>= 
+	expression "+" factorExpression |
+	expression "-" factorExpression |
+	factorExpression;
+
+factorExpression= 
+	factorExpression "*" negateExpression |
+	factorExpression "/" negateExpression |
+	negateExpression;
+
+negateExpression = "-" value | value;
+
+value= int | "(" expression ")";
+
+int='\d+';

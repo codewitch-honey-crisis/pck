@@ -28,22 +28,9 @@ class Program
 		//_RunLalr(args);	
 		//_RunXbnfGenerated(args);
 		//_RunDebugLalrXbnf(args);
-		var xbnf = XbnfDocument.ReadFrom(@"..\..\..\xbnf.xbnf");
-		var sb = new StringBuilder();
-		var sw = new StringWriter(sb);
-		XbnfToPckTransform.Transform(xbnf, sw);
-		sw.Flush();
-
-		//var cfg = CfgDocument.Parse(sb.ToString());
-		//var lex = LexDocument.Parse(sb.ToString());
-		//cfg.PrepareLL1();
-		//var tokenizer = lex.ToTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf"), cfg.EnumSymbols());
-		//var parser = cfg.ToLL1Parser(tokenizer); //new Lalr1DebugParser(cfg, tokenizer, pt);
-		var parser = new XbnfParser(new XbnfTokenizer(new FileReaderEnumerable(@"..\..\..\xbnf.xbnf")));
-			
-
-		parser.ShowHidden = false;
-		var pt = parser.ParseSubtree();
+		var xbnf = XbnfDocument.ReadFrom(@"..\..\..\..\pckw\xbnf.xbnf");
+		Console.WriteLine(xbnf);
+		
 		
 	}
 

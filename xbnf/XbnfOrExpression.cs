@@ -8,19 +8,21 @@ namespace Pck
 	{
 		public XbnfOrExpression(XbnfExpression left, params XbnfExpression[] right)
 		{
+			Right = null;
 			Left = left;
 			for (int i = 0; i < right.Length; i++)
 			{
-				var r = right[i];
-				if (null == Right)
-					Right = r;
-				
-				var c = new XbnfOrExpression();
-				c.Left = Left;
-				c.Right = Right;
-				Right = null;
-				Left = c;
-				
+				if(null==Right)
+				{
+					Right = right[i];
+				} else
+				{
+					var or = new XbnfOrExpression();
+					or.Left = Left;
+					or.Right = Right;
+					Left = or;
+					Right = right[i];
+				}
 			}
 		}
 		public XbnfOrExpression()
