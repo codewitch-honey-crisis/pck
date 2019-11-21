@@ -204,7 +204,6 @@ namespace Pck
 			if (0 < _stack.Count)
 			{
 				var entry = _parseTable[_stack.Peek()];
-				//(int RuleOrStateId, int Left, int[] Right) trns;
 				if (_errorId == _tokenEnum.Current.SymbolId)
 				{
 					_Panic();

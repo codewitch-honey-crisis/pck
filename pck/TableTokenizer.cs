@@ -136,7 +136,7 @@ namespace Pck
 			int _Lex()
 			{
 				int acc;
-				var states = 0;
+				var state = 0;
 				_buffer.Clear();
 				switch (_state)
 				{
@@ -144,7 +144,7 @@ namespace Pck
 						if (!_MoveNextInput())
 						{
 							_state = -2;
-							acc = _dfaTable[states].AcceptSymbolId;
+							acc = _dfaTable[state].AcceptSymbolId;
 							if (-1 != acc)
 								return acc;
 							else
@@ -162,9 +162,9 @@ namespace Pck
 				{
 					var next = -1;
 					// go through all the transitions
-					for(var i =0;i<_dfaTable[states].Transitions.Length;i++)
+					for(var i =0;i<_dfaTable[state].Transitions.Length;i++)
 					{
-						var entry = _dfaTable[states].Transitions[i];
+						var entry = _dfaTable[state].Transitions[i];
 						var found = false;
 						// go through all the ranges to see if we matched anything.
 						for (var j=0;j<entry.PackedRanges.Length;j++)
@@ -191,19 +191,19 @@ namespace Pck
 						break;
 					_buffer.Append(_input.Current);
 
-					states = next;
+					state = next;
 					if (!_MoveNextInput())
 					{
 						// end of stream
 						_state = -2;
-						acc = _dfaTable[states].AcceptSymbolId;
+						acc = _dfaTable[state].AcceptSymbolId;
 						if (-1 != acc) // do we accept?
 							return acc;
 						else
 							return _errorSymbol;
 					}
 				}
-				acc = _dfaTable[states].AcceptSymbolId;
+				acc = _dfaTable[state].AcceptSymbolId;
 				if (-1 != acc) // do we accept?
 				{
 					var be=_blockEnds[acc];

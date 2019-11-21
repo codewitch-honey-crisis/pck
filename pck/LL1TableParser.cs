@@ -318,9 +318,7 @@ namespace Pck
 				{
 					s = _tokenEnum.Current.SymbolId - _initCfg[1];
 					if (0 > s || row.Length <= s || null == row[s])
-					{
 						_errorToken.Value += _tokenEnum.Current.Value;
-					}
 				}
 				if (_stack.Contains(_tokenEnum.Current.SymbolId))
 				{
@@ -333,7 +331,6 @@ namespace Pck
 				do
 				{
 					s = _tokenEnum.Current.SymbolId;
-					//Console.Error.WriteLine(_tokenEnum.Current.Value);
 					_errorToken.Value += _tokenEnum.Current.Value;
 					if (!_tokenEnum.MoveNext())
 						break;
@@ -343,7 +340,6 @@ namespace Pck
 			}
 			while (_stack.Contains((s = _tokenEnum.Current.SymbolId)) && _stack.Peek() != s)
 				_stack.Pop();
-			//Console.Error.WriteLine("ERROR: " + _errorToken.Value);
 		}
 		public override void Close()
 		{

@@ -15,13 +15,14 @@ namespace Pck
 				var r = right[i];
 				if (null == Right)
 					Right = r;
-				
-				var c = new RegexOrExpression();
-				c.Left = Left;
-				c.Right = Right;
-				Right = null;
-				Left = c;
-				
+				if (i != right.Length - 1)
+				{
+					var c = new RegexOrExpression();
+					c.Left = Left;
+					c.Right = Right;
+					Right = null;
+					Left = c;
+				}
 			}
 		}
 		public RegexOrExpression() { }

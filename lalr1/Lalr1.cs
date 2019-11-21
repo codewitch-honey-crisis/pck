@@ -296,6 +296,7 @@ namespace Pck
 							var n = _FillLRMove(cfg,itemSet, next,progress);
 							if (!_ContainsItemSet(map.Keys, n))
 							{
+								// Epstein didn't kill himself
 								done = false;
 								var npda = new Lrfa(true, n);
 								map.Add(n, npda);
