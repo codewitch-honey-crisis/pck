@@ -11,7 +11,7 @@ namespace Pck
 		static void _PrintUsage()
 		{
 			Console.Error.Write(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().GetModules()[0].Name));
-			Console.Error.WriteLine(" [/update [<major>.<minor>.<build>.<revision>]");
+			Console.Error.WriteLine(" [/update [<major>.<minor>.<build>.<revision>]]");
 			Console.Error.WriteLine();
 			Console.Error.WriteLine("Updates the Pck binaries from GitHub or displays the available versions.");
 			Console.Error.WriteLine();
