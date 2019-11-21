@@ -20,7 +20,7 @@ namespace Pck
 				syms.Add(p.Name);
 				if (0 < p.Attributes.Count)
 				{
-					writer.Write(string.Concat(p.Name, ":"));
+					writer.Write(string.Concat(p.Name, ": "));
 					var delim = "";
 					for (int jc = p.Attributes.Count, j = 0; j < jc; ++j)
 					{
@@ -30,6 +30,7 @@ namespace Pck
 					writer.WriteLine();
 				}
 			}
+			writer.WriteLine();
 			// use a list dictionary to keep these in order
 			var tmap = new ListDictionary<XbnfExpression, string>();
 			var attrSets = new Dictionary<string, XbnfAttributeList>();

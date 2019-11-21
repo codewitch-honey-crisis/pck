@@ -661,7 +661,7 @@ namespace Pck
 			{
 				if (0 < attrSet.Value.Count)
 				{
-					sb.Append(string.Concat(attrSet.Key, ":"));
+					sb.Append(string.Concat(attrSet.Key, ": "));
 					var delim = "";
 					for (int jc = attrSet.Value.Count, j = 0; j < jc; ++j)
 					{
@@ -671,6 +671,7 @@ namespace Pck
 					sb.AppendLine();
 				}
 			}
+			sb.AppendLine();
 			for (int ic = Rules.Count, i = 0; i < ic; ++i)
 				sb.AppendLine(Rules[i].ToString());
 			return sb.ToString();
