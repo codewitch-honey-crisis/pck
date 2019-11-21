@@ -57,17 +57,17 @@ namespace Pck
 				{
 					if (!IsSymbol(value))
 						throw new KeyNotFoundException("The specified symbol does not exist");
-					foreach(var sattrs in AttributeSets)
+					foreach (var sattrs in AttributeSets)
 					{
-						var i =sattrs.Value.IndexOf("start");
-						if(-1<i && (sattrs.Value[i].Value is bool) && (bool)sattrs.Value[i].Value)
+						var i = sattrs.Value.IndexOf("start");
+						if (-1 < i && (sattrs.Value[i].Value is bool) && (bool)sattrs.Value[i].Value)
 							sattrs.Value.RemoveAt(i);
-						if(sattrs.Key==value)
+						if (sattrs.Key == value)
 						{
 							i = sattrs.Value.IndexOf("start");
 							if (-1 < i)
-								sattrs.Value[i].Value=true;
-							else 
+								sattrs.Value[i].Value = true;
+							else
 								sattrs.Value.Add(new CfgAttribute("start", true));
 						}
 					}
@@ -77,7 +77,7 @@ namespace Pck
 		public void InternSymbols()
 		{
 			var syms = FillSymbols();
-			for(int ic=syms.Count,i=0;i<ic;++i)
+			for (int ic = syms.Count, i = 0; i < ic; ++i)
 				string.Intern(syms[i]);
 		}
 		public bool IsDirectlyLeftRecursive {
@@ -93,14 +93,14 @@ namespace Pck
 		{
 			var seen = new HashSet<string>();
 			var ic = Rules.Count;
-			for(var i=0;i<ic;++i)
+			for (var i = 0; i < ic; ++i)
 			{
 				var s = Rules[i].Left;
 				if (seen.Add(s))
 					yield return s;
 			}
 		}
-		public IList<string> FillNonTerminals(IList<string> result=null)
+		public IList<string> FillNonTerminals(IList<string> result = null)
 		{
 			if (null == result)
 				result = new List<string>();
@@ -126,7 +126,7 @@ namespace Pck
 			for (var i = 0; i < ic; ++i)
 			{
 				var right = Rules[i].Right;
-				for(int jc=right.Count,j=0;j<jc;++j)
+				for (int jc = right.Count, j = 0; j < jc; ++j)
 				{
 					var s = right[j];
 					if (seen.Add(s))
@@ -164,11 +164,11 @@ namespace Pck
 							result.Add(s);
 				}
 			}
-			foreach(var attrs in AttributeSets)
-				if(seen.Add(attrs.Key))
+			foreach (var attrs in AttributeSets)
+				if (seen.Add(attrs.Key))
 					if (!result.Contains(attrs.Key))
 						result.Add(attrs.Key);
-				
+
 			if (!result.Contains("#EOS"))
 				result.Add("#EOS");
 			if (!result.Contains("#ERROR"))
@@ -405,7 +405,7 @@ namespace Pck
 			if (null == result)
 				result = new Dictionary<string, ICollection<(CfgRule Rule, string Symbol)>>();
 			var predictNT = _FillPredictNT();
-			
+
 			// finally, for each non-terminal N we still have in the firsts, resolve FIRSTS(N)
 			foreach (var kvp in predictNT)
 			{
@@ -416,14 +416,14 @@ namespace Pck
 					_ResolvePredict(item.Symbol, res, predictNT, new HashSet<string>());
 					foreach (var r in res)
 						col.Add((item.Rule, r));
-					
+
 				}
 				result.Add(kvp.Key, col);
 			}
 			return result;
 		}
 
-		void _ResolvePredict(string symbol,ICollection<string> result,IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> predictNT,HashSet<string> seen)
+		void _ResolvePredict(string symbol, ICollection<string> result, IDictionary<string, ICollection<(CfgRule Rule, string Symbol)>> predictNT, HashSet<string> seen)
 		{
 			if (seen.Add(symbol))
 			{
@@ -451,7 +451,7 @@ namespace Pck
 			if (null == result)
 				result = new Dictionary<string, ICollection<string>>();
 
-			var	followsNT = new Dictionary<string, ICollection<string>>();
+			var followsNT = new Dictionary<string, ICollection<string>>();
 
 			// we'll need the predict table
 			//Console.Error.WriteLine("Computing predict...");
@@ -524,7 +524,7 @@ namespace Pck
 			// below we look for any non-terminals in the follows result and replace them
 			// with their follows, so for example if N appeared, N would be replaced with 
 			// the result of FOLLOW(N)
-			
+
 			foreach (var nt in EnumNonTerminals())
 			{
 				var col = new HashSet<string>();
@@ -534,7 +534,7 @@ namespace Pck
 			}
 			//Console.Error.WriteLine("Done!");
 			return result;
-	
+
 		}
 		void _ResolveFollows(string symbol, ICollection<string> result, IDictionary<string, ICollection<string>> followsNT, HashSet<string> seen)
 		{
@@ -619,13 +619,13 @@ namespace Pck
 			}
 			return result;
 		}
-		public object GetAttribute(string symbol,string name, object @default = null)
+		public object GetAttribute(string symbol, string name, object @default = null)
 		{
 			CfgAttributeList l;
-			if(AttributeSets.TryGetValue(symbol,out l))
+			if (AttributeSets.TryGetValue(symbol, out l))
 			{
 				var i = l.IndexOf(name);
-				if(-1<i)
+				if (-1 < i)
 					return l[i].Value;
 			}
 			return @default;
@@ -633,7 +633,7 @@ namespace Pck
 		public bool IsNonTerminal(string symbol)
 		{
 			if (null != _ntCache) return _ntCache.Contains(symbol);
-			for(int ic=Rules.Count,i=0;i<ic;++i)
+			for (int ic = Rules.Count, i = 0; i < ic; ++i)
 				if (Rules[i].Left == symbol)
 					return true;
 			return false;
@@ -646,7 +646,7 @@ namespace Pck
 				var rule = Rules[i];
 				if (rule.Left == symbol)
 					return true;
-				for(int jc=rule.Right.Count,j=0;j<jc;++j)
+				for (int jc = rule.Right.Count, j = 0; j < jc; ++j)
 				{
 					if (symbol == rule.Right[j])
 						return true;
@@ -657,7 +657,7 @@ namespace Pck
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			foreach(var attrSet in AttributeSets)
+			foreach (var attrSet in AttributeSets)
 			{
 				if (0 < attrSet.Value.Count)
 				{
@@ -671,7 +671,7 @@ namespace Pck
 					sb.AppendLine();
 				}
 			}
-			for (int ic=Rules.Count,i=0;i<ic;++i)
+			for (int ic = Rules.Count, i = 0; i < ic; ++i)
 				sb.AppendLine(Rules[i].ToString());
 			return sb.ToString();
 		}
@@ -710,7 +710,7 @@ namespace Pck
 		internal static CfgDocument Parse(ParseContext pc)
 		{
 			var result = new CfgDocument();
-			while(-1!=pc.Current)
+			while (-1 != pc.Current)
 			{
 				var line = pc.Line;
 				var column = pc.Column;
@@ -722,14 +722,14 @@ namespace Pck
 					CfgNode.SkipCommentsAndWhitespace(pc);
 				}
 				var id = CfgNode.ParseIdentifier(pc);
-				if(string.IsNullOrEmpty(id))
+				if (string.IsNullOrEmpty(id))
 				{
 					pc.Advance();
 					CfgNode.SkipCommentsAndWhitespace(pc);
 					continue;
 				}
 				CfgNode.SkipCommentsAndWhitespace(pc);
-				
+
 				pc.Expecting(':', '-', '=');
 				if (':' == pc.Current) // attribute set
 				{
@@ -747,7 +747,8 @@ namespace Pck
 					}
 					result.AttributeSets.Add(id, d);
 					CfgNode.SkipCommentsAndWhitespace(pc);
-				} else if ('-' == pc.Current)
+				}
+				else if ('-' == pc.Current)
 				{
 					pc.Advance();
 					pc.Expecting('>');
@@ -762,14 +763,15 @@ namespace Pck
 						CfgNode.SkipCommentsAndWhitespace(pc);
 					}
 					result.Rules.Add(rule);
-				} else if ('=' == pc.Current)
+				}
+				else if ('=' == pc.Current)
 				{
 					pc.TrySkipUntil('\n', true);
 				}
 				if ('\n' == pc.Current)
 					pc.Advance();
 				CfgNode.SkipCommentsAndWhitespace(pc);
-				
+
 			}
 			return result;
 		}
@@ -790,7 +792,7 @@ namespace Pck
 					foreach (var attr in attrs.Value)
 					{
 						var i = d.IndexOf(attr.Name);
-						if (0>i || !Equals(d[i].Value, attr.Value))
+						if (0 > i || !Equals(d[i].Value, attr.Value))
 							return false;
 					}
 				}
@@ -813,11 +815,11 @@ namespace Pck
 			var result = 0;
 			foreach (var attrs in AttributeSets)
 			{
-				if(null!=attrs.Key)
+				if (null != attrs.Key)
 					result ^= attrs.Key.GetHashCode();
 				foreach (var attr in attrs.Value)
 				{
-					if(null!=attr.Name)
+					if (null != attr.Name)
 						result ^= attr.Name.GetHashCode();
 					if (null != attr.Value)
 						result ^= attr.Value.GetHashCode();

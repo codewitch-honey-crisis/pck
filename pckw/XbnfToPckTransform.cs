@@ -5,16 +5,16 @@ using System.Text;
 
 namespace Pck
 {
-	[Transform("xbnfToPck",".xbnf",".pck","Translates an xbnf grammar to a pck spec.")]
+	[Transform("xbnfToPck", ".xbnf", ".pck", "Translates an xbnf grammar to a pck spec.")]
 	static class XbnfToPckTransform
 	{
 		public static void Transform(TextReader input, TextWriter output)
 			=> Transform(XbnfDocument.ReadFrom(input), output);
-		public static void Transform(XbnfDocument document,TextWriter writer)
+		public static void Transform(XbnfDocument document, TextWriter writer)
 		{
 			var syms = new HashSet<string>();
 			// gather the attributes and production names
-			for(int ic=document.Productions.Count,i=0;i<ic;++i)
+			for (int ic = document.Productions.Count, i = 0; i < ic; ++i)
 			{
 				var p = document.Productions[i];
 				syms.Add(p.Name);
@@ -63,14 +63,14 @@ namespace Pck
 			for (int ic = document.Productions.Count, i = 0; i < ic; ++i)
 			{
 				var p = document.Productions[i];
-				if(!p.IsTerminal)
+				if (!p.IsTerminal)
 				{
-					var dys = _GetDysjunctions(document, syms,tmap,attrSets,rules,p,p.Expression);
+					var dys = _GetDysjunctions(document, syms, tmap, attrSets, rules, p, p.Expression);
 					ntd.Add(p.Name, dys);
 				}
 			}
 			// now that we've done that, write the rest of our attributes
-			foreach(var attrs in attrSets)
+			foreach (var attrs in attrSets)
 			{
 				writer.Write(string.Concat(attrs.Key, ":"));
 				var delim = "";
@@ -93,7 +93,7 @@ namespace Pck
 				}
 			}
 			// write our secondary rules
-			foreach(var rule in rules)
+			foreach (var rule in rules)
 			{
 				writer.Write(string.Concat(rule.Key, "->"));
 				foreach (var s in rule.Value)
@@ -102,28 +102,28 @@ namespace Pck
 			}
 			writer.WriteLine();
 			// write our terminals
-			for(int ic = tmap.Count,i=0;i<ic;++i)
+			for (int ic = tmap.Count, i = 0; i < ic; ++i)
 			{
 				var te = tmap[i];
-				writer.WriteLine(string.Concat(te.Value,"= \'",_ToRegex(document,te.Key),"\'"));
-				
+				writer.WriteLine(string.Concat(te.Value, "= \'", _ToRegex(document, te.Key), "\'"));
+
 			}
 			writer.Flush();
 			return;
 		}
-		static string _ToRegex(XbnfDocument d,XbnfExpression e)
+		static string _ToRegex(XbnfDocument d, XbnfExpression e)
 		{
 			var le = e as XbnfLiteralExpression;
-			if(null!=le)
+			if (null != le)
 				return _EscapeLiteral(XbnfNode.Escape(le.Value));
 			var rxe = e as XbnfRegexExpression;
 			if (null != rxe)
-				return string.Concat("(",rxe.Value,")");
+				return string.Concat("(", rxe.Value, ")");
 			var rfe = e as XbnfRefExpression;
 			if (null != rfe)
 				_ToRegex(d, d.Productions[rfe.Symbol].Expression);
 			var re = e as XbnfRepeatExpression;
-			if(null!=re)
+			if (null != re)
 			{
 				if (re.IsOptional)
 					return string.Concat("(", _ToRegex(d, re.Expression), ")*");
@@ -131,11 +131,11 @@ namespace Pck
 					return string.Concat("(", _ToRegex(d, re.Expression), ")+");
 			}
 			var oe = e as XbnfOrExpression;
-			if(null!=oe)
-				return string.Concat("(", _ToRegex(d,oe.Left), "|", _ToRegex(d,oe.Right), ")");
+			if (null != oe)
+				return string.Concat("(", _ToRegex(d, oe.Left), "|", _ToRegex(d, oe.Right), ")");
 			var oc = e as XbnfConcatExpression;
-			if(null!=oc)
-				return string.Concat(_ToRegex(d, oe.Left),  _ToRegex(d, oe.Right));
+			if (null != oc)
+				return string.Concat(_ToRegex(d, oe.Left), _ToRegex(d, oe.Right));
 			var ope = e as XbnfOptionalExpression;
 			if (null != ope)
 				return string.Concat("(", _ToRegex(d, ope.Expression), ")?");
@@ -144,9 +144,9 @@ namespace Pck
 		static string _EscapeLiteral(string v)
 		{
 			var sb = new StringBuilder();
-			for(var i = 0;i<v.Length;++i)
+			for (var i = 0; i < v.Length; ++i)
 			{
-				switch(v[i])
+				switch (v[i])
 				{
 					case '[':
 					case ']':
@@ -177,15 +177,15 @@ namespace Pck
 		static IList<IList<string>> _GetDysjunctions(
 			XbnfDocument d,
 			ICollection<string> syms,
-			IDictionary<XbnfExpression,string> tmap, 
-			IDictionary<string,XbnfAttributeList> attrs,
-			IList<KeyValuePair<string,IList<string>>> rules,
+			IDictionary<XbnfExpression, string> tmap,
+			IDictionary<string, XbnfAttributeList> attrs,
+			IList<KeyValuePair<string, IList<string>>> rules,
 			XbnfProduction p,
 			XbnfExpression e
 			)
 		{
 			var le = e as XbnfLiteralExpression;
-			if(null!=le)
+			if (null != le)
 			{
 				var res = new List<IList<string>>();
 				var l = new List<string>();
@@ -203,7 +203,7 @@ namespace Pck
 				return res;
 			}
 			var rfe = e as XbnfRefExpression;
-			if(null!=rfe)
+			if (null != rfe)
 			{
 				var res = new List<IList<string>>();
 				var l = new List<string>();
@@ -212,19 +212,19 @@ namespace Pck
 				return res;
 			}
 			var ce = e as XbnfConcatExpression;
-			if(null!=ce)
-				return _GetDysConcat(d, syms, tmap,attrs,rules, p, ce);
-			
+			if (null != ce)
+				return _GetDysConcat(d, syms, tmap, attrs, rules, p, ce);
+
 			var oe = e as XbnfOrExpression;
-			if(null!=oe)
-				return _GetDysOr(d, syms, tmap, attrs,rules,p, oe);
+			if (null != oe)
+				return _GetDysOr(d, syms, tmap, attrs, rules, p, oe);
 			var ope = e as XbnfOptionalExpression;
-			if(null!=ope)
+			if (null != ope)
 			{
 				return _GetDysOptional(d, syms, tmap, attrs, rules, p, ope);
 			}
 			var re = e as XbnfRepeatExpression;
-			if(null!=re)
+			if (null != re)
 				return _GetDysRepeat(d, syms, tmap, attrs, rules, p, re);
 			throw new NotSupportedException("The specified expression type is not supported.");
 		}
@@ -269,6 +269,7 @@ namespace Pck
 				++i;
 			}
 			syms.Add(ss);
+			listId = ss;
 			var attr = new XbnfAttribute("collapsed", true);
 			var attrlist = new XbnfAttributeList();
 			attrlist.Add(attr);
@@ -300,13 +301,13 @@ namespace Pck
 			}
 		}
 
-		static IList<IList<string>> _GetDysOr(XbnfDocument d, ICollection<string> syms, IDictionary<XbnfExpression, string> tmap, IDictionary<string,XbnfAttributeList> attrs,IList<KeyValuePair<string,IList<string>>> rules, XbnfProduction p, XbnfOrExpression oe)
+		static IList<IList<string>> _GetDysOr(XbnfDocument d, ICollection<string> syms, IDictionary<XbnfExpression, string> tmap, IDictionary<string, XbnfAttributeList> attrs, IList<KeyValuePair<string, IList<string>>> rules, XbnfProduction p, XbnfOrExpression oe)
 		{
 			var l = new List<IList<string>>();
 			if (null == oe.Left)
 				l.Add(new List<string>());
 			else
-				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs,rules,p,oe.Left))
+				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs, rules, p, oe.Left))
 					if (!l.Contains(ll, OrderedCollectionEqualityComparer<string>.Default))
 						l.Add(ll);
 			if (null == oe.Right)
@@ -316,7 +317,7 @@ namespace Pck
 					l.Add(ll);
 			}
 			else
-				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs,rules,p, oe.Right))
+				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs, rules, p, oe.Right))
 					if (!l.Contains(ll, OrderedCollectionEqualityComparer<string>.Default))
 						l.Add(ll);
 			return l;
@@ -328,19 +329,19 @@ namespace Pck
 			if (null == ce.Right)
 			{
 				if (null == ce.Left) return l;
-				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs,rules,p, ce.Left))
+				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs, rules, p, ce.Left))
 					l.Add(new List<string>(ll));
 				return l;
 			}
 			else if (null == ce.Left)
 			{
-				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs,rules,p, ce.Right))
+				foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs, rules, p, ce.Right))
 					l.Add(new List<string>(ll));
 				return l;
 			}
-			foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs,rules,p, ce.Left))
+			foreach (var ll in _GetDysjunctions(d, syms, tmap, attrs, rules, p, ce.Left))
 			{
-				foreach (var ll2 in _GetDysjunctions(d, syms, tmap, attrs,rules,p, ce.Right))
+				foreach (var ll2 in _GetDysjunctions(d, syms, tmap, attrs, rules, p, ce.Right))
 				{
 					var ll3 = new List<string>();
 					ll3.AddRange(ll);
@@ -352,9 +353,9 @@ namespace Pck
 			return l;
 		}
 
-		static XbnfProduction _GetProductionForExpression(XbnfDocument d,XbnfExpression e)
+		static XbnfProduction _GetProductionForExpression(XbnfDocument d, XbnfExpression e)
 		{
-			for(int ic = d.Productions.Count,i=0;i<ic;++i)
+			for (int ic = d.Productions.Count, i = 0; i < ic; ++i)
 			{
 				var prod = d.Productions[i];
 				if (e == prod.Expression)
