@@ -83,9 +83,11 @@ namespace Pck
 						o = prod.Attributes[i].Value;
 						isHidden = (o is bool && (bool)o);
 					}
-					if (!isHidden && !Equals(rc.Key, StartProduction.Name))
-						result.Add(new XbnfMessage(ErrorLevel.Warning, -1, string.Concat("Unreferenced production \"", prod.Name, "\""),
-							prod.Line, prod.Column, prod.Position, Filename));
+					var sp = StartProduction;
+					if(null!=sp)
+						if (!isHidden && !Equals(rc.Key, sp.Name))
+							result.Add(new XbnfMessage(ErrorLevel.Warning, -1, string.Concat("Unreferenced production \"", prod.Name, "\""),
+								prod.Line, prod.Column, prod.Position, Filename));
 				}
 			}
 			return result;

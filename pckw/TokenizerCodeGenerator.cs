@@ -98,6 +98,16 @@ namespace Pck
 			if (string.IsNullOrEmpty(language))
 				language = "cs";
 			var cdp = CodeDomProvider.CreateProvider(language);
+			if(2==symbolTable.Count && "#EOS"== symbolTable[0] && "#ERROR"==symbolTable[1])
+			{
+				// this is a lex document and the cfg was a dummy so we don't use it.
+				// build the symbol table from the LexDocument
+				symbolTable = new List<string>();
+				foreach(var rule in lex.Rules)
+					symbolTable.Add(rule.Left);
+				symbolTable.Add("#EOS");
+				symbolTable.Add("#ERROR");
+			}
 			var tokenizer = _CreateTokenizerClass(lex, symbolTable, name,progress);
 			var opts = new CodeGeneratorOptions();
 			opts.BlankLinesBetweenMembers = false;

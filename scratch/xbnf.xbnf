@@ -61,11 +61,10 @@ lineComment<hidden>= '//[^\n]*[\n]';
 blockComment<hidden,blockEnd="*/">= "/*";
 
 // defining these isn't required, but gives
-// us better constant names and an opportunity to 
-// remove them from the tree.
+// us better constant names 
 //
 // double quotes denote a literal. the escapes are nearly the
-// same as C#. \U and \x are not supported
+// same as C#. \U and \x are not supported but \u is
 or="|";
 lt="<";
 gt=">";
